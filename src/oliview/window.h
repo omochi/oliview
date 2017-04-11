@@ -2,6 +2,8 @@
 
 #include "./dependency.h"
 #include "./object.h"
+#include "./size.h"
+#include "./view.h"
 
 namespace oliview {
     class Window : public Object<Window> {
@@ -11,8 +13,10 @@ namespace oliview {
 
         bool closed() const;
         void set_should_close(const std::function<bool()> & value);
+        Size window_size() const;
+        Size framebuffer_size() const;
 
-        GLFWwindow * raw_window() const;
+        Ref<View> root_view() const;
 
         void Close();
         void Draw();
@@ -23,10 +27,10 @@ namespace oliview {
     private:
         GLFWwindow * window_;
         std::function<bool()> should_close_;
-        int window_width_;
-        int window_height_;
-        int framebuffer_width_;
-        int framebuffer_height_;
+
+        Size window_size_;
+        Size framebuffer_size_;
+        Ref<View> root_view_;
 
         static void RefreshHandler(GLFWwindow * window);
         static void WindowSizeHandler(GLFWwindow * window, int w, int h);

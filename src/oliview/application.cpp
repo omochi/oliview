@@ -19,13 +19,11 @@ namespace oliview {
         init_ = value;
     }
 
-    void Application::set_final(const std::function<void()> & value) {
-        final_ = value;
+    void Application::set_finish(const std::function<void()> & value) {
+        finish_ = value;
     }
 
     void Application::Run() {
-        glfwSwapInterval(0);
-        
         Init();
 
         while (true) {
@@ -50,7 +48,7 @@ namespace oliview {
             }
         }
 
-        Final();
+        Finish();
     }
 
     void Application::AddWindowInternal(const Ref<Window> & window) {
@@ -71,6 +69,14 @@ namespace oliview {
         return shared_;
     }
 
+    void Application::Main(const std::function<void()> & init,
+                           const std::function<void()> & finish) {
+        auto app = shared();
+        app->set_init(init);
+        app->set_finish(finish);
+        app->Run();
+    }
+
     void Application::Init() {
         if (!glfwInit()) {
             Fatal("glfwInit failed");
@@ -81,9 +87,9 @@ namespace oliview {
         }
     }
 
-    void Application::Final() {
-        if (final_) {
-            final_();
+    void Application::Finish() {
+        if (finish_) {
+            finish_();
         }
 
         glfwTerminate();

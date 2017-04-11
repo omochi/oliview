@@ -7,17 +7,24 @@ namespace oliview {
         window_ = glfwCreateWindow(960, 540, "window", nullptr, nullptr);
         OLIVIEW_ASSERT(window_ != nullptr);
 
-        glfwGetWindowSize(window_, &window_width_, &window_height_);
-        glfwGetFramebufferSize(window_, &framebuffer_width_, &framebuffer_height_);
+        auto app = Application::shared();
+        app->AddWindowInternal(this_ref());
+
+        int w, h;
+
         glfwSetWindowUserPointer(window_, this);
+
         glfwSetWindowRefreshCallback(window_, &Window::RefreshHandler);
+
+        glfwGetWindowSize(window_, &w, &h);
+        window_size_ = Size(w, h);
         glfwSetWindowSizeCallback(window_, &Window::WindowSizeHandler);
+
+        glfwGetFramebufferSize(window_, &w, &h);
+        framebuffer_size_ = Size(w, h);
         glfwSetFramebufferSizeCallback(window_, &Window::FramebufferSizeHandler);
 
         MakeContextCurrent();
-
-        auto app = Application::shared();
-        app->AddWindowInternal(this_ref());
     }
 
     Window::~Window() {
@@ -34,22 +41,30 @@ namespace oliview {
         should_close_ = value;
     }
 
-    GLFWwindow * Window::raw_window() const {
-        return window_;
+    Size Window::window_size() const {
+        return window_size_;
+    }
+
+    Size Window::framebuffer_size() const {
+        return framebuffer_size_;
+    }
+
+    Ref<View> Window::root_view() const {
+        return root_view_;
     }
 
     void Window::Close() {
-        glfwDestroyWindow(window_);
-
         auto app = Application::shared();
         app->RemoveWindowInternal(this_ref());
+
+        glfwDestroyWindow(window_);
 
         glfwSetWindowUserPointer(window_, nullptr);
         window_ = nullptr;
     }
 
     void Window::Draw() {
-        glViewport(0, 0, framebuffer_width_, framebuffer_height_);
+        glViewport(0, 0, framebuffer_size_.width(), framebuffer_size_.height());
         glBegin(GL_TRIANGLES);
         glVertex2f(-0.5f, -0.5f);
         glVertex2f(0.5f, -0.5f);
@@ -75,12 +90,11 @@ namespace oliview {
     }
 
     void Window::OnWindowSizeChange(int w, int h) {
-        window_width_ = w;
-        window_height_ = h;
+        window_size_ = Size(w, h);
     }
+
     void Window::OnFramebufferSizeChange(int w, int h) {
-        framebuffer_width_ = w;
-        framebuffer_height_ = h;
+        framebuffer_size_ = Size(w, h);
     }
 
     void Window::RefreshHandler(GLFWwindow * window) {
