@@ -82,6 +82,8 @@ namespace oliview {
             Fatal("glfwInit failed");
         }
 
+        glfwSetTime(0.0);
+
         if (init_) {
             init_();
         }

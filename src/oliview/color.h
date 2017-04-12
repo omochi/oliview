@@ -18,6 +18,8 @@ namespace oliview {
         void set_blue(float value);
         float alpha() const;
         void set_alpha(float value);
+
+        NVGcolor ToNanoVG() const;
     private:
         float red_;
         float green_;

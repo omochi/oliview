@@ -2,7 +2,7 @@
 
 #include "./dependency.h"
 #include "./vector2.h"
-#include "./size.h"
+#include "./matrix3x3.h"
 
 namespace oliview {
     class Rect {
@@ -13,17 +13,21 @@ namespace oliview {
              float width,
              float height);
         Rect(const Vector2 & origin,
-             const Size & size);
+             const Vector2 & size);
 
         Vector2 origin() const;
         void set_origin(const Vector2 & value);
 
-        Size size() const;
-        void set_size(const Size & value);
+        Vector2 size() const;
+        void set_size(const Vector2 & value);
+
+        Vector2 center() const;
+
+        Vector2 end() const;
+
+        Rect ApplyTransform(const Matrix3x3 & m) const;
     private:
-        float x_;
-        float y_;
-        float width_;
-        float height_;
+        Vector2 origin_;
+        Vector2 size_;
     };
 }

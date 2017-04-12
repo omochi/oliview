@@ -2,8 +2,9 @@
 
 #include "./dependency.h"
 #include "./object.h"
-#include "./size.h"
 #include "./view.h"
+#include "./gl_assert.h"
+#include "./vector2.h"
 
 namespace oliview {
     class Window : public Object<Window> {
@@ -13,8 +14,8 @@ namespace oliview {
 
         bool closed() const;
         void set_should_close(const std::function<bool()> & value);
-        Size window_size() const;
-        Size framebuffer_size() const;
+        Vector2 window_size() const;
+        Vector2 framebuffer_size() const;
 
         Ref<View> root_view() const;
 
@@ -26,10 +27,12 @@ namespace oliview {
         void OnFramebufferSizeChange(int w, int h);
     private:
         GLFWwindow * window_;
+        NVGcontext * nvg_;
+
         std::function<bool()> should_close_;
 
-        Size window_size_;
-        Size framebuffer_size_;
+        Vector2 window_size_;
+        Vector2 framebuffer_size_;
         Ref<View> root_view_;
 
         static void RefreshHandler(GLFWwindow * window);

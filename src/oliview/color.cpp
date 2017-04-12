@@ -46,4 +46,9 @@ namespace oliview {
     void Color::set_alpha(float value) {
         alpha_ = value;
     }
+
+    NVGcolor Color::ToNanoVG() const {
+        return nvgRGBAf(red_, green_, blue_, alpha_);
+    }
 }
+

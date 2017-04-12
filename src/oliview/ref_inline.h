@@ -54,7 +54,8 @@ namespace oliview {
 
     template <typename T>
     void Ref<T>::Attach(T * ptr) {
-        Ref<T> other(ptr);
+        Ref<T> other;
+        other.ptr_.store(ptr);
         Swap(other);
     }
 
@@ -62,7 +63,7 @@ namespace oliview {
     T * Ref<T>::Dettach() {
         Ref<T> other;
         Swap(other);
-        return other.ptr_.exchange(nullptr);
+        return other.ptr_.load();
     }
 
     template <typename T>

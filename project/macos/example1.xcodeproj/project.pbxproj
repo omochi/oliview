@@ -10,10 +10,11 @@
 		D6C3F6D41E99B4320020D65A /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D6C3F6D31E99B4320020D65A /* main.cpp */; };
 		D6C3F6E61E9A0A960020D65A /* liboliview.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D6C3F6E51E9A0A960020D65A /* liboliview.a */; };
 		D6C3F6E81E9A0B8A0020D65A /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D6C3F6E71E9A0B8A0020D65A /* OpenGL.framework */; };
-		D6C3F6EA1E9A0C3A0020D65A /* libglfw3.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D6C3F6E91E9A0C3A0020D65A /* libglfw3.a */; };
 		D6C3F6EC1E9A0D4C0020D65A /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D6C3F6EB1E9A0D4C0020D65A /* AppKit.framework */; };
 		D6C3F6EE1E9A0D5D0020D65A /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D6C3F6ED1E9A0D5D0020D65A /* CoreVideo.framework */; };
 		D6C3F6F01E9A0D650020D65A /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D6C3F6EF1E9A0D650020D65A /* IOKit.framework */; };
+		D6C3F72C1E9D1C610020D65A /* libglfw3.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D6C3F72B1E9D1C610020D65A /* libglfw3.a */; };
+		D6C3F72E1E9D1C6A0020D65A /* libnanovg.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D6C3F72D1E9D1C6A0020D65A /* libnanovg.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -33,10 +34,11 @@
 		D6C3F6D31E99B4320020D65A /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		D6C3F6E51E9A0A960020D65A /* liboliview.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = liboliview.a; path = build/Debug/liboliview.a; sourceTree = "<group>"; };
 		D6C3F6E71E9A0B8A0020D65A /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
-		D6C3F6E91E9A0C3A0020D65A /* libglfw3.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libglfw3.a; path = ../../ext/glfw/macos/lib/libglfw3.a; sourceTree = "<group>"; };
 		D6C3F6EB1E9A0D4C0020D65A /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
 		D6C3F6ED1E9A0D5D0020D65A /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
 		D6C3F6EF1E9A0D650020D65A /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
+		D6C3F72B1E9D1C610020D65A /* libglfw3.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libglfw3.a; path = ../../ext/glfw/lib/macos/libglfw3.a; sourceTree = "<group>"; };
+		D6C3F72D1E9D1C6A0020D65A /* libnanovg.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libnanovg.a; path = ../../ext/nanovg/lib/macos/libnanovg.a; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -45,11 +47,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				D6C3F6F01E9A0D650020D65A /* IOKit.framework in Frameworks */,
+				D6C3F72E1E9D1C6A0020D65A /* libnanovg.a in Frameworks */,
 				D6C3F6EE1E9A0D5D0020D65A /* CoreVideo.framework in Frameworks */,
 				D6C3F6EC1E9A0D4C0020D65A /* AppKit.framework in Frameworks */,
-				D6C3F6EA1E9A0C3A0020D65A /* libglfw3.a in Frameworks */,
 				D6C3F6E81E9A0B8A0020D65A /* OpenGL.framework in Frameworks */,
 				D6C3F6E61E9A0A960020D65A /* liboliview.a in Frameworks */,
+				D6C3F72C1E9D1C610020D65A /* libglfw3.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -85,10 +88,11 @@
 		D6C3F6E41E9A0A960020D65A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				D6C3F72D1E9D1C6A0020D65A /* libnanovg.a */,
+				D6C3F72B1E9D1C610020D65A /* libglfw3.a */,
 				D6C3F6EF1E9A0D650020D65A /* IOKit.framework */,
 				D6C3F6ED1E9A0D5D0020D65A /* CoreVideo.framework */,
 				D6C3F6EB1E9A0D4C0020D65A /* AppKit.framework */,
-				D6C3F6E91E9A0C3A0020D65A /* libglfw3.a */,
 				D6C3F6E71E9A0B8A0020D65A /* OpenGL.framework */,
 				D6C3F6E51E9A0A960020D65A /* liboliview.a */,
 			);
@@ -252,12 +256,14 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				HEADER_SEARCH_PATHS = (
-					../../ext/glfw/macos/include,
+					../../ext/glfw/include,
+					../../ext/nanovg/include,
 					../../src,
 				);
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					../../ext/glfw/macos/lib,
+					../../ext/glfw/lib/macos,
+					../../ext/nanovg/lib/macos,
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				USE_HEADERMAP = NO;
@@ -268,12 +274,14 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				HEADER_SEARCH_PATHS = (
-					../../ext/glfw/macos/include,
+					../../ext/glfw/include,
+					../../ext/nanovg/include,
 					../../src,
 				);
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					../../ext/glfw/macos/lib,
+					../../ext/glfw/lib/macos,
+					../../ext/nanovg/lib/macos,
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				USE_HEADERMAP = NO;
