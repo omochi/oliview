@@ -9,7 +9,6 @@
 #include "./window.h"
 #include "./array_function.h"
 
-
 namespace oliview {
     class Application : public Object<Application> {
     public:
@@ -18,28 +17,22 @@ namespace oliview {
 
         Ref<TaskQueue> task_queue() const;
 
-        void set_init(const std::function<void()> & value);
-        void set_finish(const std::function<void()> & value);
-
         void Run();
+
+        virtual void OnInit();
+        virtual void OnFinish();
 
         void AddWindowInternal(const Ref<Window> & window);
         void RemoveWindowInternal(const Ref<Window> & window);
-
-        static Ref<Application> shared();
-        static void Main(const std::function<void()> & init,
-                         const std::function<void()> & finish);
     private:
         void Init();
         void Finish();
 
-        Ref<TaskQueue> task_queue_;
         std::vector<Ref<Window>> windows_;
-
-        std::function<void()> init_;
-        std::function<void()> finish_;
-
-        static std::mutex static_mutex_;
-        static Ref<Application> shared_;
     };
+
+    template <typename T>
+    int ApplicationMain(int argc, char * argv[]);
 }
+
+#include "./application_inline.h"

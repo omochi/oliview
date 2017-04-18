@@ -5,6 +5,7 @@
 #include "./rect.h"
 #include "./color.h"
 #include "./matrix3x3.h"
+#include "./array_function.h"
 
 namespace oliview {
     class Window;
@@ -13,9 +14,11 @@ namespace oliview {
     public:
         View();
 
-        
         Ref<View> parent() const;
         const std::vector<Ref<View>> & children() const;
+        void AddChild(const Ref<View> & child);
+        void RemoveChild(const Ref<View> & child);
+        void RemoveChildAt(int index);
 
         Ref<Window> window() const;
 

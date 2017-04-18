@@ -3,7 +3,9 @@
 #include "./application.h"
 
 namespace oliview {
-    Window::Window() {
+    Window::Window(const Ref<Application> & application) {
+        Ref<Window> this_ref(this);
+
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
         glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
@@ -18,8 +20,8 @@ namespace oliview {
         window_ = glfwCreateWindow(960, 540, "window", nullptr, nullptr);
         OLIVIEW_ASSERT(window_ != nullptr);
 
-        auto app = Application::shared();
-        app->AddWindowInternal(this_ref());
+        app_ = application.get();
+        app_->AddWindowInternal(this_ref);
 
         int w, h;
 
@@ -39,8 +41,8 @@ namespace oliview {
 
         nvg_ = nvgCreateGL3(NVG_ANTIALIAS | NVG_STENCIL_STROKES | NVG_DEBUG);
 
-        root_view_.Attach(new View());
-        root_view_->SetWindowInternal(this_ref());
+        root_view_ = Create<View>();
+        root_view_->SetWindowInternal(this_ref);
     }
 
     Window::~Window() {
@@ -72,8 +74,9 @@ namespace oliview {
             return;
         }
 
-        auto app = Application::shared();
-        app->RemoveWindowInternal(this_ref());
+        Ref<Window> this_ref(this);
+
+        app_->RemoveWindowInternal(this_ref);
 
         root_view_ = nullptr;
 

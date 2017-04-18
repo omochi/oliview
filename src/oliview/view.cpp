@@ -8,13 +8,13 @@ namespace oliview {
     transform_(Matrix3x3::Identity()),
     window_transform_dirty_(true),
     window_transform_(Matrix3x3::Identity()),
-    background_color_(1, 0, 0, 1)
+    background_color_(1, 1, 1, 1)
     {
     }
 
     Ref<View> View::parent() const {
         if (parent_) {
-            return parent_->this_ref();
+            return Ref<View>(parent_);
         }
         return nullptr;
     }
@@ -23,9 +23,27 @@ namespace oliview {
         return children_;
     }
 
+    void View::AddChild(const Ref<View> & child) {
+        children_.push_back(child);
+    }
+
+    void View::RemoveChild(const Ref<View> & child) {
+        while (true) {
+            auto index = ArrayFindR(children_, [&](auto x){ return x == child; });
+            if (!index) {
+                break;
+            }
+            RemoveChildAt(*index);
+        }
+    }
+
+    void View::RemoveChildAt(int index) {
+        ArrayRemoveAt(children_, index);
+    }
+
     Ref<Window> View::window() const {
         if (window_) {
-            return window_->this_ref();
+            return Ref<Window>(window_);
         }
         if (parent_) {
             return parent_->window();

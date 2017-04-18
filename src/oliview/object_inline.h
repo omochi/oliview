@@ -1,4 +1,5 @@
 namespace oliview {
+
     template <typename T>
     Object<T>::Object():
     retain_count_(1)
@@ -14,13 +15,13 @@ namespace oliview {
     }
 
     template <typename T>
-    Ref<T> Object<T>::this_ref() {
-        return Ref<T>(dynamic_cast<T *>(this));
+    Ref<const T> Object<T>::this_ref() const {
+        return Ref<const T>(static_cast<const T *>(this));
     }
 
     template <typename T>
-    Ref<const T> Object<T>::this_ref() const {
-        return Ref<const T>(dynamic_cast<const T *>(this));
+    Ref<T> Object<T>::this_ref() {
+        return Ref<T>(static_cast<T *>(this));
     }
 
     template <typename T>
@@ -35,4 +36,5 @@ namespace oliview {
             delete this;
         }
     }
+
 }

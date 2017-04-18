@@ -1,6 +1,7 @@
 #pragma once
 
 #include "./dependency.h"
+#include "./object.h"
 
 namespace oliview {
     template <typename T> class Ref {
@@ -29,6 +30,9 @@ namespace oliview {
     private:
         std::atomic<T *> ptr_;
     };
+
+    template <typename T, typename... Args>
+    Ref<T> Create(Args... args);
 }
 
 #include "./ref_inline.h"

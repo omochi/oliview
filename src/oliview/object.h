@@ -1,17 +1,20 @@
 #pragma once
 
 #include "./dependency.h"
-#include "./ref.h"
 
 namespace oliview {
-    template <typename T> class Object {
+    template <typename T> class Ref;
+
+    template <typename T>
+    class Object {
     public:
         Object();
         virtual ~Object();
 
         int retain_count() const;
-        Ref<T> this_ref();
+
         Ref<const T> this_ref() const;
+        Ref<T> this_ref();
 
         void Retain();
         void Release();
@@ -21,3 +24,5 @@ namespace oliview {
 }
 
 #include "./object_inline.h"
+
+

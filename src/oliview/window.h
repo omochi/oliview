@@ -2,14 +2,17 @@
 
 #include "./dependency.h"
 #include "./object.h"
+#include "./ref.h"
 #include "./view.h"
 #include "./gl_assert.h"
 #include "./vector2.h"
 
 namespace oliview {
+    class Application;
+
     class Window : public Object<Window> {
     public:
-        Window();
+        Window(const Ref<Application> & application);
         virtual ~Window();
 
         bool closed() const;
@@ -26,6 +29,8 @@ namespace oliview {
         void OnWindowSizeChange(int w, int h);
         void OnFramebufferSizeChange(int w, int h);
     private:
+        Application * app_;
+        
         GLFWwindow * window_;
         NVGcontext * nvg_;
 

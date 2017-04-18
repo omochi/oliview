@@ -1,8 +1,34 @@
-
 namespace oliview {
     template <typename C>
-    std::vector<typename C::value_type>
-    ArrayRemove(const C & array,
+    Optional<int>
+    ArrayFind(const C & array,
+              const std::function<bool(const typename C::value_type &)> & pred)
+    {
+        for (auto iter = array.cbegin(); iter != array.cend(); iter++) {
+            if (pred(*iter)) {
+                return Some((int)(iter - array.cbegin()));
+            }
+        }
+        return nullptr;
+    }
+
+    template <typename C>
+    Optional<int>
+    ArrayFindR(const C & array,
+               const std::function<bool(const typename C::value_type &)> & pred)
+    {
+        for (auto iter = array.crbegin(); iter != array.crend(); iter++) {
+            if (pred(*iter)) {
+                int offset = (int)(iter - array.crbegin());
+                return Some((int)array.size() - 1 - offset);
+            }
+        }
+        return nullptr;
+    }
+
+    template <typename C>
+    void
+    ArrayRemove(C & array,
                 const std::function<bool(const typename C::value_type &)> & pred)
     {
         std::vector<typename C::value_type> ret;
@@ -11,6 +37,13 @@ namespace oliview {
                 ret.push_back(item);
             }
         }
-        return ret;
+        array = ret;
+    }
+
+    template <typename C>
+    void
+    ArrayRemoveAt(C & array, int index)
+    {
+        array.erase(array.begin() + index);
     }
 }

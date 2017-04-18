@@ -90,4 +90,13 @@ namespace oliview {
     bool Ref<T>::operator!= (const Ref<T> & other) const {
         return !(*this == other);
     }
+
+    template <typename T, typename... Args>
+    Ref<T> Create(Args... args)
+    {
+        Ref<T> ret;
+        T * obj = new T(args...);
+        ret.Attach(obj);
+        return ret;
+    }
 }

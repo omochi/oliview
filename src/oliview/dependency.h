@@ -10,6 +10,7 @@
 #include <atomic>
 #include <mutex>
 #include <iostream>
+#include <memory>
 
 #define GLFW_INCLUDE_GLCOREARB
 #define GLFW_INCLUDE_GLEXT
@@ -20,7 +21,9 @@
 
 #include <nanovg.h>
 
-#define NANOVG_GL3
+#ifndef NANOVG_GL3_IMPLEMENTATION
+#   define NANOVG_GL3
+#endif
 #include <nanovg_gl.h>
 #include <nanovg_gl_utils.h>
 
