@@ -1,6 +1,6 @@
 #include "./assert.h"
 
-#include "./format.h"
+#include "./string_format.h"
 
 namespace oliview {
     void Assert(bool condition,

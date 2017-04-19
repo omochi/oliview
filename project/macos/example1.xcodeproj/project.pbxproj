@@ -255,6 +255,7 @@
 		D6C3F6C91E99AEAA0020D65A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
 				HEADER_SEARCH_PATHS = (
 					../../ext/glfw/include,
 					../../ext/nanovg/include,
@@ -273,6 +274,7 @@
 		D6C3F6CA1E99AEAA0020D65A /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
 				HEADER_SEARCH_PATHS = (
 					../../ext/glfw/include,
 					../../ext/nanovg/include,
