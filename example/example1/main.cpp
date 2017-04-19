@@ -2,8 +2,20 @@
 
 using namespace oliview;
 
+void f(const FilePath & path_) {
+    auto p = path_;
+    p.Expand();
+
+    Print(Format("[%s] => [%s]",
+                 path_.ToString().c_str(),
+                 p.ToString().c_str()));
+}
+
 class Example1 : public Application {
     virtual void OnInit() override {
+        f(FilePath::current());
+        f(FilePath("/a/b//c/./d/../e"));
+
         auto window = Create<Window>(this_ref());
 
         auto view1 = Create<View>();

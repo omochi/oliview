@@ -12,6 +12,10 @@
 #include <iostream>
 #include <memory>
 
+#ifdef OLIVIEW_MACOS
+#   include <unistd.h>
+#endif
+
 #define GLFW_INCLUDE_GLCOREARB
 #define GLFW_INCLUDE_GLEXT
 #pragma clang diagnostic push

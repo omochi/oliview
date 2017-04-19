@@ -14,6 +14,24 @@ namespace oliview {
         return ret;
     }
 
+    bool StartWith(const std::string & string,
+                   const std::string & test)
+    {
+        if (string.size() < test.size()) {
+            return false;
+        }
+        return string.substr(0, test.size()) == test;
+    }
+
+    bool EndWith(const std::string & string,
+                 const std::string & test)
+    {
+        if (string.size() < test.size()) {
+            return false;
+        }
+        return string.substr(string.size() - test.size(), test.size()) == test;
+    }
+
     Optional<int> Find(const std::string & string,
                        int start_index,
                        const std::vector<std::string> & targets,
@@ -57,6 +75,15 @@ namespace oliview {
             }
         }
         return nullptr;
+    }
+
+    std::vector<std::string> Split(const std::string & string,
+                                   const std::string & separator,
+                                   const SplitOption & option)
+    {
+        return Split(string,
+                     std::vector<std::string>{ separator },
+                     option);
     }
 
     std::vector<std::string> Split(const std::string & string,
@@ -117,6 +144,15 @@ namespace oliview {
             ret.push_back(str);
         }
         return ret;
+    }
+
+    std::vector<std::string> SplitR(const std::string & string,
+                                    const std::string & separator,
+                                    const SplitOption & option)
+    {
+        return SplitR(string,
+                      std::vector<std::string>{ separator },
+                      option);
     }
 
     std::vector<std::string> SplitR(const std::string & string,

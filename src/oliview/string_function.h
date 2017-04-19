@@ -8,6 +8,11 @@ namespace oliview {
     std::string Join(const std::vector<std::string> & array,
                      const std::string & glue);
 
+    bool StartWith(const std::string & string,
+                   const std::string & test);
+    bool EndWith(const std::string & string,
+                 const std::string & test);
+
     Optional<int> Find(const std::string & string,
                        int start_index,
                        const std::vector<std::string> & targets,
@@ -23,8 +28,14 @@ namespace oliview {
     };
 
     std::vector<std::string> Split(const std::string & string,
+                                   const std::string & separator,
+                                   const SplitOption & option = SplitOption());
+    std::vector<std::string> Split(const std::string & string,
                                    const std::vector<std::string> & separators,
                                    const SplitOption & option = SplitOption());
+    std::vector<std::string> SplitR(const std::string & string,
+                                    const std::string & separator,
+                                    const SplitOption & option = SplitOption());
     std::vector<std::string> SplitR(const std::string & string,
                                     const std::vector<std::string> & separators,
                                     const SplitOption & option = SplitOption());
