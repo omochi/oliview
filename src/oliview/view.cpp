@@ -8,7 +8,7 @@ namespace oliview {
     transform_(Matrix3x3::Identity()),
     window_transform_dirty_(true),
     window_transform_(Matrix3x3::Identity()),
-    background_color_(1, 1, 1, 1)
+    background_color_(1, 1, 1, 0)
     {
     }
 
@@ -24,7 +24,9 @@ namespace oliview {
     }
 
     void View::AddChild(const Ref<View> & child) {
+        OLIVIEW_ASSERT(child->parent() == nullptr);
         children_.push_back(child);
+        child->SetParentInternal(this_ref());
     }
 
     void View::RemoveChild(const Ref<View> & child) {
@@ -38,7 +40,9 @@ namespace oliview {
     }
 
     void View::RemoveChildAt(int index) {
+        auto child = children_[index];
         ArrayRemoveAt(children_, index);
+        child->SetParentInternal(nullptr);
     }
 
     Ref<Window> View::window() const {
@@ -84,22 +88,39 @@ namespace oliview {
         auto window_frame = Rect(Vector2(0, 0), frame_.size())
             .ApplyTransform(window_transform());
 
-        nvgFillColor(ctx, background_color_.ToNanoVG());
-        nvgBeginPath(ctx);
-        nvgRect(ctx,
-                window_frame.origin().x(),
-                window_frame.origin().y(),
-                window_frame.size().x(),
-                window_frame.size().y());
-        nvgFill(ctx);
+        nvgSave(ctx);
+        nvgTranslate(ctx,
+                     window_frame.origin().x(),
+                     window_frame.origin().y());
+        nvgScale(ctx,
+                 window_frame.size().x() / frame_.size().x(),
+                 window_frame.size().y() / frame_.size().y());
+        DrawContent(ctx);
+        nvgRestore(ctx);
 
         for (auto & child : children_) {
             child->Draw(ctx);
         }
     }
 
+    void View::DrawContent(NVGcontext * ctx) {
+        nvgFillColor(ctx, background_color_.ToNanoVG());
+        nvgBeginPath(ctx);
+        nvgRect(ctx,
+                0,
+                0,
+                frame_.size().x(),
+                frame_.size().y());
+        nvgFill(ctx);
+    }
+
     void View::SetWindowInternal(const Ref<Window> & window) {
         window_ = window.get();
+    }
+
+    void View::SetParentInternal(const Ref<View> & parent) {
+        parent_ = parent.get();
+        SetWindowTransformDirty();
     }
 
     void View::set_transform(const Matrix3x3 & value) {
@@ -109,6 +130,10 @@ namespace oliview {
 
     void View::SetWindowTransformDirty() {
         window_transform_dirty_ = true;
+
+        for (auto & child : children_) {
+            child->SetWindowTransformDirty();
+        }
     }
 
     void View::UpdateWindowTransform() const {

@@ -2,6 +2,7 @@
 
 #include "./dependency.h"
 #include "./object.h"
+#include "./ref.h"
 #include "./rect.h"
 #include "./color.h"
 #include "./matrix3x3.h"
@@ -33,7 +34,10 @@ namespace oliview {
 
         void Draw(NVGcontext * ctx);
 
+        virtual void DrawContent(NVGcontext * ctx);
+
         void SetWindowInternal(const Ref<Window> & window);
+        void SetParentInternal(const Ref<View> & parent);
     private:
         void set_transform(const Matrix3x3 & value);
 

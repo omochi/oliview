@@ -1,0 +1,6 @@
+# View components
+
+## Label
+
+text.
+

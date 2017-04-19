@@ -8,6 +8,7 @@
 #include "./dependency.h"
 #include "./format.h"
 #include "./gl_assert.h"
+#include "./label.h"
 #include "./math.cpp"
 #include "./math.h"
 #include "./matrix3x3.h"

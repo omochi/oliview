@@ -43,6 +43,8 @@ namespace oliview {
 
         root_view_ = Create<View>();
         root_view_->SetWindowInternal(this_ref);
+
+        root_view_->set_background_color(Color(1, 1, 1, 1));
     }
 
     Window::~Window() {
