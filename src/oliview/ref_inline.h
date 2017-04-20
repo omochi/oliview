@@ -23,6 +23,13 @@ namespace oliview {
     {}
 
     template <typename T>
+    template <typename U>
+    Ref<T>::Ref(const Ref<U> & other,
+                typename std::enable_if<std::is_convertible<U*, T*>::value>::type * enabler):
+    Ref(static_cast<T *>(other.get()))
+    {}
+
+    template <typename T>
     Ref<T> & Ref<T>::operator= (const Ref<T> & other)
     {
         Ref<T> swap(other);

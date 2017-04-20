@@ -9,6 +9,8 @@ namespace oliview {
     class Object {
     public:
         Object();
+        Object(const Object<T> & other) = delete;
+        Object & operator=(const Object<T> & other) = delete;
         virtual ~Object();
 
         int retain_count() const;

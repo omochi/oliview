@@ -3,6 +3,8 @@
 #include "./dependency.h"
 #include "./optional.h"
 #include "./string_function.h"
+#include "./posix_error.h"
+#include "./ref.h"
 
 namespace oliview {
     class FilePath {
@@ -22,6 +24,7 @@ namespace oliview {
         const std::vector<std::string> & elements() const;
 
         FilePath parent() const;
+        Optional<std::vector<FilePath>> GetChildren(Ref<Error> * error) const;
 
         void Append(const FilePath & path);
         void Expand();

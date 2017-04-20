@@ -33,37 +33,43 @@ namespace oliview {
     }
 
     FilePath FilePath::parent() const {
-        auto elements = elements_;
-        int index = (int)elements.size() - 1;
+        FilePath ret = *this;
+
         while (true) {
-            if (index == -1) {
-                FilePath ret = *this;
-                ret.elements_.clear();
+            if (ret.elements_.size() == 0) {
                 if (type_ == Type::Relative) {
                     ret.elements_.push_back("..");
                 }
                 return ret;
             }
 
-            auto elem = elements[index];
+            auto last_iter = ret.elements_.end() - 1;
+            auto elem = *last_iter;
             if (elem == "" || elem == ".") {
-                index -= 1;
+                ret.elements_.erase(last_iter);
                 continue;
             }
 
             if (elem == "..") {
-                FilePath ret = *this;
-                ret.elements_.erase(ret.elements_.cbegin() + index + 1,
-                                    ret.elements_.cend());
                 ret.elements_.push_back("..");
                 return ret;
             }
 
-            FilePath ret = *this;
-            ret.elements_.erase(ret.elements_.cbegin() + index,
-                                ret.elements_.cend());
+            ret.elements_.erase(last_iter);
             return ret;
         }
+    }
+
+    std::vector<FilePath> FilePath::GetChildren(Ref<Error> * error) const {
+        std::string path_str = ToString();
+        DIR * dir = opendir(path_str.c_str());
+        if (!dir) {
+            if (error) {
+                *error = PosixError::Create(errno, "opendir(%s)", path_str.c_str());
+            }
+            return
+        }
+        return {};
     }
 
     void FilePath::Append(const FilePath & path) {
@@ -119,6 +125,10 @@ namespace oliview {
     FilePath FilePath::current() {
 #ifdef OLIVIEW_MACOS
         char * cstr = getcwd(nullptr, 0);
+        if (!cstr) {
+            auto err = PosixError::Create(errno, "getcwd");
+            Fatal(err->ToString());
+        }
         std::string str = std::string(cstr);
         FilePath ret(str);
         free(cstr);
@@ -131,20 +141,33 @@ namespace oliview {
     void FilePath::Parse(const std::string & string) {
         auto elements = Split(string, separator());
 
-#ifdef OLIVIEW_MACOS
-        if (elements.size() >= 2 && elements[0] == "") {
-            type_ = Type::Absolute;
-            drive_letter_ = nullptr;
-            elements_ = std::vector<std::string>(elements.cbegin() + 1,
-                                                 elements.cend());
-        } else {
+        if (elements.size() == 0) {
             type_ = Type::Relative;
             drive_letter_ = nullptr;
-            elements_ = elements;
+            elements_.clear();
+            return;
         }
 
-#else
-#   warning TODO
-#endif
+        std::string head_element = elements[0];
+
+        if (head_element == "") {
+            type_ = Type::Absolute;
+            drive_letter_ = nullptr;
+            elements_ = std::vector<std::string>(elements.begin() + 1,
+                                                 elements.end());
+            return;
+        }
+
+        if (EndWith(head_element, ":")) {
+            type_ = Type::Absolute;
+            drive_letter_ = Some(head_element.substr(0, head_element.size() - 1));
+            elements_ = std::vector<std::string>(elements.begin() + 1,
+                                                 elements.end());
+            return;
+        }
+
+        type_ = Type::Relative;
+        drive_letter_ = nullptr;
+        elements_ = elements;
     }
 }

@@ -10,6 +10,9 @@ namespace oliview {
         explicit Ref(T * ptr);
         Ref(std::nullptr_t null);
         Ref(const Ref<T> & other);
+        template <typename U>
+        Ref(const Ref<U> & other,
+            typename std::enable_if<std::is_convertible<U*, T*>::value>::type * enabler = nullptr);
         Ref<T> & operator= (const Ref<T> & other);
         ~Ref();
 
