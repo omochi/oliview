@@ -2,6 +2,9 @@
 
 #include "./string_format.h"
 
+#include "./ref.h"
+#include "./error.h"
+
 namespace oliview {
     void Assert(bool condition,
                 const char * condition_str,
@@ -23,5 +26,9 @@ namespace oliview {
 
     void Fatal(const std::string & message) {
         throw std::logic_error(message);
+    }
+
+    void Fatal(const Ref<Error> & error) {
+        Fatal(error->ToString());
     }
 }

@@ -11,6 +11,10 @@ oliview::Assert(\
     __LINE__)
 
 namespace oliview {
+    template <typename T> class Ref;
+    class Error;
+
+
     void Assert(bool condition,
                 const char * condition_str,
                 const char * func,
@@ -18,4 +22,5 @@ namespace oliview {
                 int line);
 
     void Fatal(const std::string & message) OLIVIEW_NO_RETURN;
+    void Fatal(const Ref<Error> & error) OLIVIEW_NO_RETURN;
 }

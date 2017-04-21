@@ -32,6 +32,21 @@ namespace oliview {
         return elements_;
     }
 
+    std::string FilePath::ToString() const {
+        std::string str;
+
+        if (type_ == Type::Absolute) {
+            if (drive_letter_) {
+                str = *drive_letter_ + ":" + separator();
+            } else {
+                str = separator();
+            }
+        }
+
+        str += Join(elements_, separator());
+        return str;
+    }
+
     FilePath FilePath::parent() const {
         FilePath ret = *this;
 
@@ -60,16 +75,41 @@ namespace oliview {
         }
     }
 
-    std::vector<FilePath> FilePath::GetChildren(Ref<Error> * error) const {
+    Result<std::vector<FilePath>> FilePath::GetChildren() const {
         std::string path_str = ToString();
         DIR * dir = opendir(path_str.c_str());
         if (!dir) {
-            if (error) {
-                *error = PosixError::Create(errno, "opendir(%s)", path_str.c_str());
-            }
-            return
+            return Failure(PosixError::Create(errno, "opendir(%s)", path_str.c_str()));
         }
-        return {};
+
+        OLIVIEW_DEFER([=] {
+            if (closedir(dir)) {
+                Fatal(PosixError::Create(errno, "closedir(%s)", path_str.c_str()));
+            }
+        })
+
+        std::vector<FilePath> ret;
+
+        dirent * entry;
+        errno = 0;
+        while (true) {
+            entry = readdir(dir);
+            if (!entry) {
+                if(errno) {
+                    return Failure(PosixError::Create(errno, "readdir(%s)", path_str.c_str()));
+                }
+                break;
+            }
+
+            auto name = std::string(entry->d_name);
+            if (name == "." || name == "..") {
+                continue;
+            }
+            
+            ret.push_back(*this + FilePath(name));
+        }
+
+        return Success(ret);
     }
 
     void FilePath::Append(const FilePath & path) {
@@ -98,20 +138,10 @@ namespace oliview {
         *this = ret;
     }
 
-    std::string FilePath::ToString() const {
-#ifdef OLIVIEW_MACOS
-        std::string str;
-
-        if (type_ == Type::Absolute) {
-            str += separator();
-        }
-
-        str += Join(elements_, separator());
-        return str;
-#else
-#   warning TODO
-        return "";
-#endif
+    FilePath FilePath::operator+(const FilePath & path) const {
+        FilePath ret = *this;
+        ret.Append(path);
+        return ret;
     }
 
     std::string FilePath::separator() {
@@ -126,8 +156,7 @@ namespace oliview {
 #ifdef OLIVIEW_MACOS
         char * cstr = getcwd(nullptr, 0);
         if (!cstr) {
-            auto err = PosixError::Create(errno, "getcwd");
-            Fatal(err->ToString());
+            Fatal(PosixError::Create(errno, "getcwd"));
         }
         std::string str = std::string(cstr);
         FilePath ret(str);

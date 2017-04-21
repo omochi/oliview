@@ -2,9 +2,12 @@
 
 #include "./dependency.h"
 #include "./optional.h"
+#include "./result.h"
 #include "./string_function.h"
 #include "./posix_error.h"
 #include "./ref.h"
+#include "./defer.h"
+#include "./print.h"
 
 namespace oliview {
     class FilePath {
@@ -15,7 +18,7 @@ namespace oliview {
         };
 
         FilePath();
-        FilePath(const std::string & string);
+        explicit FilePath(const std::string & string);
         FilePath(const FilePath & other);
         FilePath & operator= (const FilePath & other);
 
@@ -23,13 +26,15 @@ namespace oliview {
         const Optional<std::string> & drive_letter() const;
         const std::vector<std::string> & elements() const;
 
+        std::string ToString() const;
+
         FilePath parent() const;
-        Optional<std::vector<FilePath>> GetChildren(Ref<Error> * error) const;
+        Result<std::vector<FilePath>> GetChildren() const;
 
         void Append(const FilePath & path);
         void Expand();
 
-        std::string ToString() const;
+        FilePath operator+(const FilePath & path) const;
 
         static std::string separator();
         static FilePath current();

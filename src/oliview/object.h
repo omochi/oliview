@@ -1,10 +1,9 @@
 #pragma once
 
 #include "./dependency.h"
+#include "./ref.h"
 
 namespace oliview {
-    template <typename T> class Ref;
-
     template <typename T>
     class Object {
     public:

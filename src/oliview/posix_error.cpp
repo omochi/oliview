@@ -24,8 +24,8 @@ namespace oliview {
     std::string GetPosixErrorString(int code) {
         int size = strerror_r(code, nullptr, 0);
         std::vector<char> buf(size);
-        size = strerror_r(code, buf.data(), buf.size());
-        OLIVIEW_ASSERT(size == buf.size());
+        int ret = strerror_r(code, buf.data(), buf.size());
+        OLIVIEW_ASSERT(ret == 0);
         return std::string(buf.data());
     }
 }

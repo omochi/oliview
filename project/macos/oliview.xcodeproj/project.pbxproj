@@ -56,6 +56,10 @@
 		D64650CE1EA91FB90067BA12 /* error.h in Headers */ = {isa = PBXBuildFile; fileRef = D64650CC1EA91FB90067BA12 /* error.h */; };
 		D64650D11EA921E50067BA12 /* posix_error.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D64650CF1EA921E50067BA12 /* posix_error.cpp */; };
 		D64650D21EA921E50067BA12 /* posix_error.h in Headers */ = {isa = PBXBuildFile; fileRef = D64650D01EA921E50067BA12 /* posix_error.h */; };
+		D64651A81EAA4CD50067BA12 /* result.h in Headers */ = {isa = PBXBuildFile; fileRef = D64651A61EAA4CD50067BA12 /* result.h */; };
+		D64651AA1EAA58EB0067BA12 /* result.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D64651A91EAA58EB0067BA12 /* result.cpp */; };
+		D64651AD1EAA5C810067BA12 /* defer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D64651AB1EAA5C810067BA12 /* defer.cpp */; };
+		D64651AE1EAA5C810067BA12 /* defer.h in Headers */ = {isa = PBXBuildFile; fileRef = D64651AC1EAA5C810067BA12 /* defer.h */; };
 		D6C3F7381E9D29D90020D65A /* glfw3.h in Headers */ = {isa = PBXBuildFile; fileRef = D6C3F7331E9D29D90020D65A /* glfw3.h */; };
 		D6C3F7391E9D29D90020D65A /* glfw3native.h in Headers */ = {isa = PBXBuildFile; fileRef = D6C3F7341E9D29D90020D65A /* glfw3native.h */; };
 		D6C3F7461E9D29F70020D65A /* fontstash.h in Headers */ = {isa = PBXBuildFile; fileRef = D6C3F73D1E9D29F70020D65A /* fontstash.h */; };
@@ -119,6 +123,11 @@
 		D64650CC1EA91FB90067BA12 /* error.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = error.h; sourceTree = "<group>"; };
 		D64650CF1EA921E50067BA12 /* posix_error.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = posix_error.cpp; sourceTree = "<group>"; };
 		D64650D01EA921E50067BA12 /* posix_error.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = posix_error.h; sourceTree = "<group>"; };
+		D64651A51EAA4CD50067BA12 /* result_inline.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = result_inline.h; sourceTree = "<group>"; };
+		D64651A61EAA4CD50067BA12 /* result.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = result.h; sourceTree = "<group>"; };
+		D64651A91EAA58EB0067BA12 /* result.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = result.cpp; sourceTree = "<group>"; };
+		D64651AB1EAA5C810067BA12 /* defer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = defer.cpp; sourceTree = "<group>"; };
+		D64651AC1EAA5C810067BA12 /* defer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = defer.h; sourceTree = "<group>"; };
 		D6C3F6AA1E99AAB50020D65A /* liboliview.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = liboliview.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		D6C3F7331E9D29D90020D65A /* glfw3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = glfw3.h; sourceTree = "<group>"; };
 		D6C3F7341E9D29D90020D65A /* glfw3native.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = glfw3native.h; sourceTree = "<group>"; };
@@ -180,6 +189,8 @@
 				D64650551EA644F40067BA12 /* assert.h */,
 				D64650561EA644F40067BA12 /* color.cpp */,
 				D64650571EA644F40067BA12 /* color.h */,
+				D64651AB1EAA5C810067BA12 /* defer.cpp */,
+				D64651AC1EAA5C810067BA12 /* defer.h */,
 				D646505A1EA644F40067BA12 /* dependency.h */,
 				D64650CC1EA91FB90067BA12 /* error.h */,
 				D64650BF1EA78EF50067BA12 /* file_path.cpp */,
@@ -207,6 +218,9 @@
 				D646506B1EA644F40067BA12 /* rect.h */,
 				D646506C1EA644F40067BA12 /* ref_inline.h */,
 				D646506D1EA644F40067BA12 /* ref.h */,
+				D64651A51EAA4CD50067BA12 /* result_inline.h */,
+				D64651A61EAA4CD50067BA12 /* result.h */,
+				D64651A91EAA58EB0067BA12 /* result.cpp */,
 				D646505B1EA644F40067BA12 /* string_format.cpp */,
 				D646505C1EA644F40067BA12 /* string_format.h */,
 				D646506E1EA644F40067BA12 /* string_function.cpp */,
@@ -300,8 +314,10 @@
 				D64650911EA644F40067BA12 /* object.h in Headers */,
 				D6C3F7381E9D29D90020D65A /* glfw3.h in Headers */,
 				D64650811EA644F40067BA12 /* assert.h in Headers */,
+				D64651AE1EAA5C810067BA12 /* defer.h in Headers */,
 				D6C3F7461E9D29F70020D65A /* fontstash.h in Headers */,
 				D6C3F7471E9D29F70020D65A /* nanovg.h in Headers */,
+				D64651A81EAA4CD50067BA12 /* result.h in Headers */,
 				D646507D1EA644F40067BA12 /* array_function_inline.h in Headers */,
 				D646507E1EA644F40067BA12 /* array_function.h in Headers */,
 				D646507F1EA644F40067BA12 /* array_size.h in Headers */,
@@ -401,10 +417,12 @@
 				D64650A51EA644F40067BA12 /* window.cpp in Sources */,
 				D64650A11EA644F40067BA12 /* vector3.cpp in Sources */,
 				D64650801EA644F40067BA12 /* assert.cpp in Sources */,
+				D64651AA1EAA58EB0067BA12 /* result.cpp in Sources */,
 				D646509F1EA644F40067BA12 /* vector2.cpp in Sources */,
 				D64650891EA644F40067BA12 /* gl_assert.cpp in Sources */,
 				D64650D11EA921E50067BA12 /* posix_error.cpp in Sources */,
 				D646508B1EA644F40067BA12 /* math.cpp in Sources */,
+				D64651AD1EAA5C810067BA12 /* defer.cpp in Sources */,
 				D64650AE1EA671960067BA12 /* label.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

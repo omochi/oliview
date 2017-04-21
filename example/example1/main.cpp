@@ -13,6 +13,21 @@ void f(const FilePath & path_) {
 
 class Example1 : public Application {
     virtual void OnInit() override {
+
+        auto d = FilePath("/System/Library/Fonts");
+
+        //  1回もループせずに抜けてしまう
+        for (auto x : *d.GetChildren()) {
+            Print(x.ToString());
+        }
+
+        //  1度変数に入れるとちゃんとループする
+        std::vector<FilePath> k = *d.GetChildren();
+        for (auto x : k) {
+            Print(x.ToString());
+        }
+
+
         f(FilePath::current());
         f(FilePath("/a/b//c/./d/../e"));
 

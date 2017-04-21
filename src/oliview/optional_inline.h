@@ -1,29 +1,31 @@
 
 namespace oliview {
     template <typename T>
-    Optional<T>::Optional(): value_(nullptr)
+    Optional<T>::Optional():
+    value_(nullptr)
     {}
 
     template <typename T>
-    Optional<T>::Optional(const T & value): value_(new T(value))
+    Optional<T>::Optional(const T & value):
+    value_(new T(value))
     {}
 
     template <typename T>
-    Optional<T>::Optional(std::nullptr_t null): value_(nullptr)
+    Optional<T>::Optional(std::nullptr_t null):
+    value_(nullptr)
     {}
 
     template <typename T>
-    Optional<T>::Optional(const Optional<T> & other)
+    Optional<T>::Optional(const Optional<T> & other):
+    value_(nullptr)
     {
         if (other) {
             value_ = new T(*other);
-        } else {
-            value_ = nullptr;
         }
     }
 
     template <typename T>
-    Optional<T> & Optional<T>::operator= (const Optional<T> & other)
+    Optional<T> & Optional<T>::operator=(const Optional<T> & other)
     {
         Optional<T> temp;
         Swap(temp);
@@ -31,6 +33,17 @@ namespace oliview {
             value_ = new T(*other);
         }
         return *this;
+    }
+
+    template <typename T>
+    template <typename U>
+    Optional<T>::Optional(const Optional<U> & other,
+                          typename std::enable_if<std::is_convertible<U, T>::value>::type * enabler):
+    value_(nullptr)
+    {
+        if (other) {
+            value_ = new T(static_cast<T>(*other));
+        }
     }
 
     template <typename T>
@@ -53,19 +66,18 @@ namespace oliview {
     }
 
     template <typename T>
-    const T & Optional<T>::operator *() const {
-        OLIVIEW_ASSERT(value_ != nullptr);
-        return * value_;
-    }
-
-    template <typename T>
-    const T * Optional<T>::operator ->() const {
+    const T * Optional<T>::operator->() const {
         OLIVIEW_ASSERT(value_ != nullptr);
         return value_;
     }
 
     template <typename T>
-    bool Optional<T>::operator == (const Optional<T> & other) const {
+    const T & Optional<T>::operator*() const {
+        return *operator->();
+    }
+
+    template <typename T>
+    bool Optional<T>::operator==(const Optional<T> & other) const {
         if (*this) {
             if (other) {
                 return *this == *other;
@@ -79,6 +91,11 @@ namespace oliview {
                 return true;
             }
         }
+    }
+
+    template <typename T>
+    bool Optional<T>::operator!=(const Optional<T> & other) const {
+        return !(*this == other);
     }
 
     template <typename T>

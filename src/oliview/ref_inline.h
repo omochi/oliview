@@ -23,19 +23,21 @@ namespace oliview {
     {}
 
     template <typename T>
+    Ref<T> & Ref<T>::operator=(const Ref<T> & other)
+    {
+        Ref<T> swap(other);
+        Swap(swap);
+        return *this;
+    }
+
+    template <typename T>
     template <typename U>
     Ref<T>::Ref(const Ref<U> & other,
                 typename std::enable_if<std::is_convertible<U*, T*>::value>::type * enabler):
     Ref(static_cast<T *>(other.get()))
     {}
 
-    template <typename T>
-    Ref<T> & Ref<T>::operator= (const Ref<T> & other)
-    {
-        Ref<T> swap(other);
-        Swap(swap);
-        return *this;
-    }
+
 
     template <typename T>
     Ref<T>::~Ref()
@@ -79,22 +81,22 @@ namespace oliview {
     }
 
     template <typename T>
-    T * Ref<T>::operator-> () const {
+    T * Ref<T>::operator->() const {
         return ptr_.load();
     }
 
     template <typename T>
-    T & Ref<T>::operator* () const {
-        return * ptr_.load();
+    T & Ref<T>::operator*() const {
+        return *operator->();
     }
 
     template <typename T>
-    bool Ref<T>::operator== (const Ref<T> & other) const {
+    bool Ref<T>::operator==(const Ref<T> & other) const {
         return ptr_.load() == other.ptr_.load();
     }
 
     template <typename T>
-    bool Ref<T>::operator!= (const Ref<T> & other) const {
+    bool Ref<T>::operator!=(const Ref<T> & other) const {
         return !(*this == other);
     }
 
