@@ -31,6 +31,10 @@ namespace oliview {
         FilePath parent() const;
         Result<std::vector<FilePath>> GetChildren() const;
 
+        FilePath basename() const;
+        std::string extension() const;
+
+
         void Append(const FilePath & path);
         void Expand();
 
@@ -38,6 +42,7 @@ namespace oliview {
 
         static std::string separator();
         static FilePath current();
+        static FilePath home();
     private:
         void Parse(const std::string & string);
 

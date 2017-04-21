@@ -5,6 +5,9 @@
 #include "./error.h"
 #include "./ref.h"
 
+#include "./print.h"
+#include "./string_format.h"
+
 namespace oliview {
     struct ResultFailureValue {
         Ref<Error> error;
@@ -19,6 +22,7 @@ namespace oliview {
         template <typename U>
         Result(const Result<U> & other,
                typename std::enable_if<std::is_convertible<U, T>::value>::type * enabler = nullptr);
+        ~Result();
         
         bool is_success() const;
 

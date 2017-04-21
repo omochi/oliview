@@ -112,6 +112,24 @@ namespace oliview {
         return Success(ret);
     }
 
+    FilePath FilePath::basename() const {
+        if (elements_.size() == 0) {
+            return FilePath();
+        }
+        return FilePath(elements_.back());
+    }
+
+    std::string FilePath::extension() const {
+        if (elements_.size() == 0) {
+            return "";
+        }
+        auto strs = SplitR(elements_.back(), std::string("."), { .limit = Some(2) });
+        if (strs.size() < 2) {
+            return "";
+        }
+        return std::string(".") + strs[1];
+    }
+
     void FilePath::Append(const FilePath & path) {
         OLIVIEW_ASSERT(path.type() != Type::Absolute);
 
@@ -158,13 +176,22 @@ namespace oliview {
         if (!cstr) {
             Fatal(PosixError::Create(errno, "getcwd"));
         }
-        std::string str = std::string(cstr);
+        std::string str(cstr);
         FilePath ret(str);
         free(cstr);
         return ret;
 #else
 #   warning TODO
 #endif
+    }
+
+    FilePath FilePath::home() {
+        char * cstr = getenv("HOME");
+        if (!cstr) {
+            Fatal("HOME is null");
+        }
+        std::string str(cstr);
+        return FilePath(str);
     }
 
     void FilePath::Parse(const std::string & string) {

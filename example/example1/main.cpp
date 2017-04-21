@@ -11,22 +11,20 @@ void f(const FilePath & path_) {
                  p.ToString().c_str()));
 }
 
+
+
 class Example1 : public Application {
     virtual void OnInit() override {
 
-        auto d = FilePath("/System/Library/Fonts");
+        Print(FilePath::home().ToString());
 
-        //  1回もループせずに抜けてしまう
-        for (auto x : *d.GetChildren()) {
-            Print(x.ToString());
-        }
+        auto d = FilePath("/System/Library/Fonts");
 
         //  1度変数に入れるとちゃんとループする
         std::vector<FilePath> k = *d.GetChildren();
         for (auto x : k) {
-            Print(x.ToString());
+            Print(Format("%s, %s", x.ToString().c_str(), x.extension().c_str()));
         }
-
 
         f(FilePath::current());
         f(FilePath("/a/b//c/./d/../e"));
