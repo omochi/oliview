@@ -76,15 +76,15 @@ namespace oliview {
     }
 
     Result<std::vector<FilePath>> FilePath::GetChildren() const {
-        std::string path_str = ToString();
-        DIR * dir = opendir(path_str.c_str());
-        if (!dir) {
-            return Failure(PosixError::Create(errno, "opendir(%s)", path_str.c_str()));
+        std::string str = ToString();
+        DIR * handle = opendir(str.c_str());
+        if (!handle) {
+            return Failure(PosixError::Create(errno, "opendir(%s)", str.c_str()));
         }
 
         OLIVIEW_DEFER([=] {
-            if (closedir(dir)) {
-                Fatal(PosixError::Create(errno, "closedir(%s)", path_str.c_str()));
+            if (closedir(handle)) {
+                Fatal(PosixError::Create(errno, "closedir(%s)", str.c_str()));
             }
         })
 
@@ -93,10 +93,10 @@ namespace oliview {
         dirent * entry;
         errno = 0;
         while (true) {
-            entry = readdir(dir);
+            entry = readdir(handle);
             if (!entry) {
                 if(errno) {
-                    return Failure(PosixError::Create(errno, "readdir(%s)", path_str.c_str()));
+                    return Failure(PosixError::Create(errno, "readdir(%s)", str.c_str()));
                 }
                 break;
             }
@@ -138,6 +138,12 @@ namespace oliview {
                          path.elements_.end());
     }
 
+    FilePath FilePath::operator+(const FilePath & path) const {
+        FilePath ret = *this;
+        ret.Append(path);
+        return ret;
+    }
+
     void FilePath::Expand() {
         FilePath ret = *this;
         ret.elements_.clear();
@@ -156,17 +162,85 @@ namespace oliview {
         *this = ret;
     }
 
-    FilePath FilePath::operator+(const FilePath & path) const {
-        FilePath ret = *this;
-        ret.Append(path);
-        return ret;
+    Result<Ref<Data>> FilePath::Read() const {
+        std::string str = ToString();
+
+        int fd = open(str.c_str(), O_RDONLY | O_CLOEXEC);
+        if (fd == -1) {
+            return Failure(PosixError::Create(errno, "open(%s)", str.c_str()));
+        }
+
+        OLIVIEW_DEFER([=] {
+            if (close(fd)) {
+                Fatal(PosixError::Create(errno, "close(%s)", str.c_str()));
+            }
+        })
+
+        struct stat st;
+        if (fstat(fd, &st)) {
+            return Failure(PosixError::Create(errno, "fstat(%s)", str.c_str()));
+        }
+        int size = (int)st.st_size;
+
+        Ref<Data> data = Create<Data>();
+        data->Reserve(size);
+
+        uint8_t chunk[1024];
+        while (true) {
+            int chunk_size = (int)read(fd, chunk, OLIVIEW_ARRAY_SIZE(chunk));
+            if (chunk_size < 0) {
+                return Failure(PosixError::Create(errno, "read(%s)", str.c_str()));
+            }
+            if (chunk_size == 0) {
+                break;
+            }
+
+            data->Append(Create<Data>(chunk, chunk_size, false, false));
+        }
+
+        return Success(data);
+    }
+
+    Result<None> FilePath::Write(const Ref<const Data> & data) {
+        std::string str = ToString();
+
+        int fd = open(str.c_str(),
+                      O_WRONLY | O_TRUNC | O_CREAT | O_CLOEXEC,
+                      S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH);
+        if (fd == -1) {
+            return Failure(PosixError::Create(errno, "open(%s)", str.c_str()));
+        }
+
+        OLIVIEW_DEFER([=] {
+            if (close(fd)) {
+                Fatal(PosixError::Create(errno, "close(%s)", str.c_str()));
+            }
+        })
+
+        int total_wrote_size = 0;
+        while (true) {
+            int write_size = std::min(data->size() - total_wrote_size, 1024);
+            if (write_size == 0) {
+                break;
+            }
+
+            int wrote_size = (int)write(fd,
+                                        (const uint8_t *)data->data() + total_wrote_size,
+                                        write_size);
+            if (wrote_size < 0) {
+                return Failure(PosixError::Create(errno, "write(%s)", str.c_str()));
+            }
+            total_wrote_size += wrote_size;
+        }
+
+        return Success(None());
     }
 
     std::string FilePath::separator() {
 #ifdef OLIVIEW_MACOS
         return "/";
-#else
-#   warning TODO
+#elif defined OLIVIEW_WINDOWS
+        return "\\";
 #endif
     }
 
@@ -195,7 +269,12 @@ namespace oliview {
     }
 
     void FilePath::Parse(const std::string & string) {
-        auto elements = Split(string, separator());
+        std::vector<std::string> separators = { "/" };
+#ifdef OLIVIEW_WINDOWS
+        separators.push_back("\\");
+#endif
+
+        auto elements = Split(string, separators);
 
         if (elements.size() == 0) {
             type_ = Type::Relative;

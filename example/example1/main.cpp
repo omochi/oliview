@@ -16,18 +16,9 @@ void f(const FilePath & path_) {
 class Example1 : public Application {
     virtual void OnInit() override {
 
-        Print(FilePath::home().ToString());
-
-        auto d = FilePath("/System/Library/Fonts");
-
-        //  1度変数に入れるとちゃんとループする
-        std::vector<FilePath> k = *d.GetChildren();
-        for (auto x : k) {
-            Print(Format("%s, %s", x.ToString().c_str(), x.extension().c_str()));
-        }
-
-        f(FilePath::current());
-        f(FilePath("/a/b//c/./d/../e"));
+        std::string aa = "hello world\n";
+        FilePath file = FilePath::home() + FilePath("hello.txt");
+        file.Write(Create<Data>(aa.c_str(), (int)aa.size()));
 
         auto window = Create<Window>(this_ref());
 

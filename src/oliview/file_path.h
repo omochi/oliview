@@ -1,6 +1,7 @@
 #pragma once
 
 #include "./dependency.h"
+#include "./array_size.h"
 #include "./optional.h"
 #include "./result.h"
 #include "./string_function.h"
@@ -8,6 +9,8 @@
 #include "./ref.h"
 #include "./defer.h"
 #include "./print.h"
+#include "./none.h"
+#include "./data.h"
 
 namespace oliview {
     class FilePath {
@@ -34,11 +37,13 @@ namespace oliview {
         FilePath basename() const;
         std::string extension() const;
 
-
         void Append(const FilePath & path);
+        FilePath operator+(const FilePath & path) const;
+
         void Expand();
 
-        FilePath operator+(const FilePath & path) const;
+        Result<Ref<Data>> Read() const;
+        Result<None> Write(const Ref<const Data> & data);
 
         static std::string separator();
         static FilePath current();

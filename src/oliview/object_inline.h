@@ -25,12 +25,12 @@ namespace oliview {
     }
 
     template <typename T>
-    void Object<T>::Retain() {
+    void Object<T>::Retain() const {
         retain_count_++;
     }
 
     template <typename T>
-    void Object<T>::Release() {
+    void Object<T>::Release() const {
         int new_count = --retain_count_;
         if (new_count == 0) {
             delete this;

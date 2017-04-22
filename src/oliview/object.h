@@ -17,10 +17,10 @@ namespace oliview {
         Ref<const T> this_ref() const;
         Ref<T> this_ref();
 
-        void Retain();
-        void Release();
+        void Retain() const;
+        void Release() const;
     private:
-        std::atomic<int> retain_count_;
+        mutable std::atomic<int> retain_count_;
     };
 }
 

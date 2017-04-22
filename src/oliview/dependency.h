@@ -15,6 +15,8 @@
 #ifdef OLIVIEW_MACOS
 #   include <unistd.h>
 #   include <dirent.h>
+#   include <fcntl.h>
+#   include <sys/stat.h>
 #endif
 
 #define GLFW_INCLUDE_GLCOREARB
