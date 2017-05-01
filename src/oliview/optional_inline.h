@@ -61,8 +61,18 @@ namespace oliview {
     }
 
     template <typename T>
+    bool Optional<T>::present() const {
+        return operator bool();
+    }
+
+    template <typename T>
     Optional<T>::operator bool() const {
         return value_ != nullptr;
+    }
+
+    template <typename T>
+    const T & Optional<T>::value() const {
+        return operator*();
     }
 
     template <typename T>
@@ -80,7 +90,7 @@ namespace oliview {
     bool Optional<T>::operator==(const Optional<T> & other) const {
         if (*this) {
             if (other) {
-                return *this == *other;
+                return value() == *other;
             } else {
                 return false;
             }

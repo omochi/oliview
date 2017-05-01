@@ -47,32 +47,46 @@ namespace oliview {
         return str;
     }
 
-    FilePath FilePath::parent() const {
+    bool FilePath::operator==(const FilePath & other) const {
+        return ToString() == other.ToString();
+    }
+
+    bool FilePath::operator!=(const FilePath & other) const {
+        return !(*this == other);
+    }
+
+
+    Optional<FilePath> FilePath::parent() const {
         FilePath ret = *this;
 
         while (true) {
             if (ret.elements_.size() == 0) {
-                if (type_ == Type::Relative) {
-                    ret.elements_.push_back("..");
+                if (type_ == Type::Absolute) {
+                    return nullptr;
                 }
-                return ret;
+
+                ret.elements_.push_back("..");
+
+                return Some(ret);
             }
 
-            auto last_iter = ret.elements_.end() - 1;
-            auto elem = *last_iter;
+            auto iter = ret.elements_.end() - 1;
+            auto elem = *iter;
             if (elem == "" || elem == ".") {
-                ret.elements_.erase(last_iter);
+                ret.elements_.erase(iter);
                 continue;
             }
 
             if (elem == "..") {
                 ret.elements_.push_back("..");
-                return ret;
+                return Some(ret);
             }
 
-            ret.elements_.erase(last_iter);
-            return ret;
+            break;
         }
+
+        ret.elements_.erase(ret.elements_.end() - 1);
+        return Some(ret);
     }
 
     Result<std::vector<FilePath>> FilePath::GetChildren() const {
@@ -105,8 +119,10 @@ namespace oliview {
             if (name == "." || name == "..") {
                 continue;
             }
-            
-            ret.push_back(*this + FilePath(name));
+
+            auto child = *this;
+            child.Append(FilePath(name)).value();
+            ret.push_back(child);
         }
 
         return Success(ret);
@@ -114,37 +130,75 @@ namespace oliview {
 
     FilePath FilePath::basename() const {
         if (elements_.size() == 0) {
-            return FilePath();
+            return FilePath("");
         }
         return FilePath(elements_.back());
     }
 
-    std::string FilePath::extension() const {
+    Result<None> FilePath::SetBasename(const FilePath & value) {
+        if (value.elements_.size() != 1) {
+            return Failure(GenericError::Create("value must has 1 element (%s)",
+                                                value.ToString().c_str()));
+        }
+        if (value.type_ != Type::Relative) {
+            return Failure(GenericError::Create("value must be relative (%s)",
+                                                value.ToString().c_str()));
+        }
+
         if (elements_.size() == 0) {
-            return "";
+            Append(value).value();
+        } else {
+            elements_.back() = value.ToString();
         }
-        auto strs = SplitR(elements_.back(), std::string("."), { .limit = Some(2) });
-        if (strs.size() < 2) {
-            return "";
-        }
-        return std::string(".") + strs[1];
+
+        return Success(None());
     }
 
-    void FilePath::Append(const FilePath & path) {
-        OLIVIEW_ASSERT(path.type() != Type::Absolute);
+    SplitExtensionResult FilePath::SplitExtension() const {
+        std::string basename = this->basename().ToString();
+        auto strs = SplitR(basename, std::string("."), { .limit = Some(2) });
+
+        Optional<std::string> ext;
+        if (strs.size() == 2) {
+            ext = Some(strs[1]);
+        }
+
+        return { strs[0], ext };
+    }
+
+    Optional<std::string> FilePath::extension() const {
+        return SplitExtension().extension;
+    }
+
+    void FilePath::set_extension(const Optional<std::string> & value) {
+        auto split_ret = SplitExtension();
+        std::string name = split_ret.name;
+        if (value) {
+            name = name + "." + *value;
+        }
+        SetBasename(FilePath(name)).value();
+    }
+
+    Result<None> FilePath::Append(const FilePath & path) {
+        if (path.type_ != Type::Relative) {
+            return Failure(GenericError::Create("path must be relative (%s)",
+                                                path.ToString().c_str()));
+        }
 
         elements_.insert(elements_.end(),
                          path.elements_.begin(),
                          path.elements_.end());
+
+        return Success(None());
     }
 
-    FilePath FilePath::operator+(const FilePath & path) const {
-        FilePath ret = *this;
-        ret.Append(path);
+    FilePath FilePath::operator+(const FilePath & other) {
+        auto ret = *this;
+        ret.Append(other).value();
         return ret;
     }
 
-    void FilePath::Expand() {
+    Result<None> FilePath::Expand() {
         FilePath ret = *this;
         ret.elements_.clear();
 
@@ -153,13 +207,21 @@ namespace oliview {
                 continue;
             }
             if (elem == "..") {
-                ret = ret.parent();
+                auto parent = ret.parent();
+                if (!parent) {
+                    return Failure(GenericError::Create("can not get parent (%s)",
+                                                        ToString().c_str()));
+                }
+                ret = *parent;
                 continue;
             }
-            ret.Append(FilePath(elem));
+
+            ret.Append(FilePath(elem)).value();
         }
 
         *this = ret;
+
+        return Success(None());
     }
 
     Result<Ref<Data>> FilePath::Read() const {

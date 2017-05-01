@@ -10,6 +10,8 @@
 #include "./dependency.h"
 #include "./error.h"
 #include "./file_path.h"
+#include "./font.h"
+#include "./generic_error.h"
 #include "./gl_assert.h"
 #include "./label.h"
 #include "./math.cpp"

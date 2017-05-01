@@ -8,4 +8,5 @@ namespace oliview {
         virtual ~Error() {}
         virtual std::string ToString() const = 0;
     };
+
 }

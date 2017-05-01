@@ -23,9 +23,12 @@ namespace oliview {
         Result(const Result<U> & other,
                typename std::enable_if<std::is_convertible<U, T>::value>::type * enabler = nullptr);
         ~Result();
-        
-        bool is_success() const;
 
+
+        bool success() const;
+        explicit operator bool() const;
+
+        const T & value() const;
         const Ref<Error> & error() const;
 
         const T * operator->() const;
@@ -45,6 +48,9 @@ namespace oliview {
     Result<T> Success(const T & value);
 
     ResultFailureValue Failure(const Ref<Error> & error);
+
+    template <typename T>
+    ResultFailureValue Failure(const Result<T> & result);
 }
 
 #include "./result_inline.h"

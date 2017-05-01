@@ -13,24 +13,34 @@ namespace oliview {
                bool copy,
                bool free_when_done)
     {
-        if (size == 0) {
-            data_ = nullptr;
-            size_ = 0;
-            capacity_ = 0;
-            free_when_done_ = true;
-        } else if (copy) {
+        if (copy) {
             OLIVIEW_ASSERT(free_when_done);
 
-            CopyData(data, size);
+            if (size == 0) {
+                data_ = nullptr;
+                capacity_ = 0;
+                size_ = 0;
+            } else {
+                data_ = malloc(size);
+                OLIVIEW_ASSERT(data_ != nullptr);
+                capacity_ = size;
+
+                memcpy(data_, data, size);
+                size_ = size;
+            }
+            free_when_done_ = true;
         } else {
             data_ = const_cast<void *>(data);
             capacity_ = size;
+            size_ = size;
             free_when_done_ = free_when_done;
         }
     }
 
     Data::~Data() {
-        Clear();
+        if (free_when_done_ && data_) {
+            free(data_);
+        }
     }
 
     const void * Data::data() const {
@@ -66,33 +76,24 @@ namespace oliview {
     void Data::Reserve(int capacity) {
         OLIVIEW_ASSERT(capacity > 0);
 
-        void * new_data = realloc(data_, capacity);
-        int size = std::min(size_, capacity);
+        if (free_when_done_) {
+            data_ = realloc(data_, capacity);
+            OLIVIEW_ASSERT(data_ != nullptr);
+            capacity_ = capacity;
 
-        Clear();
+            size_ = std::min(size_, capacity);
+            free_when_done_ = true;
+        } else {
+            void * new_data = malloc(capacity);
+            OLIVIEW_ASSERT(new_data != nullptr);
 
-        data_ = new_data;
-        size_ = size;
-        capacity_ = capacity;
-        free_when_done_ = true;
-    }
+            int new_size = std::min(size_, capacity);
+            memcpy(new_data, data_, new_size);
 
-    void Data::CopyData(const void * data, int size) {
-        data_ = malloc(size);
-        memcpy(data_, data, size);
-        size_ = size;
-        capacity_ = size;
-        free_when_done_ = true;
-    }
-
-    void Data::Clear() {
-        if (free_when_done_ && data_) {
-            free(data_);
+            data_ = new_data;
+            capacity_ = capacity;
+            size_ = new_size;
+            free_when_done_ = true;
         }
-
-        data_ = nullptr;
-        size_ = 0;
-        capacity_ = 0;
-        free_when_done_ = true;
     }
 }

@@ -1,5 +1,8 @@
 #pragma once
 
 namespace oliview {
-    struct None {};
+    struct None {
+        bool operator==(const None & other) const;
+        bool operator!=(const None & other) const;
+    };
 }

@@ -35,8 +35,18 @@ namespace oliview {
     {}
 
     template <typename T>
-    bool Result<T>::is_success() const {
-        return value_.present();
+    bool Result<T>::success() const {
+        return operator bool();
+    }
+
+    template <typename T>
+    Result<T>::operator bool() const {
+        return value_ != nullptr;
+    }
+
+    template <typename T>
+    const T & Result<T>::value() const {
+        return operator*();
     }
 
     template <typename T>
@@ -58,7 +68,6 @@ namespace oliview {
         return *operator->();
     }
 
-
     template <typename T>
     Result<T>::Result(const Optional<T> & value,
                       const Ref<Error> & error):
@@ -70,5 +79,10 @@ namespace oliview {
     Result<T> Success(const T & value) {
         return Result<T>(Some(value), nullptr);
     }
-
+    
+    template <typename T>
+    ResultFailureValue Failure(const Result<T> & result) {
+        return Failure(result.error());
+    }
+    
 }

@@ -21,6 +21,6 @@ namespace oliview {
                 const char * file,
                 int line);
 
-    void Fatal(const std::string & message) OLIVIEW_NO_RETURN;
-    void Fatal(const Ref<Error> & error) OLIVIEW_NO_RETURN;
+    OLIVIEW_NO_RETURN void Fatal(const std::string & message);
+    OLIVIEW_NO_RETURN void Fatal(const Ref<Error> & error);
 }

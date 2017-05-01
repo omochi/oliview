@@ -20,7 +20,10 @@ namespace oliview {
 
         void Swap(Optional<T> & other);
 
+        bool present() const;
         explicit operator bool() const;
+
+        const T & value() const;
 
         const T * operator->() const;
         const T & operator*() const;

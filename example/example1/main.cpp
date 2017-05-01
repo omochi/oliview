@@ -1,25 +1,46 @@
 #include <oliview/oliview.h>
 
+#include <stb_truetype.h>
+
 using namespace oliview;
 
 void f(const FilePath & path_) {
     auto p = path_;
-    p.Expand();
+    p.Expand().value();
 
     Print(Format("[%s] => [%s]",
                  path_.ToString().c_str(),
                  p.ToString().c_str()));
 }
 
+//const char *GetFontName(const stbtt_fontinfo *font, int *length, int platformID, int encodingID, int languageID, int nameID)
+//{
+//    int32_t i,count,stringOffset;
+//    uint8_t *fc = font->data;
+//    uint32_t offset = font->fontstart;
+//    uint32_t nm = stbtt__find_table(fc, offset, "name");
+//    if (!nm) return NULL;
+//
+//    count = ttUSHORT(fc+nm+2);
+//    stringOffset = nm + ttUSHORT(fc+nm+4);
+//    for (i=0; i < count; ++i) {
+//        uint32_t loc = nm + 6 + 12 * i;
+//        if (platformID == ttUSHORT(fc+loc+0) && encodingID == ttUSHORT(fc+loc+2)
+//            && languageID == ttUSHORT(fc+loc+4) && nameID == ttUSHORT(fc+loc+6)) {
+//            *length = ttUSHORT(fc+loc+8);
+//            return (const char *) (fc+stringOffset+ttUSHORT(fc+loc+10));
+//        }
+//    }
+//    return NULL;
+//}
 
 
 class Example1 : public Application {
     virtual void OnInit() override {
 
-        std::string aa = "hello world\n";
-        FilePath file = FilePath::home() + FilePath("hello.txt");
-        file.Write(Create<Data>(aa.c_str(), (int)aa.size()));
-
+        Font::Find("ヒラギノ角ゴシック W3");
+        Font::Find("Arial");
+        
         auto window = Create<Window>(this_ref());
 
         auto view1 = Create<View>();

@@ -21,9 +21,6 @@ namespace oliview {
         void Append(const Ref<const Data> & data);
         void Reserve(int capacity);
     private:
-        void CopyData(const void * data, int size);
-        void Clear();
-
         void * data_;
         int size_;
         int capacity_;
