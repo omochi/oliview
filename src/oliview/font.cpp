@@ -22,22 +22,37 @@ namespace oliview {
         auto split_ret = path.SplitExtension();
         auto name = split_ret.name;
 
+
+        int offset = 0;
+        int index = 0;
         for (int i = 0; ; i++) {
-            int offset = stbtt_GetFontOffsetForIndex((uint8_t *)data->bytes(), i);
-            Print(Format("[%d] => %d", i, offset));
-            if (offset < 0) {
+            int off = stbtt_GetFontOffsetForIndex((uint8_t *)data->bytes(), i);
+            if (off < 0) {
                 break;
             }
+
+            stbtt_fontinfo fontinfo;
+            int tt = stbtt_InitFont(&fontinfo, (uint8_t *)data->bytes(), offset);
+            Print(Format("%d, %d, tt=%d", i, off, tt));
+            
+            offset = off;
+            index = i;
         }
 
-        stbtt_fontinfo font_stb;
-        int ret = stbtt_InitFont(&font_stb, (uint8_t *)data->bytes(), 0);
-        Print(Format("InitFont %d", ret));
 
-        int handle = nvgCreateFontMem(context, name.c_str(), (uint8_t *)data->bytes(), data->size(), false);
+        int handle = nvgCreateFontMem(context,
+                                      name.c_str(),
+                                      (uint8_t *)data->bytes(),
+                                      data->size(),
+                                      false,
+                                      offset);
         if (handle < 0) {
-            return Failure(GenericError::Create("nvgCreateFontMem(path=%s)", path.ToString().c_str()));
+            return Failure(GenericError::Create("nvgCreateFontMem(path=%s, index=%d, offset=%d)",
+                                                path.ToString().c_str(),
+                                                index,
+                                                offset));
         }
+        
         return Success(oliview::Create<Font>(context,
                                              handle,
                                              name,
