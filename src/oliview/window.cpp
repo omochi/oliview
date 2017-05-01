@@ -39,7 +39,7 @@ namespace oliview {
 
         MakeContextCurrent();
 
-        nvg_ = nvgCreateGL3(NVG_ANTIALIAS | NVG_STENCIL_STROKES | NVG_DEBUG);
+        nvg_context_ = nvgCreateGL3(NVG_ANTIALIAS | NVG_STENCIL_STROKES | NVG_DEBUG);
 
         root_view_ = Create<View>();
         root_view_->SetWindowInternal(this_ref);
@@ -59,17 +59,6 @@ namespace oliview {
         should_close_ = value;
     }
 
-    Vector2 Window::window_size() const {
-        return window_size_;
-    }
-
-    Vector2 Window::framebuffer_size() const {
-        return framebuffer_size_;
-    }
-
-    Ref<View> Window::root_view() const {
-        return root_view_;
-    }
 
     void Window::Close() {
         if (!window_) {
@@ -82,13 +71,29 @@ namespace oliview {
 
         root_view_ = nullptr;
 
-        nvgDeleteGL3(nvg_);
-        nvg_ = nullptr;
+        nvgDeleteGL3(nvg_context_);
+        nvg_context_ = nullptr;
 
         glfwDestroyWindow(window_);
 
         glfwSetWindowUserPointer(window_, nullptr);
         window_ = nullptr;
+    }
+
+    Vector2 Window::window_size() const {
+        return window_size_;
+    }
+
+    Vector2 Window::framebuffer_size() const {
+        return framebuffer_size_;
+    }
+
+    Ref<View> Window::root_view() const {
+        return root_view_;
+    }
+
+    NVGcontext * Window::nvg_context() const {
+        return nvg_context_;
     }
 
     void Window::Draw() {
@@ -102,13 +107,14 @@ namespace oliview {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
             OLIVIEW_GL_ASSERT_NO_ERROR();
 
-            nvgBeginFrame(nvg_, (int)window_size_.x(), (int)window_size_.y(),
+            nvgBeginFrame(nvg_context_,
+                          (int)window_size_.x(), (int)window_size_.y(),
                           framebuffer_size_.x() / window_size_.x());
 
             root_view_->set_frame(Rect(Vector2(0, 0), window_size_));
-            root_view_->Draw(nvg_);
+            root_view_->Draw(nvg_context_);
             
-            nvgEndFrame(nvg_);
+            nvgEndFrame(nvg_context_);
             
             glfwSwapBuffers(window_);
         }

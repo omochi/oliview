@@ -2,13 +2,13 @@
 
 namespace oliview {
     Data::Data():
-    data_(nullptr),
+    bytes_(nullptr),
     size_(0),
     capacity_(0),
     free_when_done_(true)
     {}
     
-    Data::Data(const void * data,
+    Data::Data(const void * bytes,
                int size,
                bool copy,
                bool free_when_done)
@@ -17,20 +17,20 @@ namespace oliview {
             OLIVIEW_ASSERT(free_when_done);
 
             if (size == 0) {
-                data_ = nullptr;
+                bytes_ = nullptr;
                 capacity_ = 0;
                 size_ = 0;
             } else {
-                data_ = malloc(size);
-                OLIVIEW_ASSERT(data_ != nullptr);
+                bytes_ = malloc(size);
+                OLIVIEW_ASSERT(bytes_ != nullptr);
                 capacity_ = size;
 
-                memcpy(data_, data, size);
+                memcpy(bytes_, bytes, size);
                 size_ = size;
             }
             free_when_done_ = true;
         } else {
-            data_ = const_cast<void *>(data);
+            bytes_ = const_cast<void *>(bytes);
             capacity_ = size;
             size_ = size;
             free_when_done_ = free_when_done;
@@ -38,17 +38,17 @@ namespace oliview {
     }
 
     Data::~Data() {
-        if (free_when_done_ && data_) {
-            free(data_);
+        if (free_when_done_ && bytes_) {
+            free(bytes_);
         }
     }
 
-    const void * Data::data() const {
-        return data_;
+    const void * Data::bytes() const {
+        return bytes_;
     }
     
-    void * Data::data() {
-        return data_;
+    void * Data::bytes() {
+        return bytes_;
     }
 
     int Data::size() const {
@@ -69,7 +69,7 @@ namespace oliview {
             }
         }
 
-        memcpy((uint8_t *)data_ + size_, data->data_, data->size_);
+        memcpy((uint8_t *)bytes_ + size_, data->bytes_, data->size_);
         size_ += data->size_;
     }
 
@@ -77,8 +77,8 @@ namespace oliview {
         OLIVIEW_ASSERT(capacity > 0);
 
         if (free_when_done_) {
-            data_ = realloc(data_, capacity);
-            OLIVIEW_ASSERT(data_ != nullptr);
+            bytes_ = realloc(bytes_, capacity);
+            OLIVIEW_ASSERT(bytes_ != nullptr);
             capacity_ = capacity;
 
             size_ = std::min(size_, capacity);
@@ -88,9 +88,9 @@ namespace oliview {
             OLIVIEW_ASSERT(new_data != nullptr);
 
             int new_size = std::min(size_, capacity);
-            memcpy(new_data, data_, new_size);
+            memcpy(new_data, bytes_, new_size);
 
-            data_ = new_data;
+            bytes_ = new_data;
             capacity_ = capacity;
             size_ = new_size;
             free_when_done_ = true;

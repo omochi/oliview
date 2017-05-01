@@ -17,22 +17,26 @@ namespace oliview {
 
         bool closed() const;
         void set_should_close(const std::function<bool()> & value);
+        void Close();
+        
         Vector2 window_size() const;
         Vector2 framebuffer_size() const;
 
         Ref<View> root_view() const;
 
-        void Close();
+        NVGcontext * nvg_context() const;
+
         void Draw();
         void MakeContextCurrent();
         void MayTryClose();
+        
         void OnWindowSizeChange(int w, int h);
         void OnFramebufferSizeChange(int w, int h);
     private:
         Application * app_;
         
         GLFWwindow * window_;
-        NVGcontext * nvg_;
+        NVGcontext * nvg_context_;
 
         std::function<bool()> should_close_;
 

@@ -37,10 +37,6 @@ void f(const FilePath & path_) {
 
 class Example1 : public Application {
     virtual void OnInit() override {
-
-        Font::Find("ヒラギノ角ゴシック W3");
-        Font::Find("Arial");
-        
         auto window = Create<Window>(this_ref());
 
         auto view1 = Create<View>();
@@ -57,6 +53,10 @@ class Example1 : public Application {
         view2->AddChild(view3);
         view3->set_frame(Rect(20, 20, 40, 40));
         view3->set_background_color(Color(0, 1, 0, 1));
+
+
+//        Font::Find(window->nvg_context(), "ヒラギノ角ゴシック W3").value();
+        Font::Find(window->nvg_context(), "Arial").value();
     }
 };
 

@@ -287,7 +287,7 @@ namespace oliview {
             }
 
             int wrote_size = (int)write(fd,
-                                        (const uint8_t *)data->data() + total_wrote_size,
+                                        (const uint8_t *)data->bytes() + total_wrote_size,
                                         write_size);
             if (wrote_size < 0) {
                 return Failure(PosixError::Create(errno, "write(%s)", str.c_str()));
