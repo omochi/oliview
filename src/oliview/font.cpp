@@ -23,21 +23,21 @@ namespace oliview {
         auto name = split_ret.name;
 
 
-        int offset = 0;
-        int index = 0;
-        for (int i = 0; ; i++) {
-            int off = stbtt_GetFontOffsetForIndex((uint8_t *)data->bytes(), i);
-            if (off < 0) {
-                break;
-            }
-
-            stbtt_fontinfo fontinfo;
-            int tt = stbtt_InitFont(&fontinfo, (uint8_t *)data->bytes(), offset);
-            Print(Format("%d, %d, tt=%d", i, off, tt));
-            
-            offset = off;
-            index = i;
-        }
+//        int offset = 0;
+//        int index = 0;
+//        for (int i = 0; ; i++) {
+//            int off = stbtt_GetFontOffsetForIndex((uint8_t *)data->bytes(), i);
+//            if (off < 0) {
+//                break;
+//            }
+//
+//            stbtt_fontinfo fontinfo;
+//            int tt = stbtt_InitFont(&fontinfo, (uint8_t *)data->bytes(), offset);
+//            Print(Format("%d, %d, tt=%d", i, off, tt));
+//            
+//            offset = off;
+//            index = i;
+//        }
 
 
         int handle = nvgCreateFontMem(context,
@@ -45,12 +45,12 @@ namespace oliview {
                                       (uint8_t *)data->bytes(),
                                       data->size(),
                                       false,
-                                      offset);
+                                      0);
         if (handle < 0) {
             return Failure(GenericError::Create("nvgCreateFontMem(path=%s, index=%d, offset=%d)",
                                                 path.ToString().c_str(),
                                                 index,
-                                                offset));
+                                                0));
         }
         
         return Success(oliview::Create<Font>(context,

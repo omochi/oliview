@@ -56,7 +56,7 @@ class Example1 : public Application {
 
 
         Font::Find(window->nvg_context(), "ヒラギノ角ゴシック W3").value();
-//        Font::Find(window->nvg_context(), "Arial").value();
+        Font::Find(window->nvg_context(), "Arial").value();
     }
 };
 

@@ -161,7 +161,7 @@ int fons__tt_init(FONScontext *context)
 	return ftError == 0;
 }
 
-int fons__tt_loadFont(FONScontext *context, FONSttFontImpl *font, unsigned char *data, int dataSize)
+int fons__tt_loadFont(FONScontext *context, FONSttFontImpl *font, unsigned char *data, int dataSize, int offset)
 {
 	FT_Error ftError;
 	FONS_NOTUSED(context);
