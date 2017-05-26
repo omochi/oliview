@@ -11,14 +11,9 @@
 		D646507C1EA644F40067BA12 /* application.h in Headers */ = {isa = PBXBuildFile; fileRef = D64650501EA644F40067BA12 /* application.h */; };
 		D646507D1EA644F40067BA12 /* array_function_inline.h in Headers */ = {isa = PBXBuildFile; fileRef = D64650511EA644F40067BA12 /* array_function_inline.h */; };
 		D646507E1EA644F40067BA12 /* array_function.h in Headers */ = {isa = PBXBuildFile; fileRef = D64650521EA644F40067BA12 /* array_function.h */; };
-		D646507F1EA644F40067BA12 /* array_size.h in Headers */ = {isa = PBXBuildFile; fileRef = D64650531EA644F40067BA12 /* array_size.h */; };
-		D64650801EA644F40067BA12 /* assert.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D64650541EA644F40067BA12 /* assert.cpp */; };
-		D64650811EA644F40067BA12 /* assert.h in Headers */ = {isa = PBXBuildFile; fileRef = D64650551EA644F40067BA12 /* assert.h */; };
 		D64650821EA644F40067BA12 /* color.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D64650561EA644F40067BA12 /* color.cpp */; };
 		D64650831EA644F40067BA12 /* color.h in Headers */ = {isa = PBXBuildFile; fileRef = D64650571EA644F40067BA12 /* color.h */; };
 		D64650861EA644F40067BA12 /* dependency.h in Headers */ = {isa = PBXBuildFile; fileRef = D646505A1EA644F40067BA12 /* dependency.h */; };
-		D64650871EA644F40067BA12 /* string_format.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D646505B1EA644F40067BA12 /* string_format.cpp */; };
-		D64650881EA644F40067BA12 /* string_format.h in Headers */ = {isa = PBXBuildFile; fileRef = D646505C1EA644F40067BA12 /* string_format.h */; };
 		D64650891EA644F40067BA12 /* gl_assert.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D646505D1EA644F40067BA12 /* gl_assert.cpp */; };
 		D646508A1EA644F40067BA12 /* gl_assert.h in Headers */ = {isa = PBXBuildFile; fileRef = D646505E1EA644F40067BA12 /* gl_assert.h */; };
 		D646508B1EA644F40067BA12 /* math.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D646505F1EA644F40067BA12 /* math.cpp */; };
@@ -26,17 +21,9 @@
 		D646508D1EA644F40067BA12 /* matrix3x3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D64650611EA644F40067BA12 /* matrix3x3.cpp */; };
 		D646508E1EA644F40067BA12 /* matrix3x3.h in Headers */ = {isa = PBXBuildFile; fileRef = D64650621EA644F40067BA12 /* matrix3x3.h */; };
 		D646508F1EA644F40067BA12 /* nanovg_impl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D64650631EA644F40067BA12 /* nanovg_impl.cpp */; };
-		D64650911EA644F40067BA12 /* object.h in Headers */ = {isa = PBXBuildFile; fileRef = D64650651EA644F40067BA12 /* object.h */; };
 		D64650921EA644F40067BA12 /* oliview.h in Headers */ = {isa = PBXBuildFile; fileRef = D64650661EA644F40067BA12 /* oliview.h */; };
-		D64650931EA644F40067BA12 /* platform.h in Headers */ = {isa = PBXBuildFile; fileRef = D64650671EA644F40067BA12 /* platform.h */; };
-		D64650941EA644F40067BA12 /* print.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D64650681EA644F40067BA12 /* print.cpp */; };
-		D64650951EA644F40067BA12 /* print.h in Headers */ = {isa = PBXBuildFile; fileRef = D64650691EA644F40067BA12 /* print.h */; };
 		D64650961EA644F40067BA12 /* rect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D646506A1EA644F40067BA12 /* rect.cpp */; };
 		D64650971EA644F40067BA12 /* rect.h in Headers */ = {isa = PBXBuildFile; fileRef = D646506B1EA644F40067BA12 /* rect.h */; };
-		D64650981EA644F40067BA12 /* ref_inline.h in Headers */ = {isa = PBXBuildFile; fileRef = D646506C1EA644F40067BA12 /* ref_inline.h */; };
-		D64650991EA644F40067BA12 /* ref.h in Headers */ = {isa = PBXBuildFile; fileRef = D646506D1EA644F40067BA12 /* ref.h */; };
-		D646509A1EA644F40067BA12 /* string_function.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D646506E1EA644F40067BA12 /* string_function.cpp */; };
-		D646509B1EA644F40067BA12 /* string_function.h in Headers */ = {isa = PBXBuildFile; fileRef = D646506F1EA644F40067BA12 /* string_function.h */; };
 		D646509C1EA644F40067BA12 /* task_queue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D64650701EA644F40067BA12 /* task_queue.cpp */; };
 		D646509D1EA644F40067BA12 /* task_queue.h in Headers */ = {isa = PBXBuildFile; fileRef = D64650711EA644F40067BA12 /* task_queue.h */; };
 		D646509E1EA644F40067BA12 /* task.h in Headers */ = {isa = PBXBuildFile; fileRef = D64650721EA644F40067BA12 /* task.h */; };
@@ -48,25 +35,10 @@
 		D64650A41EA644F40067BA12 /* view.h in Headers */ = {isa = PBXBuildFile; fileRef = D64650781EA644F40067BA12 /* view.h */; };
 		D64650A51EA644F40067BA12 /* window.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D64650791EA644F40067BA12 /* window.cpp */; };
 		D64650A61EA644F40067BA12 /* window.h in Headers */ = {isa = PBXBuildFile; fileRef = D646507A1EA644F40067BA12 /* window.h */; };
-		D64650AA1EA6499F0067BA12 /* optional.h in Headers */ = {isa = PBXBuildFile; fileRef = D64650A81EA6499F0067BA12 /* optional.h */; };
 		D64650AE1EA671960067BA12 /* label.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D64650AC1EA671960067BA12 /* label.cpp */; };
 		D64650AF1EA671960067BA12 /* label.h in Headers */ = {isa = PBXBuildFile; fileRef = D64650AD1EA671960067BA12 /* label.h */; };
-		D64650C11EA78EF50067BA12 /* file_path.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D64650BF1EA78EF50067BA12 /* file_path.cpp */; };
-		D64650C21EA78EF50067BA12 /* file_path.h in Headers */ = {isa = PBXBuildFile; fileRef = D64650C01EA78EF50067BA12 /* file_path.h */; };
-		D64650CE1EA91FB90067BA12 /* error.h in Headers */ = {isa = PBXBuildFile; fileRef = D64650CC1EA91FB90067BA12 /* error.h */; };
-		D64650D11EA921E50067BA12 /* posix_error.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D64650CF1EA921E50067BA12 /* posix_error.cpp */; };
-		D64650D21EA921E50067BA12 /* posix_error.h in Headers */ = {isa = PBXBuildFile; fileRef = D64650D01EA921E50067BA12 /* posix_error.h */; };
-		D64651A81EAA4CD50067BA12 /* result.h in Headers */ = {isa = PBXBuildFile; fileRef = D64651A61EAA4CD50067BA12 /* result.h */; };
-		D64651AA1EAA58EB0067BA12 /* result.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D64651A91EAA58EB0067BA12 /* result.cpp */; };
-		D64651AD1EAA5C810067BA12 /* defer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D64651AB1EAA5C810067BA12 /* defer.cpp */; };
-		D64651AE1EAA5C810067BA12 /* defer.h in Headers */ = {isa = PBXBuildFile; fileRef = D64651AC1EAA5C810067BA12 /* defer.h */; };
-		D64651B11EAB0B6C0067BA12 /* data.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D64651AF1EAB0B6C0067BA12 /* data.cpp */; };
-		D64651B21EAB0B6C0067BA12 /* data.h in Headers */ = {isa = PBXBuildFile; fileRef = D64651B01EAB0B6C0067BA12 /* data.h */; };
-		D64651B61EAB2CF70067BA12 /* none.h in Headers */ = {isa = PBXBuildFile; fileRef = D64651B41EAB2CF70067BA12 /* none.h */; };
 		D64651B91EAB50300067BA12 /* font.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D64651B71EAB50300067BA12 /* font.cpp */; };
 		D64651BA1EAB50300067BA12 /* font.h in Headers */ = {isa = PBXBuildFile; fileRef = D64651B81EAB50300067BA12 /* font.h */; };
-		D64651BD1EAB56D60067BA12 /* generic_error.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D64651BB1EAB56D60067BA12 /* generic_error.cpp */; };
-		D64651BE1EAB56D60067BA12 /* generic_error.h in Headers */ = {isa = PBXBuildFile; fileRef = D64651BC1EAB56D60067BA12 /* generic_error.h */; };
 		D6C3F7381E9D29D90020D65A /* glfw3.h in Headers */ = {isa = PBXBuildFile; fileRef = D6C3F7331E9D29D90020D65A /* glfw3.h */; };
 		D6C3F7391E9D29D90020D65A /* glfw3native.h in Headers */ = {isa = PBXBuildFile; fileRef = D6C3F7341E9D29D90020D65A /* glfw3native.h */; };
 		D6C3F7461E9D29F70020D65A /* fontstash.h in Headers */ = {isa = PBXBuildFile; fileRef = D6C3F73D1E9D29F70020D65A /* fontstash.h */; };
@@ -75,7 +47,6 @@
 		D6C3F7491E9D29F70020D65A /* nanovg_gl_utils.h in Headers */ = {isa = PBXBuildFile; fileRef = D6C3F7401E9D29F70020D65A /* nanovg_gl_utils.h */; };
 		D6C3F74A1E9D29F70020D65A /* stb_image.h in Headers */ = {isa = PBXBuildFile; fileRef = D6C3F7411E9D29F70020D65A /* stb_image.h */; };
 		D6C3F74B1E9D29F70020D65A /* stb_truetype.h in Headers */ = {isa = PBXBuildFile; fileRef = D6C3F7421E9D29F70020D65A /* stb_truetype.h */; };
-		D6EEE95E1EB70FB100456069 /* none.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D6EEE95D1EB70FB100456069 /* none.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -83,14 +54,9 @@
 		D64650501EA644F40067BA12 /* application.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = application.h; sourceTree = "<group>"; };
 		D64650511EA644F40067BA12 /* array_function_inline.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = array_function_inline.h; sourceTree = "<group>"; };
 		D64650521EA644F40067BA12 /* array_function.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = array_function.h; sourceTree = "<group>"; };
-		D64650531EA644F40067BA12 /* array_size.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = array_size.h; sourceTree = "<group>"; };
-		D64650541EA644F40067BA12 /* assert.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = assert.cpp; sourceTree = "<group>"; };
-		D64650551EA644F40067BA12 /* assert.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = assert.h; sourceTree = "<group>"; };
 		D64650561EA644F40067BA12 /* color.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = color.cpp; sourceTree = "<group>"; };
 		D64650571EA644F40067BA12 /* color.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = color.h; sourceTree = "<group>"; };
 		D646505A1EA644F40067BA12 /* dependency.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dependency.h; sourceTree = "<group>"; };
-		D646505B1EA644F40067BA12 /* string_format.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = string_format.cpp; sourceTree = "<group>"; };
-		D646505C1EA644F40067BA12 /* string_format.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = string_format.h; sourceTree = "<group>"; };
 		D646505D1EA644F40067BA12 /* gl_assert.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = gl_assert.cpp; sourceTree = "<group>"; };
 		D646505E1EA644F40067BA12 /* gl_assert.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gl_assert.h; sourceTree = "<group>"; };
 		D646505F1EA644F40067BA12 /* math.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = math.cpp; sourceTree = "<group>"; };
@@ -98,18 +64,9 @@
 		D64650611EA644F40067BA12 /* matrix3x3.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = matrix3x3.cpp; sourceTree = "<group>"; };
 		D64650621EA644F40067BA12 /* matrix3x3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = matrix3x3.h; sourceTree = "<group>"; };
 		D64650631EA644F40067BA12 /* nanovg_impl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nanovg_impl.cpp; sourceTree = "<group>"; };
-		D64650641EA644F40067BA12 /* object_inline.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = object_inline.h; sourceTree = "<group>"; };
-		D64650651EA644F40067BA12 /* object.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = object.h; sourceTree = "<group>"; };
 		D64650661EA644F40067BA12 /* oliview.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = oliview.h; sourceTree = "<group>"; };
-		D64650671EA644F40067BA12 /* platform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = platform.h; sourceTree = "<group>"; };
-		D64650681EA644F40067BA12 /* print.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = print.cpp; sourceTree = "<group>"; };
-		D64650691EA644F40067BA12 /* print.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = print.h; sourceTree = "<group>"; };
 		D646506A1EA644F40067BA12 /* rect.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = rect.cpp; sourceTree = "<group>"; };
 		D646506B1EA644F40067BA12 /* rect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = rect.h; sourceTree = "<group>"; };
-		D646506C1EA644F40067BA12 /* ref_inline.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ref_inline.h; sourceTree = "<group>"; };
-		D646506D1EA644F40067BA12 /* ref.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ref.h; sourceTree = "<group>"; };
-		D646506E1EA644F40067BA12 /* string_function.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = string_function.cpp; sourceTree = "<group>"; };
-		D646506F1EA644F40067BA12 /* string_function.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = string_function.h; sourceTree = "<group>"; };
 		D64650701EA644F40067BA12 /* task_queue.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = task_queue.cpp; sourceTree = "<group>"; };
 		D64650711EA644F40067BA12 /* task_queue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = task_queue.h; sourceTree = "<group>"; };
 		D64650721EA644F40067BA12 /* task.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = task.h; sourceTree = "<group>"; };
@@ -121,28 +78,11 @@
 		D64650781EA644F40067BA12 /* view.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = view.h; sourceTree = "<group>"; };
 		D64650791EA644F40067BA12 /* window.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = window.cpp; sourceTree = "<group>"; };
 		D646507A1EA644F40067BA12 /* window.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = window.h; sourceTree = "<group>"; };
-		D64650A71EA6499F0067BA12 /* optional_inline.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = optional_inline.h; sourceTree = "<group>"; };
-		D64650A81EA6499F0067BA12 /* optional.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = optional.h; sourceTree = "<group>"; };
 		D64650AB1EA6587A0067BA12 /* application_inline.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = application_inline.h; sourceTree = "<group>"; };
 		D64650AC1EA671960067BA12 /* label.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = label.cpp; sourceTree = "<group>"; };
 		D64650AD1EA671960067BA12 /* label.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = label.h; sourceTree = "<group>"; };
-		D64650BF1EA78EF50067BA12 /* file_path.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = file_path.cpp; sourceTree = "<group>"; };
-		D64650C01EA78EF50067BA12 /* file_path.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = file_path.h; sourceTree = "<group>"; };
-		D64650CC1EA91FB90067BA12 /* error.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = error.h; sourceTree = "<group>"; };
-		D64650CF1EA921E50067BA12 /* posix_error.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = posix_error.cpp; sourceTree = "<group>"; };
-		D64650D01EA921E50067BA12 /* posix_error.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = posix_error.h; sourceTree = "<group>"; };
-		D64651A51EAA4CD50067BA12 /* result_inline.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = result_inline.h; sourceTree = "<group>"; };
-		D64651A61EAA4CD50067BA12 /* result.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = result.h; sourceTree = "<group>"; };
-		D64651A91EAA58EB0067BA12 /* result.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = result.cpp; sourceTree = "<group>"; };
-		D64651AB1EAA5C810067BA12 /* defer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = defer.cpp; sourceTree = "<group>"; };
-		D64651AC1EAA5C810067BA12 /* defer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = defer.h; sourceTree = "<group>"; };
-		D64651AF1EAB0B6C0067BA12 /* data.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = data.cpp; sourceTree = "<group>"; };
-		D64651B01EAB0B6C0067BA12 /* data.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = data.h; sourceTree = "<group>"; };
-		D64651B41EAB2CF70067BA12 /* none.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = none.h; sourceTree = "<group>"; };
 		D64651B71EAB50300067BA12 /* font.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = font.cpp; sourceTree = "<group>"; };
 		D64651B81EAB50300067BA12 /* font.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = font.h; sourceTree = "<group>"; };
-		D64651BB1EAB56D60067BA12 /* generic_error.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = generic_error.cpp; sourceTree = "<group>"; };
-		D64651BC1EAB56D60067BA12 /* generic_error.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = generic_error.h; sourceTree = "<group>"; };
 		D6C3F6AA1E99AAB50020D65A /* liboliview.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = liboliview.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		D6C3F7331E9D29D90020D65A /* glfw3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = glfw3.h; sourceTree = "<group>"; };
 		D6C3F7341E9D29D90020D65A /* glfw3native.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = glfw3native.h; sourceTree = "<group>"; };
@@ -152,7 +92,6 @@
 		D6C3F7401E9D29F70020D65A /* nanovg_gl_utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nanovg_gl_utils.h; sourceTree = "<group>"; };
 		D6C3F7411E9D29F70020D65A /* stb_image.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stb_image.h; sourceTree = "<group>"; };
 		D6C3F7421E9D29F70020D65A /* stb_truetype.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stb_truetype.h; sourceTree = "<group>"; };
-		D6EEE95D1EB70FB100456069 /* none.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = none.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -200,23 +139,11 @@
 				D64650AB1EA6587A0067BA12 /* application_inline.h */,
 				D64650511EA644F40067BA12 /* array_function_inline.h */,
 				D64650521EA644F40067BA12 /* array_function.h */,
-				D64650531EA644F40067BA12 /* array_size.h */,
-				D64650541EA644F40067BA12 /* assert.cpp */,
-				D64650551EA644F40067BA12 /* assert.h */,
 				D64650561EA644F40067BA12 /* color.cpp */,
 				D64650571EA644F40067BA12 /* color.h */,
-				D64651AF1EAB0B6C0067BA12 /* data.cpp */,
-				D64651B01EAB0B6C0067BA12 /* data.h */,
-				D64651AB1EAA5C810067BA12 /* defer.cpp */,
-				D64651AC1EAA5C810067BA12 /* defer.h */,
 				D646505A1EA644F40067BA12 /* dependency.h */,
-				D64650CC1EA91FB90067BA12 /* error.h */,
-				D64650BF1EA78EF50067BA12 /* file_path.cpp */,
-				D64650C01EA78EF50067BA12 /* file_path.h */,
 				D64651B71EAB50300067BA12 /* font.cpp */,
 				D64651B81EAB50300067BA12 /* font.h */,
-				D64651BB1EAB56D60067BA12 /* generic_error.cpp */,
-				D64651BC1EAB56D60067BA12 /* generic_error.h */,
 				D646505D1EA644F40067BA12 /* gl_assert.cpp */,
 				D646505E1EA644F40067BA12 /* gl_assert.h */,
 				D64650AC1EA671960067BA12 /* label.cpp */,
@@ -226,29 +153,9 @@
 				D64650611EA644F40067BA12 /* matrix3x3.cpp */,
 				D64650621EA644F40067BA12 /* matrix3x3.h */,
 				D64650631EA644F40067BA12 /* nanovg_impl.cpp */,
-				D64651B41EAB2CF70067BA12 /* none.h */,
-				D6EEE95D1EB70FB100456069 /* none.cpp */,
-				D64650641EA644F40067BA12 /* object_inline.h */,
-				D64650651EA644F40067BA12 /* object.h */,
 				D64650661EA644F40067BA12 /* oliview.h */,
-				D64650A71EA6499F0067BA12 /* optional_inline.h */,
-				D64650A81EA6499F0067BA12 /* optional.h */,
-				D64650671EA644F40067BA12 /* platform.h */,
-				D64650CF1EA921E50067BA12 /* posix_error.cpp */,
-				D64650D01EA921E50067BA12 /* posix_error.h */,
-				D64650681EA644F40067BA12 /* print.cpp */,
-				D64650691EA644F40067BA12 /* print.h */,
 				D646506A1EA644F40067BA12 /* rect.cpp */,
 				D646506B1EA644F40067BA12 /* rect.h */,
-				D646506C1EA644F40067BA12 /* ref_inline.h */,
-				D646506D1EA644F40067BA12 /* ref.h */,
-				D64651A51EAA4CD50067BA12 /* result_inline.h */,
-				D64651A61EAA4CD50067BA12 /* result.h */,
-				D64651A91EAA58EB0067BA12 /* result.cpp */,
-				D646505B1EA644F40067BA12 /* string_format.cpp */,
-				D646505C1EA644F40067BA12 /* string_format.h */,
-				D646506E1EA644F40067BA12 /* string_function.cpp */,
-				D646506F1EA644F40067BA12 /* string_function.h */,
 				D64650701EA644F40067BA12 /* task_queue.cpp */,
 				D64650711EA644F40067BA12 /* task_queue.h */,
 				D64650721EA644F40067BA12 /* task.h */,
@@ -328,47 +235,29 @@
 			buildActionMask = 2147483647;
 			files = (
 				D64650AF1EA671960067BA12 /* label.h in Headers */,
-				D64650991EA644F40067BA12 /* ref.h in Headers */,
 				D64650971EA644F40067BA12 /* rect.h in Headers */,
 				D6C3F74A1E9D29F70020D65A /* stb_image.h in Headers */,
 				D6C3F7491E9D29F70020D65A /* nanovg_gl_utils.h in Headers */,
 				D64650A01EA644F40067BA12 /* vector2.h in Headers */,
 				D646509D1EA644F40067BA12 /* task_queue.h in Headers */,
 				D64650A21EA644F40067BA12 /* vector3.h in Headers */,
-				D64651B21EAB0B6C0067BA12 /* data.h in Headers */,
-				D64650911EA644F40067BA12 /* object.h in Headers */,
-				D64651B61EAB2CF70067BA12 /* none.h in Headers */,
 				D6C3F7381E9D29D90020D65A /* glfw3.h in Headers */,
-				D64650811EA644F40067BA12 /* assert.h in Headers */,
 				D64651BA1EAB50300067BA12 /* font.h in Headers */,
-				D64651AE1EAA5C810067BA12 /* defer.h in Headers */,
 				D6C3F7461E9D29F70020D65A /* fontstash.h in Headers */,
 				D6C3F7471E9D29F70020D65A /* nanovg.h in Headers */,
-				D64651A81EAA4CD50067BA12 /* result.h in Headers */,
 				D646507D1EA644F40067BA12 /* array_function_inline.h in Headers */,
 				D646507E1EA644F40067BA12 /* array_function.h in Headers */,
-				D646507F1EA644F40067BA12 /* array_size.h in Headers */,
 				D646508C1EA644F40067BA12 /* math.h in Headers */,
-				D64650881EA644F40067BA12 /* string_format.h in Headers */,
 				D6C3F7481E9D29F70020D65A /* nanovg_gl.h in Headers */,
 				D6C3F74B1E9D29F70020D65A /* stb_truetype.h in Headers */,
-				D64650D21EA921E50067BA12 /* posix_error.h in Headers */,
-				D64650981EA644F40067BA12 /* ref_inline.h in Headers */,
-				D64650C21EA78EF50067BA12 /* file_path.h in Headers */,
-				D64650AA1EA6499F0067BA12 /* optional.h in Headers */,
 				D646507C1EA644F40067BA12 /* application.h in Headers */,
-				D646509B1EA644F40067BA12 /* string_function.h in Headers */,
 				D64650831EA644F40067BA12 /* color.h in Headers */,
 				D64650A41EA644F40067BA12 /* view.h in Headers */,
 				D646508A1EA644F40067BA12 /* gl_assert.h in Headers */,
-				D64650951EA644F40067BA12 /* print.h in Headers */,
-				D64650CE1EA91FB90067BA12 /* error.h in Headers */,
 				D64650A61EA644F40067BA12 /* window.h in Headers */,
 				D64650921EA644F40067BA12 /* oliview.h in Headers */,
 				D646509E1EA644F40067BA12 /* task.h in Headers */,
-				D64651BE1EAB56D60067BA12 /* generic_error.h in Headers */,
 				D6C3F7391E9D29D90020D65A /* glfw3native.h in Headers */,
-				D64650931EA644F40067BA12 /* platform.h in Headers */,
 				D646508E1EA644F40067BA12 /* matrix3x3.h in Headers */,
 				D64650861EA644F40067BA12 /* dependency.h in Headers */,
 			);
@@ -431,30 +320,19 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D64651BD1EAB56D60067BA12 /* generic_error.cpp in Sources */,
-				D646509A1EA644F40067BA12 /* string_function.cpp in Sources */,
-				D64650871EA644F40067BA12 /* string_format.cpp in Sources */,
 				D646509C1EA644F40067BA12 /* task_queue.cpp in Sources */,
 				D64650A31EA644F40067BA12 /* view.cpp in Sources */,
 				D646508D1EA644F40067BA12 /* matrix3x3.cpp in Sources */,
 				D64651B91EAB50300067BA12 /* font.cpp in Sources */,
 				D64650961EA644F40067BA12 /* rect.cpp in Sources */,
-				D64650C11EA78EF50067BA12 /* file_path.cpp in Sources */,
 				D646508F1EA644F40067BA12 /* nanovg_impl.cpp in Sources */,
 				D64650821EA644F40067BA12 /* color.cpp in Sources */,
-				D64650941EA644F40067BA12 /* print.cpp in Sources */,
 				D646507B1EA644F40067BA12 /* application.cpp in Sources */,
 				D64650A51EA644F40067BA12 /* window.cpp in Sources */,
 				D64650A11EA644F40067BA12 /* vector3.cpp in Sources */,
-				D64650801EA644F40067BA12 /* assert.cpp in Sources */,
-				D64651AA1EAA58EB0067BA12 /* result.cpp in Sources */,
 				D646509F1EA644F40067BA12 /* vector2.cpp in Sources */,
-				D6EEE95E1EB70FB100456069 /* none.cpp in Sources */,
 				D64650891EA644F40067BA12 /* gl_assert.cpp in Sources */,
-				D64651B11EAB0B6C0067BA12 /* data.cpp in Sources */,
-				D64650D11EA921E50067BA12 /* posix_error.cpp in Sources */,
 				D646508B1EA644F40067BA12 /* math.cpp in Sources */,
-				D64651AD1EAA5C810067BA12 /* defer.cpp in Sources */,
 				D64650AE1EA671960067BA12 /* label.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -563,6 +441,7 @@
 				HEADER_SEARCH_PATHS = (
 					../../ext/glfw/include,
 					../../ext/nanovg/include,
+					"../../ext/cpp-rhetoric/src",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				USE_HEADERMAP = NO;
@@ -581,6 +460,7 @@
 				HEADER_SEARCH_PATHS = (
 					../../ext/glfw/include,
 					../../ext/nanovg/include,
+					"../../ext/cpp-rhetoric/src",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				USE_HEADERMAP = NO;

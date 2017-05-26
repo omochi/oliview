@@ -1,7 +1,6 @@
 #pragma once
 
 #include "./dependency.h"
-#include "./optional.h"
 
 namespace oliview {
     template <typename C>

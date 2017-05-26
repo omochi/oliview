@@ -1,8 +1,6 @@
 #pragma once
 
 #include "./dependency.h"
-#include "./object.h"
-#include "./ref.h"
 #include "./rect.h"
 #include "./color.h"
 #include "./matrix3x3.h"
@@ -11,17 +9,17 @@
 namespace oliview {
     class Window;
 
-    class View : public Object<View> {
+    class View : public std::enable_shared_from_this<View> {
     public:
         View();
 
-        Ref<View> parent() const;
-        const std::vector<Ref<View>> & children() const;
-        void AddChild(const Ref<View> & child);
-        void RemoveChild(const Ref<View> & child);
+        Ptr<View> parent() const;
+        const std::vector<Ptr<View>> & children() const;
+        void AddChild(const Ptr<View> & child);
+        void RemoveChild(const Ptr<View> & child);
         void RemoveChildAt(int index);
 
-        Ref<Window> window() const;
+        Ptr<Window> window() const;
 
         Rect frame() const;
         void set_frame(const Rect & value);
@@ -36,17 +34,17 @@ namespace oliview {
 
         virtual void DrawContent(NVGcontext * ctx);
 
-        void SetWindowInternal(const Ref<Window> & window);
-        void SetParentInternal(const Ref<View> & parent);
+        void SetWindowInternal(const Ptr<Window> & window);
+        void SetParentInternal(const Ptr<View> & parent);
     private:
         void set_transform(const Matrix3x3 & value);
 
         void SetWindowTransformDirty();
         void UpdateWindowTransform() const;
 
-        View * parent_;
-        std::vector<Ref<View>> children_;
-        Window * window_;
+        WeakPtr<View> parent_;
+        std::vector<Ptr<View>> children_;
+        WeakPtr<Window> window_;
         Rect frame_;
         Matrix3x3 transform_;
         mutable bool window_transform_dirty_;

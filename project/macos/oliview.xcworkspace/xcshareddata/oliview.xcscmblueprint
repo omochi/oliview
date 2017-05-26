@@ -1,0 +1,30 @@
+{
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "EED642B8C37E26BCB5358364BE904220B5381765",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "BEB64E232FF8DC4BDE2A7AD241C6AC5D10775220" : 9223372036854775807,
+    "EED642B8C37E26BCB5358364BE904220B5381765" : 9223372036854775807
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "6B24D43E-228F-4C5F-BEEA-A206DFF9967B",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "BEB64E232FF8DC4BDE2A7AD241C6AC5D10775220" : "oliview\/ext\/cpp-rhetoric\/",
+    "EED642B8C37E26BCB5358364BE904220B5381765" : "oliview\/"
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "oliview",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "project\/macos\/oliview.xcworkspace",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "github.com:omochi\/cpp-rhetoric.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "BEB64E232FF8DC4BDE2A7AD241C6AC5D10775220"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "github.com:omochi\/oliview.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "EED642B8C37E26BCB5358364BE904220B5381765"
+    }
+  ]
+}

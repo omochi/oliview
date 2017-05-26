@@ -40,16 +40,16 @@ namespace oliview {
     void Application::OnFinish() {
     }
 
-    void Application::AddWindowInternal(const Ref<Window> & window) {
+    void Application::AddWindowInternal(const Ptr<Window> & window) {
         windows_.push_back(window);
     }
-    void Application::RemoveWindowInternal(const Ref<Window> & window) {
+    void Application::RemoveWindowInternal(const Ptr<Window> & window) {
         ArrayRemove(windows_, [&](auto x) { return x == window; });
     }
 
     void Application::Init() {
         if (!glfwInit()) {
-            Fatal("glfwInit failed");
+            RHETORIC_FATAL("glfwInit failed");
         }
 
         glfwSetTime(0.0);

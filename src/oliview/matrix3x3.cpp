@@ -4,7 +4,7 @@
 
 namespace oliview {
     Matrix3x3::Matrix3x3() {
-        for (int i = 0; i < OLIVIEW_ARRAY_SIZE(elements_); i++) {
+        for (int i = 0; i < RHETORIC_ARRAY_SIZE(elements_); i++) {
             elements_[i] = 0;
         }
     }

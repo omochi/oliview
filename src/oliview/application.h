@@ -1,34 +1,30 @@
 #pragma once
 
 #include "./dependency.h"
-#include "./assert.h"
-#include "./print.h"
-#include "./object.h"
-#include "./ref.h"
 #include "./task_queue.h"
 #include "./window.h"
 #include "./array_function.h"
 
 namespace oliview {
-    class Application : public Object<Application> {
+    class Application : public std::enable_shared_from_this<Application> {
     public:
         Application();
         virtual ~Application();
 
-        Ref<TaskQueue> task_queue() const;
+        Ptr<TaskQueue> task_queue() const;
 
         void Run();
 
         virtual void OnInit();
         virtual void OnFinish();
 
-        void AddWindowInternal(const Ref<Window> & window);
-        void RemoveWindowInternal(const Ref<Window> & window);
+        void AddWindowInternal(const Ptr<Window> & window);
+        void RemoveWindowInternal(const Ptr<Window> & window);
     private:
         void Init();
         void Finish();
 
-        std::vector<Ref<Window>> windows_;
+        std::vector<Ptr<Window>> windows_;
     };
 
     template <typename T>

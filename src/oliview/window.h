@@ -1,8 +1,6 @@
 #pragma once
 
 #include "./dependency.h"
-#include "./object.h"
-#include "./ref.h"
 #include "./view.h"
 #include "./gl_assert.h"
 #include "./vector2.h"
@@ -10,9 +8,9 @@
 namespace oliview {
     class Application;
 
-    class Window : public Object<Window> {
+    class Window : public std::enable_shared_from_this<Window> {
     public:
-        Window(const Ref<Application> & application);
+        Window();
         virtual ~Window();
 
         bool closed() const;
@@ -22,9 +20,11 @@ namespace oliview {
         Vector2 window_size() const;
         Vector2 framebuffer_size() const;
 
-        Ref<View> root_view() const;
+        Ptr<View> root_view() const;
 
         NVGcontext * nvg_context() const;
+
+
 
         void Draw();
         void MakeContextCurrent();
@@ -32,8 +32,12 @@ namespace oliview {
         
         void OnWindowSizeChange(int w, int h);
         void OnFramebufferSizeChange(int w, int h);
+
+        static Ptr<Window> Create(const Ptr<Application> & application);
     private:
-        Application * app_;
+        void Init(const Ptr<Application> & application);
+
+        WeakPtr<Application> app_;
         
         GLFWwindow * window_;
         NVGcontext * nvg_context_;
@@ -42,7 +46,7 @@ namespace oliview {
 
         Vector2 window_size_;
         Vector2 framebuffer_size_;
-        Ref<View> root_view_;
+        Ptr<View> root_view_;
 
         static void RefreshHandler(GLFWwindow * window);
         static void WindowSizeHandler(GLFWwindow * window, int w, int h);

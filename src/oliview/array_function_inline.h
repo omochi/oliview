@@ -9,7 +9,7 @@ namespace oliview {
                 return Some((int)(iter - array.cbegin()));
             }
         }
-        return nullptr;
+        return None();
     }
 
     template <typename C>
@@ -23,7 +23,7 @@ namespace oliview {
                 return Some((int)array.size() - 1 - offset);
             }
         }
-        return nullptr;
+        return None();
     }
 
     template <typename C>

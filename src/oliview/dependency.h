@@ -1,23 +1,14 @@
 #pragma once
 
-#include "./platform.h"
+#include <rhetoric/rhetoric.h>
 
-#include <cstdlib>
+namespace oliview {
+    using namespace rhetoric;
+}
+
 #include <cmath>
-#include <vector>
 #include <list>
-#include <string>
-#include <atomic>
 #include <mutex>
-#include <iostream>
-#include <memory>
-
-#ifdef OLIVIEW_MACOS
-#   include <unistd.h>
-#   include <dirent.h>
-#   include <fcntl.h>
-#   include <sys/stat.h>
-#endif
 
 #define GLFW_INCLUDE_GLCOREARB
 #define GLFW_INCLUDE_GLEXT

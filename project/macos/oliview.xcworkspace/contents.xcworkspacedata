@@ -2,9 +2,12 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "group:example1.xcodeproj">
+      location = "group:../../ext/cpp-rhetoric/project/macos/rhetoric.xcodeproj">
    </FileRef>
    <FileRef
       location = "group:oliview.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:example1.xcodeproj">
    </FileRef>
 </Workspace>

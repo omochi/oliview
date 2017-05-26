@@ -52,6 +52,6 @@ namespace oliview {
                                  func,
                                  file,
                                  line);
-        Fatal(str);
+        RHETORIC_FATAL(str);
     }
 }

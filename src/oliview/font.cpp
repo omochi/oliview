@@ -5,7 +5,7 @@ namespace oliview {
     Font::Font(NVGcontext * context,
                int handle,
                std::string name,
-               const Ref<const Data> & data):
+               const Ptr<const Data> & data):
     context_(context),
     handle_(handle),
     name_(name),
@@ -13,32 +13,15 @@ namespace oliview {
     {        
     }
 
-    Result<Ref<Font>> Font::Create(NVGcontext * context, const FilePath & path) {
+    Result<Ptr<Font>> Font::Create(NVGcontext * context, const FilePath & path) {
         auto data_ret = path.Read();
         if (!data_ret) {
             return Failure(data_ret);
         }
         auto data = data_ret.value();
-        auto split_ret = path.SplitExtension();
-        auto name = split_ret.name;
 
-
-//        int offset = 0;
-//        int index = 0;
-//        for (int i = 0; ; i++) {
-//            int off = stbtt_GetFontOffsetForIndex((uint8_t *)data->bytes(), i);
-//            if (off < 0) {
-//                break;
-//            }
-//
-//            stbtt_fontinfo fontinfo;
-//            int tt = stbtt_InitFont(&fontinfo, (uint8_t *)data->bytes(), offset);
-//            Print(Format("%d, %d, tt=%d", i, off, tt));
-//            
-//            offset = off;
-//            index = i;
-//        }
-
+        auto ext = path.SplitExtension();
+        auto name = ext.name;
 
         int handle = nvgCreateFontMem(context,
                                       name.c_str(),
@@ -47,19 +30,17 @@ namespace oliview {
                                       false,
                                       0);
         if (handle < 0) {
-            return Failure(GenericError::Create("nvgCreateFontMem(path=%s, index=%d, offset=%d)",
-                                                path.ToString().c_str(),
-                                                index,
-                                                0));
+            return Failure(GenericError::Create("nvgCreateFontMem(%s)",
+                                                path.ToString().c_str()));
         }
         
-        return Success(oliview::Create<Font>(context,
-                                             handle,
-                                             name,
-                                             data));
+        return Success(New<Font>(context,
+                                 handle,
+                                 name,
+                                 data));
     }
 
-    Result<Ref<Font>> Font::Find(NVGcontext * context, const std::string & name) {
+    Result<Ptr<Font>> Font::Find(NVGcontext * context, const std::string & name) {
         for (auto dir : search_paths()) {
             auto files = dir.GetChildren();
             if (!files) {
@@ -87,7 +68,7 @@ namespace oliview {
         return Failure(GenericError::Create("not found (%s)", name.c_str()));
     }
 
-    Ref<Font> Font::GetDefault(NVGcontext * context) {
+    Ptr<Font> Font::GetDefault(NVGcontext * context) {
         if (!default__) {
             auto ret = Find(context, "ヒラギノ角ゴシック W3");
             default__ = ret.value();
@@ -97,11 +78,7 @@ namespace oliview {
 
     std::vector<FilePath> Font::search_paths() {
         if (!search_paths_) {
-            search_paths_ = Some<std::vector<FilePath>>({
-                FilePath::home() + FilePath("Library/Fonts"),
-                FilePath("/Library/Fonts"),
-                FilePath("/System/Library/Fonts")
-            });
+            search_paths_ = Some(default_search_paths());
         }
         return search_paths_.value();
     }
@@ -110,6 +87,16 @@ namespace oliview {
         search_paths_ = Some(value);
     }
 
-    Ref<Font> Font::default__;
+#if RHETORIC_MACOS
+    std::vector<FilePath> Font::default_search_paths() {
+        std::vector<FilePath> ret;
+        ret.push_back(FilePath::home() + FilePath("Library/Fonts"));
+        ret.push_back(FilePath("/Library/Fonts"));
+        ret.push_back(FilePath("/System/Library/Fonts"));
+        return ret;
+    }
+#endif
+
+    Ptr<Font> Font::default__;
     Optional<std::vector<FilePath>> Font::search_paths_;
 }

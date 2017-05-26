@@ -4,7 +4,6 @@
 
 namespace oliview {
     View::View():
-    parent_(nullptr),
     transform_(Matrix3x3::Identity()),
     window_transform_dirty_(true),
     window_transform_(Matrix3x3::Identity()),
@@ -12,24 +11,21 @@ namespace oliview {
     {
     }
 
-    Ref<View> View::parent() const {
-        if (parent_) {
-            return Ref<View>(parent_);
-        }
-        return nullptr;
+    Ptr<View> View::parent() const {
+        return parent_.lock();
     }
 
-    const std::vector<Ref<View>> & View::children() const {
+    const std::vector<Ptr<View>> & View::children() const {
         return children_;
     }
 
-    void View::AddChild(const Ref<View> & child) {
-        OLIVIEW_ASSERT(child->parent() == nullptr);
+    void View::AddChild(const Ptr<View> & child) {
+        RHETORIC_ASSERT(child->parent() == nullptr);
         children_.push_back(child);
-        child->SetParentInternal(this_ref());
+        child->SetParentInternal(shared_from_this());
     }
 
-    void View::RemoveChild(const Ref<View> & child) {
+    void View::RemoveChild(const Ptr<View> & child) {
         while (true) {
             auto index = ArrayFindR(children_, [&](auto x){ return x == child; });
             if (!index) {
@@ -45,12 +41,15 @@ namespace oliview {
         child->SetParentInternal(nullptr);
     }
 
-    Ref<Window> View::window() const {
-        if (window_) {
-            return Ref<Window>(window_);
+    Ptr<Window> View::window() const {
+        auto window = window_.lock();
+        if (window) {
+            return window;
         }
-        if (parent_) {
-            return parent_->window();
+        //  TODO: check
+        auto parent = parent_.lock();
+        if (parent) {
+            return parent->window();
         }
         return nullptr;
     }
@@ -114,12 +113,12 @@ namespace oliview {
         nvgFill(ctx);
     }
 
-    void View::SetWindowInternal(const Ref<Window> & window) {
-        window_ = window.get();
+    void View::SetWindowInternal(const Ptr<Window> & window) {
+        window_ = window;
     }
 
-    void View::SetParentInternal(const Ref<View> & parent) {
-        parent_ = parent.get();
+    void View::SetParentInternal(const Ptr<View> & parent) {
+        parent_ = parent;
         SetWindowTransformDirty();
     }
 
@@ -141,13 +140,14 @@ namespace oliview {
             return;
         }
 
-        if (!parent_) {
+        auto parent = parent_.lock();
+        if (!parent) {
             window_transform_ = transform_;
             window_transform_dirty_ = false;
             return;
         }
 
-        window_transform_ = transform_ * parent_->window_transform();
+        window_transform_ = transform_ * parent->window_transform();
         window_transform_dirty_ = false;
     }
 }

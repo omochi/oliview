@@ -3,48 +3,8 @@
 #include "./application.h"
 
 namespace oliview {
-    Window::Window(const Ref<Application> & application) {
-        Ref<Window> this_ref(this);
+    Window::Window() {
 
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
-        glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-        glfwWindowHint(GLFW_RED_BITS, 8);
-        glfwWindowHint(GLFW_GREEN_BITS, 8);
-        glfwWindowHint(GLFW_BLUE_BITS, 8);
-        glfwWindowHint(GLFW_ALPHA_BITS, 8);
-        glfwWindowHint(GLFW_DEPTH_BITS, 24);
-        glfwWindowHint(GLFW_STENCIL_BITS, 8);
-        
-        window_ = glfwCreateWindow(960, 540, "window", nullptr, nullptr);
-        OLIVIEW_ASSERT(window_ != nullptr);
-
-        app_ = application.get();
-        app_->AddWindowInternal(this_ref);
-
-        int w, h;
-
-        glfwSetWindowUserPointer(window_, this);
-
-        glfwSetWindowRefreshCallback(window_, &Window::RefreshHandler);
-
-        glfwGetWindowSize(window_, &w, &h);
-        window_size_ = Vector2(w, h);
-        glfwSetWindowSizeCallback(window_, &Window::WindowSizeHandler);
-
-        glfwGetFramebufferSize(window_, &w, &h);
-        framebuffer_size_ = Vector2(w, h);
-        glfwSetFramebufferSizeCallback(window_, &Window::FramebufferSizeHandler);
-
-        MakeContextCurrent();
-
-        nvg_context_ = nvgCreateGL3(NVG_ANTIALIAS | NVG_STENCIL_STROKES | NVG_DEBUG);
-
-        root_view_ = Create<View>();
-        root_view_->SetWindowInternal(this_ref);
-
-        root_view_->set_background_color(Color(1, 1, 1, 1));
     }
 
     Window::~Window() {
@@ -65,9 +25,9 @@ namespace oliview {
             return;
         }
 
-        Ref<Window> this_ref(this);
-
-        app_->RemoveWindowInternal(this_ref);
+        auto app = app_.lock();
+        RHETORIC_ASSERT(app != nullptr);
+        app->RemoveWindowInternal(shared_from_this());
 
         root_view_ = nullptr;
 
@@ -88,7 +48,7 @@ namespace oliview {
         return framebuffer_size_;
     }
 
-    Ref<View> Window::root_view() const {
+    Ptr<View> Window::root_view() const {
         return root_view_;
     }
 
@@ -142,6 +102,54 @@ namespace oliview {
 
     void Window::OnFramebufferSizeChange(int w, int h) {
         framebuffer_size_ = Vector2(w, h);
+    }
+
+    Ptr<Window> Window::Create(const Ptr<Application> & application) {
+        auto thiz = New<Window>();
+        thiz->Init(application);
+        return thiz;
+    }
+
+    void Window::Init(const Ptr<Application> & application) {
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
+        glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+        glfwWindowHint(GLFW_RED_BITS, 8);
+        glfwWindowHint(GLFW_GREEN_BITS, 8);
+        glfwWindowHint(GLFW_BLUE_BITS, 8);
+        glfwWindowHint(GLFW_ALPHA_BITS, 8);
+        glfwWindowHint(GLFW_DEPTH_BITS, 24);
+        glfwWindowHint(GLFW_STENCIL_BITS, 8);
+
+        window_ = glfwCreateWindow(960, 540, "window", nullptr, nullptr);
+        RHETORIC_ASSERT(window_ != nullptr);
+
+        app_ = application;
+        application->AddWindowInternal(shared_from_this());
+
+        int w, h;
+
+        glfwSetWindowUserPointer(window_, this);
+
+        glfwSetWindowRefreshCallback(window_, &Window::RefreshHandler);
+
+        glfwGetWindowSize(window_, &w, &h);
+        window_size_ = Vector2(w, h);
+        glfwSetWindowSizeCallback(window_, &Window::WindowSizeHandler);
+
+        glfwGetFramebufferSize(window_, &w, &h);
+        framebuffer_size_ = Vector2(w, h);
+        glfwSetFramebufferSizeCallback(window_, &Window::FramebufferSizeHandler);
+
+        MakeContextCurrent();
+
+        nvg_context_ = nvgCreateGL3(NVG_ANTIALIAS | NVG_STENCIL_STROKES | NVG_DEBUG);
+
+        root_view_ = New<View>();
+        root_view_->SetWindowInternal(shared_from_this());
+        
+        root_view_->set_background_color(Color(1, 1, 1, 1));
     }
 
     void Window::RefreshHandler(GLFWwindow * window) {
