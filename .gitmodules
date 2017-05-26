@@ -1,0 +1,3 @@
+[submodule "ext/cpp-rhetoric"]
+	path = ext/cpp-rhetoric
+	url = https://github.com/omochi/cpp-rhetoric.git
