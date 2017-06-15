@@ -1,10 +1,9 @@
 #pragma once
 
-#include "./dependency.h"
-#include "./rect.h"
 #include "./color.h"
+#include "./dependency.h"
 #include "./matrix3x3.h"
-#include "./array_function.h"
+#include "./rect.h"
 
 namespace oliview {
     class Window;
@@ -14,7 +13,7 @@ namespace oliview {
         View();
 
         Ptr<View> parent() const;
-        const std::vector<Ptr<View>> & children() const;
+        std::vector<Ptr<View>> children() const;
         void AddChild(const Ptr<View> & child);
         void RemoveChild(const Ptr<View> & child);
         void RemoveChildAt(int index);

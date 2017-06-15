@@ -15,7 +15,7 @@ namespace oliview {
         return parent_.lock();
     }
 
-    const std::vector<Ptr<View>> & View::children() const {
+    std::vector<Ptr<View>> View::children() const {
         return children_;
     }
 
@@ -27,7 +27,7 @@ namespace oliview {
 
     void View::RemoveChild(const Ptr<View> & child) {
         while (true) {
-            auto index = ArrayFindR(children_, [&](auto x){ return x == child; });
+            auto index = ArrayFindIndexEqR(children_, child);
             if (!index) {
                 break;
             }
@@ -37,7 +37,7 @@ namespace oliview {
 
     void View::RemoveChildAt(int index) {
         auto child = children_[index];
-        ArrayRemoveAt(children_, index);
+        ArrayRemoveAt(&children_, index);
         child->SetParentInternal(nullptr);
     }
 

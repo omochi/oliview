@@ -8,7 +8,7 @@ namespace oliview {
     {
     }
 
-    void Application::Run() {
+    int Application::Main(int argc, char * argv[]) {
         Init();
 
         while (true) {
@@ -32,6 +32,8 @@ namespace oliview {
         }
 
         Finish();
+
+        return EXIT_SUCCESS;
     }
 
     void Application::OnInit() {
@@ -44,7 +46,7 @@ namespace oliview {
         windows_.push_back(window);
     }
     void Application::RemoveWindowInternal(const Ptr<Window> & window) {
-        ArrayRemove(windows_, [&](auto x) { return x == window; });
+        ArrayRemoveEq(&windows_, window);
     }
 
     void Application::Init() {

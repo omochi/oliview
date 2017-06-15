@@ -1,9 +1,7 @@
 #pragma once
 
 #include "./dependency.h"
-#include "./task_queue.h"
 #include "./window.h"
-#include "./array_function.h"
 
 namespace oliview {
     class Application : public std::enable_shared_from_this<Application> {
@@ -11,9 +9,7 @@ namespace oliview {
         Application();
         virtual ~Application();
 
-        Ptr<TaskQueue> task_queue() const;
-
-        void Run();
+        int Main(int argc, char * argv[]);
 
         virtual void OnInit();
         virtual void OnFinish();
@@ -26,9 +22,5 @@ namespace oliview {
 
         std::vector<Ptr<Window>> windows_;
     };
-
-    template <typename T>
-    int ApplicationMain(int argc, char * argv[]);
 }
 
-#include "./application_inline.h"

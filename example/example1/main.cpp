@@ -1,7 +1,5 @@
 #include <oliview/oliview.h>
 
-#include <stb_truetype.h>
-
 using namespace oliview;
 
 class Example1 : public Application {
@@ -30,5 +28,6 @@ class Example1 : public Application {
 };
 
 int main(int argc, char * argv[]) {
-    return ApplicationMain<Example1>(argc, argv);
+    auto app = New<Example1>();
+    return app->Main(argc, argv);
 }

@@ -9,8 +9,6 @@
 /* Begin PBXBuildFile section */
 		D646507B1EA644F40067BA12 /* application.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D646504F1EA644F40067BA12 /* application.cpp */; };
 		D646507C1EA644F40067BA12 /* application.h in Headers */ = {isa = PBXBuildFile; fileRef = D64650501EA644F40067BA12 /* application.h */; };
-		D646507D1EA644F40067BA12 /* array_function_inline.h in Headers */ = {isa = PBXBuildFile; fileRef = D64650511EA644F40067BA12 /* array_function_inline.h */; };
-		D646507E1EA644F40067BA12 /* array_function.h in Headers */ = {isa = PBXBuildFile; fileRef = D64650521EA644F40067BA12 /* array_function.h */; };
 		D64650821EA644F40067BA12 /* color.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D64650561EA644F40067BA12 /* color.cpp */; };
 		D64650831EA644F40067BA12 /* color.h in Headers */ = {isa = PBXBuildFile; fileRef = D64650571EA644F40067BA12 /* color.h */; };
 		D64650861EA644F40067BA12 /* dependency.h in Headers */ = {isa = PBXBuildFile; fileRef = D646505A1EA644F40067BA12 /* dependency.h */; };
@@ -20,12 +18,10 @@
 		D646508C1EA644F40067BA12 /* math.h in Headers */ = {isa = PBXBuildFile; fileRef = D64650601EA644F40067BA12 /* math.h */; };
 		D646508D1EA644F40067BA12 /* matrix3x3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D64650611EA644F40067BA12 /* matrix3x3.cpp */; };
 		D646508E1EA644F40067BA12 /* matrix3x3.h in Headers */ = {isa = PBXBuildFile; fileRef = D64650621EA644F40067BA12 /* matrix3x3.h */; };
-		D646508F1EA644F40067BA12 /* nanovg_impl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D64650631EA644F40067BA12 /* nanovg_impl.cpp */; };
+		D646508F1EA644F40067BA12 /* nanovg_gl_impl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D64650631EA644F40067BA12 /* nanovg_gl_impl.cpp */; };
 		D64650921EA644F40067BA12 /* oliview.h in Headers */ = {isa = PBXBuildFile; fileRef = D64650661EA644F40067BA12 /* oliview.h */; };
 		D64650961EA644F40067BA12 /* rect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D646506A1EA644F40067BA12 /* rect.cpp */; };
 		D64650971EA644F40067BA12 /* rect.h in Headers */ = {isa = PBXBuildFile; fileRef = D646506B1EA644F40067BA12 /* rect.h */; };
-		D646509C1EA644F40067BA12 /* task_queue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D64650701EA644F40067BA12 /* task_queue.cpp */; };
-		D646509D1EA644F40067BA12 /* task_queue.h in Headers */ = {isa = PBXBuildFile; fileRef = D64650711EA644F40067BA12 /* task_queue.h */; };
 		D646509E1EA644F40067BA12 /* task.h in Headers */ = {isa = PBXBuildFile; fileRef = D64650721EA644F40067BA12 /* task.h */; };
 		D646509F1EA644F40067BA12 /* vector2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D64650731EA644F40067BA12 /* vector2.cpp */; };
 		D64650A01EA644F40067BA12 /* vector2.h in Headers */ = {isa = PBXBuildFile; fileRef = D64650741EA644F40067BA12 /* vector2.h */; };
@@ -52,8 +48,6 @@
 /* Begin PBXFileReference section */
 		D646504F1EA644F40067BA12 /* application.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = application.cpp; sourceTree = "<group>"; };
 		D64650501EA644F40067BA12 /* application.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = application.h; sourceTree = "<group>"; };
-		D64650511EA644F40067BA12 /* array_function_inline.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = array_function_inline.h; sourceTree = "<group>"; };
-		D64650521EA644F40067BA12 /* array_function.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = array_function.h; sourceTree = "<group>"; };
 		D64650561EA644F40067BA12 /* color.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = color.cpp; sourceTree = "<group>"; };
 		D64650571EA644F40067BA12 /* color.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = color.h; sourceTree = "<group>"; };
 		D646505A1EA644F40067BA12 /* dependency.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dependency.h; sourceTree = "<group>"; };
@@ -63,12 +57,10 @@
 		D64650601EA644F40067BA12 /* math.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = math.h; sourceTree = "<group>"; };
 		D64650611EA644F40067BA12 /* matrix3x3.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = matrix3x3.cpp; sourceTree = "<group>"; };
 		D64650621EA644F40067BA12 /* matrix3x3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = matrix3x3.h; sourceTree = "<group>"; };
-		D64650631EA644F40067BA12 /* nanovg_impl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nanovg_impl.cpp; sourceTree = "<group>"; };
+		D64650631EA644F40067BA12 /* nanovg_gl_impl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nanovg_gl_impl.cpp; sourceTree = "<group>"; };
 		D64650661EA644F40067BA12 /* oliview.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = oliview.h; sourceTree = "<group>"; };
 		D646506A1EA644F40067BA12 /* rect.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = rect.cpp; sourceTree = "<group>"; };
 		D646506B1EA644F40067BA12 /* rect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = rect.h; sourceTree = "<group>"; };
-		D64650701EA644F40067BA12 /* task_queue.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = task_queue.cpp; sourceTree = "<group>"; };
-		D64650711EA644F40067BA12 /* task_queue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = task_queue.h; sourceTree = "<group>"; };
 		D64650721EA644F40067BA12 /* task.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = task.h; sourceTree = "<group>"; };
 		D64650731EA644F40067BA12 /* vector2.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = vector2.cpp; sourceTree = "<group>"; };
 		D64650741EA644F40067BA12 /* vector2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = vector2.h; sourceTree = "<group>"; };
@@ -78,7 +70,6 @@
 		D64650781EA644F40067BA12 /* view.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = view.h; sourceTree = "<group>"; };
 		D64650791EA644F40067BA12 /* window.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = window.cpp; sourceTree = "<group>"; };
 		D646507A1EA644F40067BA12 /* window.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = window.h; sourceTree = "<group>"; };
-		D64650AB1EA6587A0067BA12 /* application_inline.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = application_inline.h; sourceTree = "<group>"; };
 		D64650AC1EA671960067BA12 /* label.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = label.cpp; sourceTree = "<group>"; };
 		D64650AD1EA671960067BA12 /* label.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = label.h; sourceTree = "<group>"; };
 		D64651B71EAB50300067BA12 /* font.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = font.cpp; sourceTree = "<group>"; };
@@ -92,6 +83,9 @@
 		D6C3F7401E9D29F70020D65A /* nanovg_gl_utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nanovg_gl_utils.h; sourceTree = "<group>"; };
 		D6C3F7411E9D29F70020D65A /* stb_image.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stb_image.h; sourceTree = "<group>"; };
 		D6C3F7421E9D29F70020D65A /* stb_truetype.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stb_truetype.h; sourceTree = "<group>"; };
+		D6E0AEA11EF21BE7001ABB2A /* dependency_glfw.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = dependency_glfw.h; sourceTree = "<group>"; };
+		D6E0AEA21EF21C4B001ABB2A /* dependency_rhetoric.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = dependency_rhetoric.h; sourceTree = "<group>"; };
+		D6E0AEA31EF21CE9001ABB2A /* dependency_nanovg.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = dependency_nanovg.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -136,12 +130,12 @@
 			children = (
 				D646504F1EA644F40067BA12 /* application.cpp */,
 				D64650501EA644F40067BA12 /* application.h */,
-				D64650AB1EA6587A0067BA12 /* application_inline.h */,
-				D64650511EA644F40067BA12 /* array_function_inline.h */,
-				D64650521EA644F40067BA12 /* array_function.h */,
 				D64650561EA644F40067BA12 /* color.cpp */,
 				D64650571EA644F40067BA12 /* color.h */,
 				D646505A1EA644F40067BA12 /* dependency.h */,
+				D6E0AEA11EF21BE7001ABB2A /* dependency_glfw.h */,
+				D6E0AEA31EF21CE9001ABB2A /* dependency_nanovg.h */,
+				D6E0AEA21EF21C4B001ABB2A /* dependency_rhetoric.h */,
 				D64651B71EAB50300067BA12 /* font.cpp */,
 				D64651B81EAB50300067BA12 /* font.h */,
 				D646505D1EA644F40067BA12 /* gl_assert.cpp */,
@@ -152,12 +146,10 @@
 				D64650601EA644F40067BA12 /* math.h */,
 				D64650611EA644F40067BA12 /* matrix3x3.cpp */,
 				D64650621EA644F40067BA12 /* matrix3x3.h */,
-				D64650631EA644F40067BA12 /* nanovg_impl.cpp */,
+				D64650631EA644F40067BA12 /* nanovg_gl_impl.cpp */,
 				D64650661EA644F40067BA12 /* oliview.h */,
 				D646506A1EA644F40067BA12 /* rect.cpp */,
 				D646506B1EA644F40067BA12 /* rect.h */,
-				D64650701EA644F40067BA12 /* task_queue.cpp */,
-				D64650711EA644F40067BA12 /* task_queue.h */,
 				D64650721EA644F40067BA12 /* task.h */,
 				D64650731EA644F40067BA12 /* vector2.cpp */,
 				D64650741EA644F40067BA12 /* vector2.h */,
@@ -239,14 +231,11 @@
 				D6C3F74A1E9D29F70020D65A /* stb_image.h in Headers */,
 				D6C3F7491E9D29F70020D65A /* nanovg_gl_utils.h in Headers */,
 				D64650A01EA644F40067BA12 /* vector2.h in Headers */,
-				D646509D1EA644F40067BA12 /* task_queue.h in Headers */,
 				D64650A21EA644F40067BA12 /* vector3.h in Headers */,
 				D6C3F7381E9D29D90020D65A /* glfw3.h in Headers */,
 				D64651BA1EAB50300067BA12 /* font.h in Headers */,
 				D6C3F7461E9D29F70020D65A /* fontstash.h in Headers */,
 				D6C3F7471E9D29F70020D65A /* nanovg.h in Headers */,
-				D646507D1EA644F40067BA12 /* array_function_inline.h in Headers */,
-				D646507E1EA644F40067BA12 /* array_function.h in Headers */,
 				D646508C1EA644F40067BA12 /* math.h in Headers */,
 				D6C3F7481E9D29F70020D65A /* nanovg_gl.h in Headers */,
 				D6C3F74B1E9D29F70020D65A /* stb_truetype.h in Headers */,
@@ -320,12 +309,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D646509C1EA644F40067BA12 /* task_queue.cpp in Sources */,
 				D64650A31EA644F40067BA12 /* view.cpp in Sources */,
 				D646508D1EA644F40067BA12 /* matrix3x3.cpp in Sources */,
 				D64651B91EAB50300067BA12 /* font.cpp in Sources */,
 				D64650961EA644F40067BA12 /* rect.cpp in Sources */,
-				D646508F1EA644F40067BA12 /* nanovg_impl.cpp in Sources */,
+				D646508F1EA644F40067BA12 /* nanovg_gl_impl.cpp in Sources */,
 				D64650821EA644F40067BA12 /* color.cpp in Sources */,
 				D646507B1EA644F40067BA12 /* application.cpp in Sources */,
 				D64650A51EA644F40067BA12 /* window.cpp in Sources */,

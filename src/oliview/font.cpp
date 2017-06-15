@@ -27,8 +27,7 @@ namespace oliview {
                                       name.c_str(),
                                       (uint8_t *)data->bytes(),
                                       data->size(),
-                                      false,
-                                      0);
+                                      false);
         if (handle < 0) {
             return Failure(GenericError::Create("nvgCreateFontMem(%s)",
                                                 path.ToString().c_str()));
