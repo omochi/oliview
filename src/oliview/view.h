@@ -10,6 +10,12 @@ namespace oliview {
 
     class View : public std::enable_shared_from_this<View> {
     public:
+        struct DrawInfo {
+            Matrix3x3 window_transform;
+
+            DrawInfo();
+        };
+
         View();
 
         Ptr<View> parent() const;
@@ -23,31 +29,25 @@ namespace oliview {
         Rect frame() const;
         void set_frame(const Rect & value);
 
-        Matrix3x3 transform() const;
-        Matrix3x3 window_transform() const;
-
         Color background_color() const;
         void set_background_color(const Color & value);
 
+        void PreDraw(const DrawInfo & info);
         void Draw(NVGcontext * ctx);
 
         virtual void DrawContent(NVGcontext * ctx);
 
-        void SetWindowInternal(const Ptr<Window> & window);
         void SetParentInternal(const Ptr<View> & parent);
+        void SetWindowInternal(const Ptr<Window> & window);
     private:
-        void set_transform(const Matrix3x3 & value);
-
-        void SetWindowTransformDirty();
-        void UpdateWindowTransform() const;
-
         WeakPtr<View> parent_;
         std::vector<Ptr<View>> children_;
+
         WeakPtr<Window> window_;
+
         Rect frame_;
-        Matrix3x3 transform_;
-        mutable bool window_transform_dirty_;
-        mutable Matrix3x3 window_transform_;
         Color background_color_;
+
+        DrawInfo draw_info_;
     };
 }

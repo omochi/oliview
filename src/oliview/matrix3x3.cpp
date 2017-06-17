@@ -39,6 +39,21 @@ namespace oliview {
         return ret;
     }
 
+    Matrix3x3 & Matrix3x3::operator*=(const Matrix3x3 & other) {
+        *this = (*this) * other;
+        return *this;
+    }
+
+    Matrix3x3 Matrix3x3::Transpose() const {
+        Matrix3x3 ret;
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                ret.set(i, j, get(j, i));
+            }
+        }
+        return ret;
+    }
+
     Matrix3x3 Matrix3x3::Identity() {
         Matrix3x3 ret;
         ret.set(0, 0, 1);
@@ -77,17 +92,6 @@ namespace oliview {
         return ret;
     }
 
-    Matrix3x3 Matrix3x3::RectTransform(const Rect & from,
-                                       const Rect & to)
-    {
-        float sx = to.size().x() / from.size().x();
-        float sy = to.size().y() / from.size().y();
-
-        return Translation(-1 * from.center()) *
-        Scaling(Vector2(sx, sy)) *
-        Translation(to.center());
-    }
-
     Vector3 operator*(const Vector3 & a, const Matrix3x3 & b) {
         Vector3 ret;
         for (int i = 0; i < 3; i++) {
@@ -99,4 +103,10 @@ namespace oliview {
         }
         return ret;
     }
+
+    Vector3 & operator*=(Vector3 & a, const Matrix3x3 & b) {
+        a = a * b;
+        return a;
+    }
+
 }

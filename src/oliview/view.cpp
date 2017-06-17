@@ -3,10 +3,12 @@
 #include "./window.h"
 
 namespace oliview {
+    View::DrawInfo::DrawInfo():
+    window_transform(Matrix3x3::Identity())
+    {
+    }
+
     View::View():
-    transform_(Matrix3x3::Identity()),
-    window_transform_dirty_(true),
-    window_transform_(Matrix3x3::Identity()),
     background_color_(1, 1, 1, 0)
     {
     }
@@ -42,16 +44,7 @@ namespace oliview {
     }
 
     Ptr<Window> View::window() const {
-        auto window = window_.lock();
-        if (window) {
-            return window;
-        }
-        //  TODO: check
-        auto parent = parent_.lock();
-        if (parent) {
-            return parent->window();
-        }
-        return nullptr;
+        return window_.lock();
     }
 
     Rect View::frame() const {
@@ -60,10 +53,6 @@ namespace oliview {
 
     void View::set_frame(const Rect & value) {
         frame_ = value;
-
-        auto tr = Matrix3x3::RectTransform(Rect(Vector2(0, 0), frame_.size()),
-                                           frame_);
-        set_transform(tr);
     }
 
     Color View::background_color() const {
@@ -74,26 +63,27 @@ namespace oliview {
         background_color_ = value;
     }
 
-    Matrix3x3 View::transform() const {
-        return transform_;
-    }
+    void View::PreDraw(const DrawInfo & info) {
+        draw_info_ = info;
 
-    Matrix3x3 View::window_transform() const {
-        UpdateWindowTransform();
-        return window_transform_;
+        auto tr = draw_info_.window_transform;
+        tr *= Matrix3x3::Translation(frame_.origin());
+        draw_info_.window_transform = tr;
+
+        for (auto & child : children_) {
+            child->PreDraw(draw_info_);
+        }
     }
 
     void View::Draw(NVGcontext * ctx) {
-        auto window_frame = Rect(Vector2(0, 0), frame_.size())
-            .ApplyTransform(window_transform());
-
         nvgSave(ctx);
-        nvgTranslate(ctx,
-                     window_frame.origin().x(),
-                     window_frame.origin().y());
-        nvgScale(ctx,
-                 window_frame.size().x() / frame_.size().x(),
-                 window_frame.size().y() / frame_.size().y());
+
+        auto tr = draw_info_.window_transform;
+        tr = tr.Transpose();
+        nvgTransform(ctx,
+                     tr.get(0, 0), tr.get(1, 0),
+                     tr.get(0, 1), tr.get(1, 1),
+                     tr.get(0, 2), tr.get(1, 2));
         DrawContent(ctx);
         nvgRestore(ctx);
 
@@ -113,41 +103,22 @@ namespace oliview {
         nvgFill(ctx);
     }
 
-    void View::SetWindowInternal(const Ptr<Window> & window) {
-        window_ = window;
-    }
-
     void View::SetParentInternal(const Ptr<View> & parent) {
         parent_ = parent;
-        SetWindowTransformDirty();
+
+        if (parent) {
+            SetWindowInternal(parent->window());
+        } else {
+            SetWindowInternal(nullptr);
+        }
     }
 
-    void View::set_transform(const Matrix3x3 & value) {
-        transform_ = value;
-        SetWindowTransformDirty();
-    }
-
-    void View::SetWindowTransformDirty() {
-        window_transform_dirty_ = true;
+    void View::SetWindowInternal(const Ptr<Window> & window) {
+        window_ = window;
 
         for (auto & child : children_) {
-            child->SetWindowTransformDirty();
+            child->SetWindowInternal(window);
         }
     }
 
-    void View::UpdateWindowTransform() const {
-        if (!window_transform_dirty_) {
-            return;
-        }
-
-        auto parent = parent_.lock();
-        if (!parent) {
-            window_transform_ = transform_;
-            window_transform_dirty_ = false;
-            return;
-        }
-
-        window_transform_ = transform_ * parent->window_transform();
-        window_transform_dirty_ = false;
-    }
 }

@@ -6,8 +6,6 @@
 #include "./vector3.h"
 
 namespace oliview {
-    class Rect;
-    
     class Matrix3x3 {
     public:
         Matrix3x3();
@@ -19,16 +17,18 @@ namespace oliview {
         float * elements();
 
         Matrix3x3 operator*(const Matrix3x3 & other) const;
+        Matrix3x3 & operator*=(const Matrix3x3 & other);
+
+        Matrix3x3 Transpose() const;
 
         static Matrix3x3 Identity();
         static Matrix3x3 Translation(const Vector2 & translation);
         static Matrix3x3 Rotation(float radian);
         static Matrix3x3 Scaling(const Vector2 & scaling);
-        static Matrix3x3 RectTransform(const Rect & from,
-                                       const Rect & to);
     private:
         float elements_[9];
     };
 
     Vector3 operator*(const Vector3 & a, const Matrix3x3 & b);
+    Vector3 & operator*=(Vector3 & a, const Matrix3x3 & b);
 }

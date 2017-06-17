@@ -59,6 +59,10 @@ namespace oliview {
     void Window::Draw() {
         OLIVIEW_GL_ASSERT_NO_ERROR();
 
+        View::DrawInfo draw_info;
+
+        root_view_->PreDraw(draw_info);
+
         if (window_size_.x() > 0 && window_size_.y() > 0) {
             glViewport(0, 0, (int)framebuffer_size_.x(), (int)framebuffer_size_.y());
             OLIVIEW_GL_ASSERT_NO_ERROR();

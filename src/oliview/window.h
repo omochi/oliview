@@ -24,8 +24,6 @@ namespace oliview {
 
         NVGcontext * nvg_context() const;
 
-
-
         void Draw();
         void MakeContextCurrent();
         void MayTryClose();
