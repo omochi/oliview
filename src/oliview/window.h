@@ -14,15 +14,16 @@ namespace oliview {
         virtual ~Window();
 
         bool closed() const;
-        void set_should_close(const std::function<bool()> & value);
+        
+        RHETORIC_ACCESSOR_TRIVIAL(std::function<bool()>, should_close)
+
         void Close();
         
-        Vector2 window_size() const;
-        Vector2 framebuffer_size() const;
-
-        Ptr<View> root_view() const;
-
-        NVGcontext * nvg_context() const;
+        Ptr<Application> application() const;
+        RHETORIC_GETTER(Vector2, window_size)
+        RHETORIC_GETTER(Vector2, framebuffer_size)
+        RHETORIC_GETTER(Ptr<View>, root_view)
+        RHETORIC_GETTER(GLFWwindow *, glfw_window)
 
         void Draw();
         void MakeContextCurrent();
@@ -35,10 +36,9 @@ namespace oliview {
     private:
         void Init(const Ptr<Application> & application);
 
-        WeakPtr<Application> app_;
+        WeakPtr<Application> application_;
         
-        GLFWwindow * window_;
-        NVGcontext * nvg_context_;
+        GLFWwindow * glfw_window_;
 
         std::function<bool()> should_close_;
 

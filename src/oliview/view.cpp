@@ -24,7 +24,7 @@ namespace oliview {
     void View::AddChild(const Ptr<View> & child) {
         RHETORIC_ASSERT(child->parent() == nullptr);
         children_.push_back(child);
-        child->SetParentInternal(shared_from_this());
+        child->_SetParent(shared_from_this());
     }
 
     void View::RemoveChild(const Ptr<View> & child) {
@@ -40,7 +40,7 @@ namespace oliview {
     void View::RemoveChildAt(int index) {
         auto child = children_[index];
         ArrayRemoveAt(&children_, index);
-        child->SetParentInternal(nullptr);
+        child->_SetParent(nullptr);
     }
 
     Ptr<Window> View::window() const {
@@ -103,21 +103,21 @@ namespace oliview {
         nvgFill(ctx);
     }
 
-    void View::SetParentInternal(const Ptr<View> & parent) {
+    void View::_SetParent(const Ptr<View> & parent) {
         parent_ = parent;
 
         if (parent) {
-            SetWindowInternal(parent->window());
+            _SetWindow(parent->window());
         } else {
-            SetWindowInternal(nullptr);
+            _SetWindow(nullptr);
         }
     }
 
-    void View::SetWindowInternal(const Ptr<Window> & window) {
+    void View::_SetWindow(const Ptr<Window> & window) {
         window_ = window;
 
         for (auto & child : children_) {
-            child->SetWindowInternal(window);
+            child->_SetWindow(window);
         }
     }
 
