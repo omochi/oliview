@@ -1,7 +1,7 @@
 #pragma once
 
 #include "./dependency.h"
-#include "./font.h"
+#include "./font_manager.h"
 #include "./window.h"
 
 namespace oliview {
@@ -12,25 +12,28 @@ namespace oliview {
 
         int Main(int argc, char * argv[]);
 
-        virtual void OnInit();
-        virtual void OnFinish();
+        virtual void OnInit() {}
+        virtual void OnFinish() {}
         
-        NVGcontext * nvg_context() const;
-
+        RHETORIC_GETTER(NVGcontext *, nvg_context)
+        RHETORIC_GETTER(Ptr<FontManager>, font_manager)
+        
         void _AddWindow(const Ptr<Window> & window);
         void _RemoveWindow(const Ptr<Window> & window);
         Ptr<Window> _shared_context_window() const;
-        NVGcontext * _nvg_context() const;
-        void _set_nvg_context(NVGcontext * value);
         
     private:
         void Init();
         void Finish();
-
-        void InitFont();
+        
+        void InitNVGContext();
+        Result<None> _InitNVGContext();
+        void DestroyNVGContext();
 
         std::vector<Ptr<Window>> windows_;
         NVGcontext * nvg_context_;
+        
+        Ptr<FontManager> font_manager_;
     };
 }
 

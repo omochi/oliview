@@ -25,9 +25,9 @@ class Example1 : public Application {
         window->root_view()->AddChild(view4);
         view4->set_frame(Rect(20, 440, 30, 30));
         view4->set_background_color(Color(1, 0, 0, 1));
-
-        Font::Find(nvg_context(), "ヒラギノ角ゴシック W3").value();
-        Font::Find(nvg_context(), "Arial").value();
+//
+//        font_manager()->Find("ヒラギノ角ゴシック W3");
+//        font_manager()->Find("Arial").value();
     }
 };
 

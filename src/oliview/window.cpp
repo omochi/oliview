@@ -3,11 +3,6 @@
 #include "./application.h"
 
 namespace oliview {
-    Window::Window():
-    glfw_window_(nullptr)
-    {
-    }
-
     Window::~Window() {
         Close();
     }
@@ -55,7 +50,7 @@ namespace oliview {
             OLIVIEW_GL_ASSERT_NO_ERROR();
 
             auto app = application();
-            auto ctx = app->_nvg_context();
+            auto ctx = app->nvg_context();
             
             nvgBeginFrame(ctx,
                           (int)window_size_.x(), (int)window_size_.y(),
@@ -95,9 +90,14 @@ namespace oliview {
     }
 
     Ptr<Window> Window::Create(const Ptr<Application> & application) {
-        auto thiz = New<Window>();
+        auto thiz = RHETORIC_NEW(Window);
         thiz->Init(application);
         return thiz;
+    }
+    
+    Window::Window():
+    glfw_window_(nullptr)
+    {
     }
 
     void Window::Init(const Ptr<Application> & application) {

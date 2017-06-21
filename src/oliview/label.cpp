@@ -1,38 +1,28 @@
 #include "./label.h"
 
+#include "./application.h"
+
 namespace oliview {
-    Label::Label()
-    {}
-
-    Label::Label(const std::string & text) {
-        set_text(text);
-    }
-
-    const std::string & Label::text() const {
-        return text_;
-    }
-
-    void Label::set_text(const std::string & value) {
-        text_ = value;
+    Label::Label(const std::string & text):
+    text_(text),
+    font_size_(12.0f)
+    {
     }
 
     void Label::DrawContent(NVGcontext * ctx) {
+        auto fm = application()->font_manager();
+        auto font = this->font();
+        if (!font) {
+            font = fm->default_font();
+        }
+        
         View::DrawContent(ctx);
-
-//        nvgBeginPath(ctx);
-//        nvgRect(ctx,
-//                0,
-//                0,
-//                100,
-//                20);
-//        nvgFillColor(ctx, Color(0.0f, 1.0f, 0.0f, 1.0f).ToNanoVG());
-//        nvgFill(ctx);
 
         nvgScissor(ctx, 0, 0, 30, 30);
         nvgFillColor(ctx, Color(0.0f, 0.0f, 0.0f, 1.0f).ToNanoVG());
-
-        Font::default_font();
-        nvgTextLineHeight(ctx, 10.0f);
+        
+        nvgFontFaceId(ctx, font->nvg_handle());
+        nvgFontSize(ctx, font_size());
         nvgText(ctx, 0, 20, text_.c_str(), text_.c_str() + text_.size());
     }
 }

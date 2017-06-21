@@ -10,7 +10,6 @@ namespace oliview {
 
     class Window : public std::enable_shared_from_this<Window> {
     public:
-        Window();
         virtual ~Window();
 
         bool closed() const;
@@ -34,6 +33,7 @@ namespace oliview {
 
         static Ptr<Window> Create(const Ptr<Application> & application);
     private:
+        Window();
         void Init(const Ptr<Application> & application);
 
         WeakPtr<Application> application_;

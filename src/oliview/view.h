@@ -6,6 +6,7 @@
 #include "./rect.h"
 
 namespace oliview {
+    class Application;
     class Window;
 
     class View : public std::enable_shared_from_this<View> {
@@ -25,6 +26,7 @@ namespace oliview {
         void RemoveChildAt(int index);
 
         Ptr<Window> window() const;
+        Ptr<Application> application() const;
 
         Rect frame() const;
         void set_frame(const Rect & value);

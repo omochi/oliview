@@ -46,6 +46,10 @@ namespace oliview {
     Ptr<Window> View::window() const {
         return window_.lock();
     }
+    
+    Ptr<Application> View::application() const {
+        return window()->application();
+    }
 
     Rect View::frame() const {
         return frame_;

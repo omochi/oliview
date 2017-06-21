@@ -39,20 +39,9 @@ namespace oliview {
         return EXIT_SUCCESS;
     }
 
-    void Application::OnInit() {
-    }
-
-    void Application::OnFinish() {
-    }
-    
-    NVGcontext * Application::nvg_context() const {
-        return nvg_context_;
-    }
-
     void Application::_AddWindow(const Ptr<Window> & window) {
         if (windows_.size() == 0) {
-            NVGcontext * nvg_context = nvgCreateGL3(NVG_ANTIALIAS | NVG_STENCIL_STROKES | NVG_DEBUG);
-            _set_nvg_context(nvg_context);
+            InitNVGContext();
         }
         
         windows_.push_back(window);
@@ -62,10 +51,7 @@ namespace oliview {
         ArrayRemoveEq(&windows_, window);
         
         if (windows_.size() == 0) {
-            if (nvg_context_) {
-                nvgDeleteGL3(nvg_context_);
-                nvg_context_ = nullptr;
-            }
+            DestroyNVGContext();
         }
     }
     
@@ -75,14 +61,6 @@ namespace oliview {
         }
         return windows_[0];
     }
-    
-    NVGcontext * Application::_nvg_context() const {
-        return nvg_context_;
-    }
-    
-    void Application::_set_nvg_context(NVGcontext * value) {
-        nvg_context_ = value;
-    }
 
     void Application::Init() {
         if (!glfwInit()) {
@@ -90,8 +68,6 @@ namespace oliview {
         }
 
         glfwSetTime(0.0);
-
-        InitFont();
 
         OnInit();
     }
@@ -101,17 +77,30 @@ namespace oliview {
 
         glfwTerminate();
     }
-
-    void Application::InitFont() {
-        std::vector<FilePath> paths;
-#if RHETORIC_MACOS
-        paths.push_back(FilePath::home() + FilePath("Library/Fonts"));
-        paths.push_back(FilePath("/Library/Fonts"));
-        paths.push_back(FilePath("/System/Library/Fonts"));
-#endif
-        Font::set_search_paths(paths);
-
-        Font::Find(NVGcontext *context, <#const std::string &name#>)
-        "ヒラギノ角ゴシック W3"
+    
+    void Application::InitNVGContext() {
+        auto ret = _InitNVGContext();
+        if (!ret) {
+            RHETORIC_FATAL(ret.error()->ToString());
+        }
     }
+    
+    Result<None> Application::_InitNVGContext() {
+        auto thiz = shared_from_this();
+        
+        NVGcontext * nvg_context = nvgCreateGL3(NVG_ANTIALIAS | NVG_STENCIL_STROKES | NVG_DEBUG);
+        nvg_context_ = nvg_context;
+        
+        RHETORIC_TRY_ASSIGN(font_manager_, FontManager::Create(thiz));
+        
+        return Success(None());
+    }
+
+    void Application::DestroyNVGContext() {
+        if (nvg_context_) {
+            nvgDeleteGL3(nvg_context_);
+            nvg_context_ = nullptr;
+        }
+    }
+    
 }
