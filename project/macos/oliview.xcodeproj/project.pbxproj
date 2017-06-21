@@ -22,7 +22,6 @@
 		D64650921EA644F40067BA12 /* oliview.h in Headers */ = {isa = PBXBuildFile; fileRef = D64650661EA644F40067BA12 /* oliview.h */; };
 		D64650961EA644F40067BA12 /* rect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D646506A1EA644F40067BA12 /* rect.cpp */; };
 		D64650971EA644F40067BA12 /* rect.h in Headers */ = {isa = PBXBuildFile; fileRef = D646506B1EA644F40067BA12 /* rect.h */; };
-		D646509E1EA644F40067BA12 /* task.h in Headers */ = {isa = PBXBuildFile; fileRef = D64650721EA644F40067BA12 /* task.h */; };
 		D646509F1EA644F40067BA12 /* vector2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D64650731EA644F40067BA12 /* vector2.cpp */; };
 		D64650A01EA644F40067BA12 /* vector2.h in Headers */ = {isa = PBXBuildFile; fileRef = D64650741EA644F40067BA12 /* vector2.h */; };
 		D64650A11EA644F40067BA12 /* vector3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D64650751EA644F40067BA12 /* vector3.cpp */; };
@@ -61,7 +60,6 @@
 		D64650661EA644F40067BA12 /* oliview.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = oliview.h; sourceTree = "<group>"; };
 		D646506A1EA644F40067BA12 /* rect.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = rect.cpp; sourceTree = "<group>"; };
 		D646506B1EA644F40067BA12 /* rect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = rect.h; sourceTree = "<group>"; };
-		D64650721EA644F40067BA12 /* task.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = task.h; sourceTree = "<group>"; };
 		D64650731EA644F40067BA12 /* vector2.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = vector2.cpp; sourceTree = "<group>"; };
 		D64650741EA644F40067BA12 /* vector2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = vector2.h; sourceTree = "<group>"; };
 		D64650751EA644F40067BA12 /* vector3.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = vector3.cpp; sourceTree = "<group>"; };
@@ -150,7 +148,6 @@
 				D64650661EA644F40067BA12 /* oliview.h */,
 				D646506A1EA644F40067BA12 /* rect.cpp */,
 				D646506B1EA644F40067BA12 /* rect.h */,
-				D64650721EA644F40067BA12 /* task.h */,
 				D64650731EA644F40067BA12 /* vector2.cpp */,
 				D64650741EA644F40067BA12 /* vector2.h */,
 				D64650751EA644F40067BA12 /* vector3.cpp */,
@@ -245,7 +242,6 @@
 				D646508A1EA644F40067BA12 /* gl_assert.h in Headers */,
 				D64650A61EA644F40067BA12 /* window.h in Headers */,
 				D64650921EA644F40067BA12 /* oliview.h in Headers */,
-				D646509E1EA644F40067BA12 /* task.h in Headers */,
 				D6C3F7391E9D29D90020D65A /* glfw3native.h in Headers */,
 				D646508E1EA644F40067BA12 /* matrix3x3.h in Headers */,
 				D64650861EA644F40067BA12 /* dependency.h in Headers */,

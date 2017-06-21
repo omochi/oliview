@@ -10,10 +10,13 @@ namespace oliview {
              std::string name,
              const Ptr<const Data> & data);
 
-        static Result<Ptr<Font>> Create(NVGcontext * context, const FilePath & path);
+        int handle() const;
+
+        static Result<Ptr<Font>> Open(NVGcontext * context, const FilePath & path);
         static Result<Ptr<Font>> Find(NVGcontext * context, const std::string & name);
 
-        static Ptr<Font> GetDefault(NVGcontext * context);
+        static Ptr<Font> default_font();
+        static void set_default_font(const Ptr<Font> & value);
 
         static std::vector<FilePath> search_paths();
         static void set_search_paths(const std::vector<FilePath> & value);
@@ -23,11 +26,7 @@ namespace oliview {
         std::string name_;
         Ptr<const Data> data_;
 
-        static std::vector<FilePath> default_search_paths();
-
-        static Ptr<Font> default__;
-        static Optional<std::vector<FilePath>> search_paths_;
-
-
+        static Ptr<Font> default_font_;
+        static std::vector<FilePath> search_paths_;
     };
 }

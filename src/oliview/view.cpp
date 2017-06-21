@@ -93,13 +93,13 @@ namespace oliview {
     }
 
     void View::DrawContent(NVGcontext * ctx) {
-        nvgFillColor(ctx, background_color_.ToNanoVG());
         nvgBeginPath(ctx);
         nvgRect(ctx,
                 0,
                 0,
                 frame_.size().x(),
                 frame_.size().y());
+        nvgFillColor(ctx, background_color_.ToNanoVG());
         nvgFill(ctx);
     }
 

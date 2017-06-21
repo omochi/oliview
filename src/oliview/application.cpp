@@ -56,6 +56,8 @@ namespace oliview {
 
         glfwSetTime(0.0);
 
+        InitFont();
+
         OnInit();
     }
 
@@ -63,5 +65,18 @@ namespace oliview {
         OnFinish();
 
         glfwTerminate();
+    }
+
+    void Application::InitFont() {
+        std::vector<FilePath> paths;
+#if RHETORIC_MACOS
+        paths.push_back(FilePath::home() + FilePath("Library/Fonts"));
+        paths.push_back(FilePath("/Library/Fonts"));
+        paths.push_back(FilePath("/System/Library/Fonts"));
+#endif
+        Font::set_search_paths(paths);
+
+        Font::Find(NVGcontext *context, <#const std::string &name#>)
+        "ヒラギノ角ゴシック W3"
     }
 }

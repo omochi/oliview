@@ -13,12 +13,12 @@ namespace oliview {
     {        
     }
 
-    Result<Ptr<Font>> Font::Create(NVGcontext * context, const FilePath & path) {
-        auto data_ret = path.Read();
-        if (!data_ret) {
-            return Failure(data_ret);
-        }
-        auto data = data_ret.value();
+    int Font::handle() const {
+        return handle_;
+    }
+
+    Result<Ptr<Font>> Font::Open(NVGcontext * context, const FilePath & path) {
+        RHETORIC_TRY_ASSIGN(auto data, path.Read())
 
         auto ext = path.SplitExtension();
         auto name = ext.name;
@@ -41,11 +41,9 @@ namespace oliview {
 
     Result<Ptr<Font>> Font::Find(NVGcontext * context, const std::string & name) {
         for (auto dir : search_paths()) {
-            auto files = dir.GetChildren();
-            if (!files) {
-                return Failure(files);
-            }
-            for (auto file : files.value()) {
+            RHETORIC_TRY_ASSIGN(auto files, dir.GetChildren())
+
+            for (auto file : files) {
                 auto split_ret = file.SplitExtension();
                 if (!split_ret.extension) {
                     continue;
@@ -60,42 +58,28 @@ namespace oliview {
                     continue;
                 }
 
-                auto font = Create(context, file);
-                return font;
+                return Open(context, file);
             }
         }
         return Failure(GenericError::Create("not found (%s)", name.c_str()));
     }
 
-    Ptr<Font> Font::GetDefault(NVGcontext * context) {
-        if (!default__) {
-            auto ret = Find(context, "ヒラギノ角ゴシック W3");
-            default__ = ret.value();
-        }
-        return default__;
+    Ptr<Font> Font::default_font() {
+        return default_font_;
+    }
+
+    void Font::set_default_font(const Ptr<Font> & value) {
+        default_font_ = value;
     }
 
     std::vector<FilePath> Font::search_paths() {
-        if (!search_paths_) {
-            search_paths_ = Some(default_search_paths());
-        }
-        return search_paths_.value();
+        return search_paths_;
     }
 
     void Font::set_search_paths(const std::vector<FilePath> & value) {
-        search_paths_ = Some(value);
+        search_paths_ = value;
     }
 
-#if RHETORIC_MACOS
-    std::vector<FilePath> Font::default_search_paths() {
-        std::vector<FilePath> ret;
-        ret.push_back(FilePath::home() + FilePath("Library/Fonts"));
-        ret.push_back(FilePath("/Library/Fonts"));
-        ret.push_back(FilePath("/System/Library/Fonts"));
-        return ret;
-    }
-#endif
-
-    Ptr<Font> Font::default__;
-    Optional<std::vector<FilePath>> Font::search_paths_;
+    Ptr<Font> Font::default_font_;
+    std::vector<FilePath> Font::search_paths_;
 }

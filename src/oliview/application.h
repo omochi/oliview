@@ -1,6 +1,7 @@
 #pragma once
 
 #include "./dependency.h"
+#include "./font.h"
 #include "./window.h"
 
 namespace oliview {
@@ -19,6 +20,8 @@ namespace oliview {
     private:
         void Init();
         void Finish();
+
+        void InitFont();
 
         std::vector<Ptr<Window>> windows_;
     };
