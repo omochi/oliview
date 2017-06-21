@@ -3,8 +3,9 @@
 #include "./application.h"
 
 namespace oliview {
-    Window::Window() {
-
+    Window::Window():
+    glfw_window_(nullptr)
+    {
     }
 
     Window::~Window() {
@@ -12,48 +13,28 @@ namespace oliview {
     }
 
     bool Window::closed() const {
-        return window_ == nullptr;
+        return glfw_window_ == nullptr;
     }
-
-    void Window::set_should_close(const std::function<bool()> & value) {
-        should_close_ = value;
-    }
-
 
     void Window::Close() {
-        if (!window_) {
+        if (!glfw_window_) {
             return;
         }
 
-        auto app = app_.lock();
+        auto app = application();
         RHETORIC_ASSERT(app != nullptr);
-        app->RemoveWindowInternal(shared_from_this());
+        app->_RemoveWindow(shared_from_this());
 
         root_view_ = nullptr;
 
-        nvgDeleteGL3(nvg_context_);
-        nvg_context_ = nullptr;
+        glfwDestroyWindow(glfw_window_);
 
-        glfwDestroyWindow(window_);
-
-        glfwSetWindowUserPointer(window_, nullptr);
-        window_ = nullptr;
+        glfwSetWindowUserPointer(glfw_window_, nullptr);
+        glfw_window_ = nullptr;
     }
-
-    Vector2 Window::window_size() const {
-        return window_size_;
-    }
-
-    Vector2 Window::framebuffer_size() const {
-        return framebuffer_size_;
-    }
-
-    Ptr<View> Window::root_view() const {
-        return root_view_;
-    }
-
-    NVGcontext * Window::nvg_context() const {
-        return nvg_context_;
+    
+    Ptr<Application> Window::application() const {
+        return application_.lock();
     }
 
     void Window::Draw() {
@@ -64,6 +45,8 @@ namespace oliview {
         root_view_->PreDraw(draw_info);
 
         if (window_size_.x() > 0 && window_size_.y() > 0) {
+            MakeContextCurrent();
+            
             glViewport(0, 0, (int)framebuffer_size_.x(), (int)framebuffer_size_.y());
             OLIVIEW_GL_ASSERT_NO_ERROR();
             glClearColor(0, 0, 0, 0);
@@ -71,25 +54,28 @@ namespace oliview {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
             OLIVIEW_GL_ASSERT_NO_ERROR();
 
-            nvgBeginFrame(nvg_context_,
+            auto app = application();
+            auto ctx = app->_nvg_context();
+            
+            nvgBeginFrame(ctx,
                           (int)window_size_.x(), (int)window_size_.y(),
                           framebuffer_size_.x() / window_size_.x());
 
             root_view_->set_frame(Rect(Vector2(0, 0), window_size_));
-            root_view_->Draw(nvg_context_);
+            root_view_->Draw(ctx);
             
-            nvgEndFrame(nvg_context_);
+            nvgEndFrame(ctx);
             
-            glfwSwapBuffers(window_);
+            glfwSwapBuffers(glfw_window_);
         }
     }
 
     void Window::MakeContextCurrent() {
-        glfwMakeContextCurrent(window_);
+        glfwMakeContextCurrent(glfw_window_);
     }
 
     void Window::MayTryClose() {
-        if (glfwWindowShouldClose(window_)) {
+        if (glfwWindowShouldClose(glfw_window_)) {
             bool do_close = true;
             if (should_close_) {
                 do_close = should_close_();
@@ -125,33 +111,39 @@ namespace oliview {
         glfwWindowHint(GLFW_ALPHA_BITS, 8);
         glfwWindowHint(GLFW_DEPTH_BITS, 24);
         glfwWindowHint(GLFW_STENCIL_BITS, 8);
+        
+        
+        GLFWwindow * gfscw = nullptr;
+        auto scw = application->_shared_context_window();
+        if (scw) {
+            gfscw = scw->glfw_window();
+        }
 
-        window_ = glfwCreateWindow(960, 540, "window", nullptr, nullptr);
-        RHETORIC_ASSERT(window_ != nullptr);
+        glfw_window_ = glfwCreateWindow(960, 540, "window", nullptr, gfscw);
+        RHETORIC_ASSERT(glfw_window_ != nullptr);
 
-        app_ = application;
-        application->AddWindowInternal(shared_from_this());
+        application_ = application;
 
         int w, h;
 
-        glfwSetWindowUserPointer(window_, this);
+        glfwSetWindowUserPointer(glfw_window_, this);
 
-        glfwSetWindowRefreshCallback(window_, &Window::RefreshHandler);
+        glfwSetWindowRefreshCallback(glfw_window_, &Window::RefreshHandler);
 
-        glfwGetWindowSize(window_, &w, &h);
+        glfwGetWindowSize(glfw_window_, &w, &h);
         window_size_ = Vector2(w, h);
-        glfwSetWindowSizeCallback(window_, &Window::WindowSizeHandler);
+        glfwSetWindowSizeCallback(glfw_window_, &Window::WindowSizeHandler);
 
-        glfwGetFramebufferSize(window_, &w, &h);
+        glfwGetFramebufferSize(glfw_window_, &w, &h);
         framebuffer_size_ = Vector2(w, h);
-        glfwSetFramebufferSizeCallback(window_, &Window::FramebufferSizeHandler);
+        glfwSetFramebufferSizeCallback(glfw_window_, &Window::FramebufferSizeHandler);
 
         MakeContextCurrent();
-
-        nvg_context_ = nvgCreateGL3(NVG_ANTIALIAS | NVG_STENCIL_STROKES | NVG_DEBUG);
+        
+        application->_AddWindow(shared_from_this());
 
         root_view_ = New<View>();
-        root_view_->SetWindowInternal(shared_from_this());
+        root_view_->_SetWindow(shared_from_this());
         
         root_view_->set_background_color(Color(1, 1, 1, 1));
     }

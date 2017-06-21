@@ -10,14 +10,11 @@ namespace oliview {
               float green,
               float blue,
               float alpha);
-        float red() const;
-        void set_red(float value);
-        float green() const;
-        void set_green(float value);
-        float blue() const;
-        void set_blue(float value);
-        float alpha() const;
-        void set_alpha(float value);
+        
+        RHETORIC_ACCESSOR_TRIVIAL(float, red)
+        RHETORIC_ACCESSOR_TRIVIAL(float, green)
+        RHETORIC_ACCESSOR_TRIVIAL(float, blue)
+        RHETORIC_ACCESSOR_TRIVIAL(float, alpha)
 
         NVGcolor ToNanoVG() const;
     private:

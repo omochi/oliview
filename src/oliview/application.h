@@ -14,9 +14,15 @@ namespace oliview {
 
         virtual void OnInit();
         virtual void OnFinish();
+        
+        NVGcontext * nvg_context() const;
 
-        void AddWindowInternal(const Ptr<Window> & window);
-        void RemoveWindowInternal(const Ptr<Window> & window);
+        void _AddWindow(const Ptr<Window> & window);
+        void _RemoveWindow(const Ptr<Window> & window);
+        Ptr<Window> _shared_context_window() const;
+        NVGcontext * _nvg_context() const;
+        void _set_nvg_context(NVGcontext * value);
+        
     private:
         void Init();
         void Finish();
@@ -24,6 +30,7 @@ namespace oliview {
         void InitFont();
 
         std::vector<Ptr<Window>> windows_;
+        NVGcontext * nvg_context_;
     };
 }
 

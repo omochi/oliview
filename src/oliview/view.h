@@ -37,8 +37,8 @@ namespace oliview {
 
         virtual void DrawContent(NVGcontext * ctx);
 
-        void SetParentInternal(const Ptr<View> & parent);
-        void SetWindowInternal(const Ptr<Window> & window);
+        void _SetParent(const Ptr<View> & parent);
+        void _SetWindow(const Ptr<Window> & window);
     private:
         WeakPtr<View> parent_;
         std::vector<Ptr<View>> children_;

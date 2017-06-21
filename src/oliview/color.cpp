@@ -15,38 +15,6 @@ namespace oliview {
     alpha_(alpha)
     {}
 
-    float Color::red() const {
-        return red_;
-    }
-
-    void Color::set_red(float value) {
-        red_ = value;
-    }
-
-    float Color::green() const {
-        return green_;
-    }
-
-    void Color::set_green(float value) {
-        green_ = value;
-    }
-
-    float Color::blue() const {
-        return blue_;
-    }
-
-    void Color::set_blue(float value) {
-        blue_ = value;
-    }
-
-    float Color::alpha() const {
-        return alpha_;
-    }
-
-    void Color::set_alpha(float value) {
-        alpha_ = value;
-    }
-
     NVGcolor Color::ToNanoVG() const {
         return nvgRGBAf(red_, green_, blue_, alpha_);
     }

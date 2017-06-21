@@ -26,8 +26,8 @@ class Example1 : public Application {
         view4->set_frame(Rect(20, 440, 30, 30));
         view4->set_background_color(Color(1, 0, 0, 1));
 
-        Font::Find(window->nvg_context(), "ヒラギノ角ゴシック W3").value();
-        Font::Find(window->nvg_context(), "Arial").value();
+        Font::Find(nvg_context(), "ヒラギノ角ゴシック W3").value();
+        Font::Find(nvg_context(), "Arial").value();
     }
 };
 
