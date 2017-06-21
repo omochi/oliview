@@ -18,6 +18,7 @@ namespace oliview {
         };
 
         View();
+        virtual ~View();
 
         Ptr<View> parent() const;
         std::vector<Ptr<View>> children() const;

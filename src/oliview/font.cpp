@@ -12,6 +12,8 @@ namespace oliview {
     data_(data)
     {        
     }
+    
+    Font::~Font() {}
 
 }
 

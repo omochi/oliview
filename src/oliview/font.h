@@ -9,6 +9,7 @@ namespace oliview {
              int nvg_handle,
              std::string name,
              const Ptr<const Data> & data);
+        virtual ~Font();
 
         RHETORIC_GETTER(NVGcontext *, nvg_context)
         RHETORIC_GETTER(int, nvg_handle)

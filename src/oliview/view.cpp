@@ -12,6 +12,9 @@ namespace oliview {
     background_color_(1, 1, 1, 0)
     {
     }
+    
+    View::~View() {
+    }
 
     Ptr<View> View::parent() const {
         return parent_.lock();

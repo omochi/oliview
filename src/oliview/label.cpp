@@ -10,15 +10,14 @@ namespace oliview {
     }
 
     void Label::DrawContent(NVGcontext * ctx) {
+        View::DrawContent(ctx);
+        
         auto fm = application()->font_manager();
         auto font = this->font();
         if (!font) {
             font = fm->default_font();
         }
         
-        View::DrawContent(ctx);
-
-        nvgScissor(ctx, 0, 0, 30, 30);
         nvgFillColor(ctx, Color(0.0f, 0.0f, 0.0f, 1.0f).ToNanoVG());
         
         nvgFontFaceId(ctx, font->nvg_handle());

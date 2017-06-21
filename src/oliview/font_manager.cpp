@@ -3,6 +3,8 @@
 #include "./application.h"
 
 namespace oliview {
+    FontManager::~FontManager() {}
+    
     Result<Ptr<Font>> FontManager::Open(const FilePath & path) {
         auto ctx = nvg_context();
         

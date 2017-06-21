@@ -5,8 +5,10 @@
 namespace oliview {
     class Application;
     
-    class FontManager {
+    class FontManager : public std::enable_shared_from_this<FontManager> {
     public:
+        virtual ~FontManager();
+        
         Result<Ptr<Font>> Open(const FilePath & path);
         Result<Ptr<Font>> Find(const std::string & name);
         
