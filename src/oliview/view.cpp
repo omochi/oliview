@@ -1,5 +1,6 @@
 #include "./view.h"
 
+#include "./application.h"
 #include "./window.h"
 
 namespace oliview {
@@ -10,7 +11,8 @@ namespace oliview {
     
     View::View(const Ptr<Application> & application):
     application_(application),
-    background_color_(1, 1, 1, 0)
+    background_color_(1, 1, 1, 0),
+    needs_layout_(true)
     {
     }
     
@@ -34,6 +36,8 @@ namespace oliview {
         
         children_.push_back(child);
         child->_SetParent(shared_from_this());
+        
+        SetNeedsLayout();
     }
 
     void View::RemoveChild(const Ptr<View> & child) {
@@ -50,6 +54,8 @@ namespace oliview {
         auto child = children_[index];
         ArrayRemoveAt(&children_, index);
         child->_SetParent(nullptr);
+        
+        SetNeedsLayout();
     }
 
     Ptr<Window> View::window() const {
@@ -62,6 +68,8 @@ namespace oliview {
 
     void View::set_frame(const Rect & value) {
         frame_ = value;
+        
+        SetNeedsLayout();
     }
 
     Color View::background_color() const {
@@ -70,6 +78,32 @@ namespace oliview {
 
     void View::set_background_color(const Color & value) {
         background_color_ = value;
+    }
+    
+    void View::Layout() {
+        if (layout_function_) {
+            layout_function_();
+        }
+    }
+    
+    bool View::MayLayout() {
+        if (!needs_layout_) {
+            return false;
+        }
+        
+        needs_layout_ = false;
+        Layout();
+        return true;
+    }
+    
+    void View::SetNeedsLayout() {
+        needs_layout_ = true;
+    }
+    
+    void View::set_layout_function(const std::function<void()> & value) {
+        layout_function_ = value;
+        
+        SetNeedsLayout();
     }
 
     void View::PreDraw(const DrawInfo & info) {
@@ -84,7 +118,9 @@ namespace oliview {
         }
     }
 
-    void View::Draw(NVGcontext * ctx) {
+    void View::Draw() {
+        auto app = application();
+        auto ctx = app->nvg_context();
         
         Rect content_clip = Rect(Vector2(0, 0), frame().size());
         content_clip = content_clip.ApplyTransform(draw_info_.window_transform);
@@ -104,15 +140,18 @@ namespace oliview {
                      tr.get(0, 1), tr.get(1, 1),
                      tr.get(0, 2), tr.get(1, 2));
 
-        DrawContent(ctx);
+        DrawContent();
         nvgRestore(ctx);
 
         for (auto & child : children_) {
-            child->Draw(ctx);
+            child->Draw();
         }
     }
 
-    void View::DrawContent(NVGcontext * ctx) {
+    void View::DrawContent() {
+        auto app = application();
+        auto ctx = app->nvg_context();
+        
         nvgBeginPath(ctx);
         nvgRect(ctx,
                 0,
@@ -135,6 +174,8 @@ namespace oliview {
         } else {
             _SetWindow(nullptr);
         }
+        
+        SetNeedsLayout();
     }
 
     void View::_SetWindow(const Ptr<Window> & window) {

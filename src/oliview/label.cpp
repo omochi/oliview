@@ -19,12 +19,42 @@ namespace oliview {
     void Label::set_text(const std::string & value) {
         auto ls = SplitLines(value);
         lines_ = std::list<std::string>(ls.cbegin(), ls.cend());
+        
+        SetNeedsLayout();
+    }
+    
+    void Label::Layout() {
+        Print("layout label");
+        
+        auto app = application();
+        
+        auto ctx = app->nvg_context();
+        
+        auto fm = app->font_manager();
+        auto font = this->font();
+        if (!font) {
+            font = fm->default_font();
+        }
+        
+        nvgFontFaceId(ctx, font->nvg_handle());
+        nvgFontSize(ctx, font_size());
+        nvgFillColor(ctx, Color(0.0f, 0.0f, 0.0f, 1.0f).ToNanoVG());
+        
+        TextDrawLayouter layouter;
+        
+        text_layout_ = layouter.Layout(ctx,
+                                       lines_,
+                                       Some(frame().size().width()));
     }
 
-    void Label::DrawContent(NVGcontext * ctx) {
-        View::DrawContent(ctx);
+    void Label::DrawContent() {
+        View::DrawContent();
         
-        auto fm = application()->font_manager();
+        auto app = application();
+        
+        auto ctx = app->nvg_context();
+        
+        auto fm = app->font_manager();
         auto font = this->font();
         if (!font) {
             font = fm->default_font();
@@ -37,12 +67,7 @@ namespace oliview {
         float ascender;
         nvgTextMetrics(ctx, &ascender, nullptr, nullptr);
         
-        TextDrawLayouter layouter;
-        
-        auto layout = layouter.Layout(ctx,
-                                      lines_,
-                                      Some(frame().size().width()));
-        for (auto & draw : layout.entries) {
+        for (auto & draw : text_layout_.entries) {
             nvgText(ctx,
                     0,
                     draw.y + ascender,

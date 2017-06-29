@@ -18,10 +18,13 @@ namespace oliview {
         RHETORIC_ACCESSOR(Ptr<Font>, font)
         RHETORIC_ACCESSOR_TRIVIAL(float, font_size)
 
-        virtual void DrawContent(NVGcontext * ctx);
+        virtual void Layout() override;
+        virtual void DrawContent() override;
     private:
         std::list<std::string> lines_;
         Ptr<Font> font_;
         float font_size_;
+        
+        TextDrawLayouter::Result text_layout_;
     };
 }

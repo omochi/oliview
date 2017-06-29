@@ -33,40 +33,25 @@ namespace oliview {
         return application_.lock();
     }
 
-    void Window::Draw() {
-        OLIVIEW_GL_ASSERT_NO_ERROR();
-
+    void Window::Update() {
+        int layout_count = 0;
+        while (true) {
+            bool occured = LayoutView(root_view_);
+            layout_count += 1;
+            if (!occured) {
+                break;
+            }
+            
+            RHETORIC_ASSERT(layout_count < 100);
+        }
+        
         View::DrawInfo draw_info;
-
+        
         draw_info.clip_frame = Rect(Vector2(0, 0),
                                     window_size_);
         root_view_->PreDraw(draw_info);
-
-        if (window_size_.width() > 0 && window_size_.height() > 0) {
-            MakeContextCurrent();
-            
-            glViewport(0, 0, (int)framebuffer_size_.width(), (int)framebuffer_size_.height());
-            OLIVIEW_GL_ASSERT_NO_ERROR();
-            glClearColor(0, 0, 0, 0);
-            OLIVIEW_GL_ASSERT_NO_ERROR();
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-            OLIVIEW_GL_ASSERT_NO_ERROR();
-
-            auto app = application();
-            auto ctx = app->nvg_context();
-            
-            nvgBeginFrame(ctx,
-                          (int)window_size_.width(),
-                          (int)window_size_.height(),
-                          framebuffer_size_.width() / window_size_.width());
-
-            root_view_->set_frame(Rect(Vector2(0, 0), window_size_));
-            root_view_->Draw(ctx);
-            
-            nvgEndFrame(ctx);
-            
-            glfwSwapBuffers(glfw_window_);
-        }
+        
+        Draw();
     }
 
     void Window::MakeContextCurrent() {
@@ -156,6 +141,55 @@ namespace oliview {
         MakeContextCurrent();
         
         app->_AddWindow(shared_from_this());
+    }
+    
+    bool Window::LayoutView(const Ptr<View> & view) {
+        bool ret = false;
+        
+        bool occured = view->MayLayout();
+        if (occured) {
+            ret = true;
+        }
+        
+        for (auto & v : view->children()) {
+            occured = LayoutView(v);
+            if (occured) {
+                ret = true;
+            }
+        }
+        
+        return ret;
+    }
+    
+    void Window::Draw() {
+        if (window_size_.width() == 0 || window_size_.height() == 0) {
+            return;
+        }
+
+        MakeContextCurrent();
+        OLIVIEW_GL_ASSERT_NO_ERROR();
+        
+        glViewport(0, 0, (int)framebuffer_size_.width(), (int)framebuffer_size_.height());
+        OLIVIEW_GL_ASSERT_NO_ERROR();
+        glClearColor(0, 0, 0, 0);
+        OLIVIEW_GL_ASSERT_NO_ERROR();
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+        OLIVIEW_GL_ASSERT_NO_ERROR();
+        
+        auto app = application();
+        auto ctx = app->nvg_context();
+        
+        nvgBeginFrame(ctx,
+                      (int)window_size_.width(),
+                      (int)window_size_.height(),
+                      framebuffer_size_.width() / window_size_.width());
+        
+        root_view_->set_frame(Rect(Vector2(0, 0), window_size_));
+        root_view_->Draw();
+        
+        nvgEndFrame(ctx);
+        
+        glfwSwapBuffers(glfw_window_);
     }
 
     void Window::RefreshHandler(GLFWwindow * window) {

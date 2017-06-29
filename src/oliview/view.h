@@ -37,11 +37,18 @@ namespace oliview {
 
         Color background_color() const;
         void set_background_color(const Color & value);
-
+        
+        virtual void Layout();
+        bool MayLayout();
+        
+        void SetNeedsLayout();
+        
+        RHETORIC_GETTER(std::function<void()>, layout_function)
+        void set_layout_function(const std::function<void()> & value);
+        
         void PreDraw(const DrawInfo & info);
-        void Draw(NVGcontext * ctx);
-
-        virtual void DrawContent(NVGcontext * ctx);
+        void Draw();
+        virtual void DrawContent();
 
         void _SetParent(const Ptr<View> & parent);
         void _SetWindow(const Ptr<Window> & window);
@@ -55,6 +62,10 @@ namespace oliview {
 
         Rect frame_;
         Color background_color_;
+        
+        bool needs_layout_;
+        
+        std::function<void()> layout_function_;
 
         DrawInfo draw_info_;
     };

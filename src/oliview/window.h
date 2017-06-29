@@ -25,7 +25,7 @@ namespace oliview {
         RHETORIC_GETTER(Ptr<View>, root_view)
         RHETORIC_GETTER(GLFWwindow *, glfw_window)
 
-        void Draw();
+        void Update();
         void MakeContextCurrent();
         void MayTryClose();
         
@@ -37,6 +37,10 @@ namespace oliview {
         Window(const Ptr<Application> & application);
         void Init();
         void Open();
+        
+        bool LayoutView(const Ptr<View> & view);
+        
+        void Draw();
 
         WeakPtr<Application> application_;
         

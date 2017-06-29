@@ -30,7 +30,7 @@ namespace oliview {
                     continue;
                 }
 
-                window->Draw();
+                window->Update();
             }
         }
 
