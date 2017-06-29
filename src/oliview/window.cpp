@@ -40,10 +40,10 @@ namespace oliview {
 
         root_view_->PreDraw(draw_info);
 
-        if (window_size_.x() > 0 && window_size_.y() > 0) {
+        if (window_size_.width() > 0 && window_size_.height() > 0) {
             MakeContextCurrent();
             
-            glViewport(0, 0, (int)framebuffer_size_.x(), (int)framebuffer_size_.y());
+            glViewport(0, 0, (int)framebuffer_size_.width(), (int)framebuffer_size_.height());
             OLIVIEW_GL_ASSERT_NO_ERROR();
             glClearColor(0, 0, 0, 0);
             OLIVIEW_GL_ASSERT_NO_ERROR();
@@ -54,8 +54,9 @@ namespace oliview {
             auto ctx = app->nvg_context();
             
             nvgBeginFrame(ctx,
-                          (int)window_size_.x(), (int)window_size_.y(),
-                          framebuffer_size_.x() / window_size_.x());
+                          (int)window_size_.width(),
+                          (int)window_size_.height(),
+                          framebuffer_size_.width() / window_size_.width());
 
             root_view_->set_frame(Rect(Vector2(0, 0), window_size_));
             root_view_->Draw(ctx);
@@ -83,11 +84,11 @@ namespace oliview {
     }
 
     void Window::OnWindowSizeChange(int w, int h) {
-        window_size_ = Vector2(w, h);
+        window_size_ = Size(w, h);
     }
 
     void Window::OnFramebufferSizeChange(int w, int h) {
-        framebuffer_size_ = Vector2(w, h);
+        framebuffer_size_ = Size(w, h);
     }
 
     Ptr<Window> Window::Create(const Ptr<Application> & application) {
@@ -143,11 +144,11 @@ namespace oliview {
         glfwSetWindowRefreshCallback(glfw_window_, &Window::RefreshHandler);
         
         glfwGetWindowSize(glfw_window_, &w, &h);
-        window_size_ = Vector2(w, h);
+        window_size_ = Size(w, h);
         glfwSetWindowSizeCallback(glfw_window_, &Window::WindowSizeHandler);
         
         glfwGetFramebufferSize(glfw_window_, &w, &h);
-        framebuffer_size_ = Vector2(w, h);
+        framebuffer_size_ = Size(w, h);
         glfwSetFramebufferSizeCallback(glfw_window_, &Window::FramebufferSizeHandler);
         
         MakeContextCurrent();

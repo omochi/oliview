@@ -38,6 +38,10 @@
 		D64650AF1EA671960067BA12 /* label.h in Headers */ = {isa = PBXBuildFile; fileRef = D64650AD1EA671960067BA12 /* label.h */; };
 		D64651B91EAB50300067BA12 /* font.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D64651B71EAB50300067BA12 /* font.cpp */; };
 		D64651BA1EAB50300067BA12 /* font.h in Headers */ = {isa = PBXBuildFile; fileRef = D64651B81EAB50300067BA12 /* font.h */; };
+		D678E3A81F053A8700B9A4C0 /* text_draw_layouter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D678E3A61F053A8700B9A4C0 /* text_draw_layouter.cpp */; };
+		D678E3A91F053A8700B9A4C0 /* text_draw_layouter.h in Headers */ = {isa = PBXBuildFile; fileRef = D678E3A71F053A8700B9A4C0 /* text_draw_layouter.h */; };
+		D678E3AC1F053BEF00B9A4C0 /* size.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D678E3AA1F053BEF00B9A4C0 /* size.cpp */; };
+		D678E3AD1F053BEF00B9A4C0 /* size.h in Headers */ = {isa = PBXBuildFile; fileRef = D678E3AB1F053BEF00B9A4C0 /* size.h */; };
 		D6C3F7381E9D29D90020D65A /* glfw3.h in Headers */ = {isa = PBXBuildFile; fileRef = D6C3F7331E9D29D90020D65A /* glfw3.h */; };
 		D6C3F7391E9D29D90020D65A /* glfw3native.h in Headers */ = {isa = PBXBuildFile; fileRef = D6C3F7341E9D29D90020D65A /* glfw3native.h */; };
 		D6C3F7461E9D29F70020D65A /* fontstash.h in Headers */ = {isa = PBXBuildFile; fileRef = D6C3F73D1E9D29F70020D65A /* fontstash.h */; };
@@ -80,6 +84,10 @@
 		D64650AD1EA671960067BA12 /* label.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = label.h; sourceTree = "<group>"; };
 		D64651B71EAB50300067BA12 /* font.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = font.cpp; sourceTree = "<group>"; };
 		D64651B81EAB50300067BA12 /* font.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = font.h; sourceTree = "<group>"; };
+		D678E3A61F053A8700B9A4C0 /* text_draw_layouter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = text_draw_layouter.cpp; sourceTree = "<group>"; };
+		D678E3A71F053A8700B9A4C0 /* text_draw_layouter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = text_draw_layouter.h; sourceTree = "<group>"; };
+		D678E3AA1F053BEF00B9A4C0 /* size.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = size.cpp; sourceTree = "<group>"; };
+		D678E3AB1F053BEF00B9A4C0 /* size.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = size.h; sourceTree = "<group>"; };
 		D6C3F6AA1E99AAB50020D65A /* liboliview.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = liboliview.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		D6C3F7331E9D29D90020D65A /* glfw3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = glfw3.h; sourceTree = "<group>"; };
 		D6C3F7341E9D29D90020D65A /* glfw3native.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = glfw3native.h; sourceTree = "<group>"; };
@@ -154,6 +162,10 @@
 				D603008D1EFAE98E006D0A9D /* unicode_util.h */,
 				D646506A1EA644F40067BA12 /* rect.cpp */,
 				D646506B1EA644F40067BA12 /* rect.h */,
+				D678E3AA1F053BEF00B9A4C0 /* size.cpp */,
+				D678E3AB1F053BEF00B9A4C0 /* size.h */,
+				D678E3A61F053A8700B9A4C0 /* text_draw_layouter.cpp */,
+				D678E3A71F053A8700B9A4C0 /* text_draw_layouter.h */,
 				D64650731EA644F40067BA12 /* vector2.cpp */,
 				D64650741EA644F40067BA12 /* vector2.h */,
 				D64650751EA644F40067BA12 /* vector3.cpp */,
@@ -242,11 +254,13 @@
 				D6C3F7461E9D29F70020D65A /* fontstash.h in Headers */,
 				D6C3F7471E9D29F70020D65A /* nanovg.h in Headers */,
 				D646508C1EA644F40067BA12 /* math.h in Headers */,
+				D678E3AD1F053BEF00B9A4C0 /* size.h in Headers */,
 				D6C3F7481E9D29F70020D65A /* nanovg_gl.h in Headers */,
 				D6C3F74B1E9D29F70020D65A /* stb_truetype.h in Headers */,
 				D646507C1EA644F40067BA12 /* application.h in Headers */,
 				D64650831EA644F40067BA12 /* color.h in Headers */,
 				D64650A41EA644F40067BA12 /* view.h in Headers */,
+				D678E3A91F053A8700B9A4C0 /* text_draw_layouter.h in Headers */,
 				D646508A1EA644F40067BA12 /* gl_assert.h in Headers */,
 				D64650A61EA644F40067BA12 /* window.h in Headers */,
 				D64650921EA644F40067BA12 /* oliview.h in Headers */,
@@ -323,7 +337,9 @@
 				D646507B1EA644F40067BA12 /* application.cpp in Sources */,
 				D603008F1EFAE98E006D0A9D /* unicode_util.cpp in Sources */,
 				D64650A51EA644F40067BA12 /* window.cpp in Sources */,
+				D678E3AC1F053BEF00B9A4C0 /* size.cpp in Sources */,
 				D64650A11EA644F40067BA12 /* vector3.cpp in Sources */,
+				D678E3A81F053A8700B9A4C0 /* text_draw_layouter.cpp in Sources */,
 				D646509F1EA644F40067BA12 /* vector2.cpp in Sources */,
 				D64650891EA644F40067BA12 /* gl_assert.cpp in Sources */,
 				D646508B1EA644F40067BA12 /* math.cpp in Sources */,

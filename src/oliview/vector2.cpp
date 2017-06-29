@@ -61,6 +61,16 @@ namespace oliview {
         return Vector2(x() - other.x(),
                        y() - other.y());
     }
+    
+    Vector2 Vector2::GetMin(const Vector2 & other) const {
+        return Vector2(std::min(x(), other.x()),
+                       std::min(y(), other.y()));
+    }
+    
+    Vector2 Vector2::GetMax(const Vector2 & other) const {
+        return Vector2(std::max(x(), other.x()),
+                       std::max(y(), other.y()));
+    }
 
     Vector2 operator*(float a, const Vector2 & b) {
         return Vector2(a * b.x(), a * b.y());

@@ -9,6 +9,8 @@
 #include "./math.h"
 #include "./matrix3x3.h"
 #include "./rect.h"
+#include "./size.h"
+#include "./text_draw_layouter.h"
 #include "./unicode_util.h"
 #include "./vector2.h"
 #include "./vector3.h"

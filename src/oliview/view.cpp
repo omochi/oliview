@@ -106,8 +106,8 @@ namespace oliview {
         nvgRect(ctx,
                 0,
                 0,
-                frame_.size().x(),
-                frame_.size().y());
+                frame_.size().width(),
+                frame_.size().height());
         nvgFillColor(ctx, background_color_.ToNanoVG());
         nvgFill(ctx);
     }

@@ -1,8 +1,9 @@
 #pragma once
 
 #include "./dependency.h"
-#include "./view.h"
 #include "./gl_assert.h"
+#include "./size.h"
+#include "./view.h"
 #include "./vector2.h"
 
 namespace oliview {
@@ -19,8 +20,8 @@ namespace oliview {
         void Close();
         
         Ptr<Application> application() const;
-        RHETORIC_GETTER(Vector2, window_size)
-        RHETORIC_GETTER(Vector2, framebuffer_size)
+        RHETORIC_GETTER(Size, window_size)
+        RHETORIC_GETTER(Size, framebuffer_size)
         RHETORIC_GETTER(Ptr<View>, root_view)
         RHETORIC_GETTER(GLFWwindow *, glfw_window)
 
@@ -43,8 +44,8 @@ namespace oliview {
 
         std::function<bool()> should_close_;
 
-        Vector2 window_size_;
-        Vector2 framebuffer_size_;
+        Size window_size_;
+        Size framebuffer_size_;
         Ptr<View> root_view_;
 
         static void RefreshHandler(GLFWwindow * window);

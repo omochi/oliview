@@ -1,6 +1,7 @@
 #pragma once
 
 #include "./font.h"
+#include "./text_draw_layouter.h"
 #include "./view.h"
 
 namespace oliview {

@@ -29,6 +29,9 @@ namespace oliview {
 
         Vector2 operator+(const Vector2 & other) const;
         Vector2 operator-(const Vector2 & other) const;
+        
+        Vector2 GetMin(const Vector2 & other) const;
+        Vector2 GetMax(const Vector2 & other) const;
     private:
         float elements_[2];
     };
