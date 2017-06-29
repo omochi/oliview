@@ -17,8 +17,10 @@ namespace oliview {
             DrawInfo();
         };
 
-        View();
+        View(const Ptr<Application> & application);
         virtual ~View();
+        
+        Ptr<Application> application() const;
 
         Ptr<View> parent() const;
         std::vector<Ptr<View>> children() const;
@@ -27,7 +29,6 @@ namespace oliview {
         void RemoveChildAt(int index);
 
         Ptr<Window> window() const;
-        Ptr<Application> application() const;
 
         Rect frame() const;
         void set_frame(const Rect & value);
@@ -43,6 +44,8 @@ namespace oliview {
         void _SetParent(const Ptr<View> & parent);
         void _SetWindow(const Ptr<Window> & window);
     private:
+        WeakPtr<Application> application_;
+        
         WeakPtr<View> parent_;
         std::vector<Ptr<View>> children_;
 

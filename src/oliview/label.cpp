@@ -3,7 +3,9 @@
 #include "./application.h"
 
 namespace oliview {
-    Label::Label(const std::string & text):
+    Label::Label(const Ptr<Application> &application,
+                 const std::string & text):
+    View(application),
     text_(text),
     font_size_(12.0f)
     {

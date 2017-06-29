@@ -4,9 +4,12 @@
 #include "./view.h"
 
 namespace oliview {
+    class Application;
+    
     class Label : public View {
     public:
-        Label(const std::string & text = "");
+        Label(const Ptr<Application> & application,
+              const std::string & text = "");
 
         RHETORIC_ACCESSOR(std::string, text)
         RHETORIC_ACCESSOR(Ptr<Font>, font)

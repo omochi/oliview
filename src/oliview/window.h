@@ -33,8 +33,9 @@ namespace oliview {
 
         static Ptr<Window> Create(const Ptr<Application> & application);
     private:
-        Window();
-        void Init(const Ptr<Application> & application);
+        Window(const Ptr<Application> & application);
+        void Init();
+        void Open();
 
         WeakPtr<Application> application_;
         

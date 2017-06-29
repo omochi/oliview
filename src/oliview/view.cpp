@@ -7,13 +7,18 @@ namespace oliview {
     window_transform(Matrix3x3::Identity())
     {
     }
-
-    View::View():
+    
+    View::View(const Ptr<Application> & application):
+    application_(application),
     background_color_(1, 1, 1, 0)
     {
     }
     
     View::~View() {
+    }
+    
+    Ptr<Application> View::application() const {
+        return application_.lock();
     }
 
     Ptr<View> View::parent() const {
@@ -26,6 +31,7 @@ namespace oliview {
 
     void View::AddChild(const Ptr<View> & child) {
         RHETORIC_ASSERT(child->parent() == nullptr);
+        
         children_.push_back(child);
         child->_SetParent(shared_from_this());
     }
@@ -48,10 +54,6 @@ namespace oliview {
 
     Ptr<Window> View::window() const {
         return window_.lock();
-    }
-    
-    Ptr<Application> View::application() const {
-        return window()->application();
     }
 
     Rect View::frame() const {
@@ -111,6 +113,10 @@ namespace oliview {
     }
 
     void View::_SetParent(const Ptr<View> & parent) {
+        if (parent) {
+            RHETORIC_ASSERT(application() == parent->application());
+        }
+        
         parent_ = parent;
 
         if (parent) {
@@ -121,6 +127,10 @@ namespace oliview {
     }
 
     void View::_SetWindow(const Ptr<Window> & window) {
+        if (window) {
+            RHETORIC_ASSERT(application() == window->application());
+        }
+        
         window_ = window;
 
         for (auto & child : children_) {
@@ -128,4 +138,5 @@ namespace oliview {
         }
     }
 
+    
 }
