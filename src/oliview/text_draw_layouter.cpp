@@ -5,8 +5,7 @@ namespace oliview {
     string(nullptr),
     length(0),
     y(0),
-    left(0),
-    right(0)
+    draw_width(0)
     {}
     
     TextDrawLayouter::Result
@@ -33,8 +32,8 @@ namespace oliview {
         Rect whole_frame;
         
         for (auto & draw : result.entries) {
-            Rect draw_rect = Rect(Vector2(draw.left, draw.y),
-                                  Size(draw.right - draw.left, line_height_));
+            Rect draw_rect = Rect(Vector2(0, draw.y),
+                                  Size(draw.draw_width, line_height_));
             whole_frame = whole_frame.GetUnion(draw_rect);
         }
         
@@ -45,8 +44,7 @@ namespace oliview {
     
     TextDrawLayouter::SingleLineResult::SingleLineResult():
     length(0),
-    draw_left(0),
-    draw_right(0)
+    draw_width(0)
     {}
     
     std::vector<TextDrawLayouter::DrawEntry>
@@ -77,8 +75,7 @@ namespace oliview {
             draw_entry.string = next_begin_ptr;
             draw_entry.length = single_result.length;
             draw_entry.y = draw_y;
-            draw_entry.left = single_result.draw_left;
-            draw_entry.right = single_result.draw_right;
+            draw_entry.draw_width = single_result.draw_width;
             result.push_back(draw_entry);
             
             draw_y += line_height_;
@@ -138,8 +135,7 @@ namespace oliview {
             }
             
             result.length = (int)(next_glyph_str - string_start);
-            result.draw_left = std::min(result.draw_left, position.minx);
-            result.draw_right = std::max(result.draw_right, position.maxx);
+            result.draw_width = std::max(result.draw_width, position.maxx);
             
             index += 1;
         }

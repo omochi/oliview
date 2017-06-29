@@ -44,7 +44,7 @@ namespace oliview {
                                       Some(frame().size().width()));
         for (auto & draw : layout.entries) {
             nvgText(ctx,
-                    draw.left,
+                    0,
                     draw.y + ascender,
                     draw.string,
                     draw.string + draw.length);

@@ -11,8 +11,7 @@ namespace oliview {
             int length;
             
             float y;
-            float left;
-            float right;
+            float draw_width;
             
             DrawEntry();
         };
@@ -28,8 +27,7 @@ namespace oliview {
     private:
         struct SingleLineResult {
             int length;
-            float draw_left;
-            float draw_right;
+            float draw_width;
             
             SingleLineResult();
         };
