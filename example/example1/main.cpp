@@ -23,9 +23,9 @@ class Example1 : public Application {
         view3->set_frame(Rect(20, 20, 40, 40));
         view3->set_background_color(Color(0, 1, 0, 1));
 
-        auto view4 = New<Label>(app, "明xるい未来");
+        auto view4 = New<Label>(app, "明るい未来\n暗い過去");
         window->root_view()->AddChild(view4);
-        view4->set_frame(Rect(20, 440, 30, 30));
+        view4->set_frame(Rect(20, 440, 59, 40));
         view4->set_background_color(Color(1, 0, 0, 1));
         
         auto usi = GetUnicodeScalarIndices(view4->text());

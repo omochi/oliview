@@ -11,13 +11,15 @@ namespace oliview {
         Label(const Ptr<Application> & application,
               const std::string & text = "");
 
-        RHETORIC_ACCESSOR(std::string, text)
+        std::string text() const;
+        void set_text(const std::string & value);
+
         RHETORIC_ACCESSOR(Ptr<Font>, font)
         RHETORIC_ACCESSOR_TRIVIAL(float, font_size)
 
         virtual void DrawContent(NVGcontext * ctx);
     private:
-        std::string text_;
+        std::list<std::string> lines_;
         Ptr<Font> font_;
         float font_size_;
     };
