@@ -13,6 +13,8 @@ namespace oliview {
     public:
         struct DrawInfo {
             Matrix3x3 window_transform;
+            
+            Rect clip_frame;
 
             DrawInfo();
         };

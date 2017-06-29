@@ -17,13 +17,13 @@ class Example1 : public Application {
         auto view2 = New<View>(app);
         window->root_view()->AddChild(view2);
         view2->set_frame(Rect(Vector2(20, 120),
-                              Size(300, 300)));
+                              Size(100, 100)));
         view2->set_background_color(Color(0, 0, 1, 1));
 
         auto view3 = New<View>(app);
         view2->AddChild(view3);
         view3->set_frame(Rect(Vector2(20, 20),
-                              Size(40, 40)));
+                              Size(140, 40)));
         view3->set_background_color(Color(0, 1, 0, 1));
 
         auto view4 = New<Label>(app, "明るい未来\n暗い過去");

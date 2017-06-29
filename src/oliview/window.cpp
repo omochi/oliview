@@ -38,6 +38,8 @@ namespace oliview {
 
         View::DrawInfo draw_info;
 
+        draw_info.clip_frame = Rect(Vector2(0, 0),
+                                    window_size_);
         root_view_->PreDraw(draw_info);
 
         if (window_size_.width() > 0 && window_size_.height() > 0) {

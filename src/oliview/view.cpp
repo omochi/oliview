@@ -76,7 +76,7 @@ namespace oliview {
         draw_info_ = info;
 
         auto tr = draw_info_.window_transform;
-        tr *= Matrix3x3::Translation(frame_.origin());
+        tr = Matrix3x3::Translation(frame_.origin()) * tr;
         draw_info_.window_transform = tr;
 
         for (auto & child : children_) {
@@ -85,7 +85,17 @@ namespace oliview {
     }
 
     void View::Draw(NVGcontext * ctx) {
+        
+        Rect content_clip = Rect(Vector2(0, 0), frame().size());
+        content_clip = content_clip.ApplyTransform(draw_info_.window_transform);
+        content_clip = content_clip.GetIntersection(draw_info_.clip_frame);
+        
         nvgSave(ctx);
+        nvgScissor(ctx,
+                   content_clip.origin().x(),
+                   content_clip.origin().y(),
+                   content_clip.size().width(),
+                   content_clip.size().height());
 
         auto tr = draw_info_.window_transform;
         tr = tr.Transpose();
@@ -93,6 +103,7 @@ namespace oliview {
                      tr.get(0, 0), tr.get(1, 0),
                      tr.get(0, 1), tr.get(1, 1),
                      tr.get(0, 2), tr.get(1, 2));
+
         DrawContent(ctx);
         nvgRestore(ctx);
 

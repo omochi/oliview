@@ -23,6 +23,9 @@ namespace oliview {
         
         Rect GetUnion(const Rect & other) const;
         Rect GetIntersection(const Rect & other) const;
+        
+        static Rect FromPoints(const Vector2 & p0,
+                               const Vector2 & p1);
     private:
         Vector2 origin_;
         Size size_;
