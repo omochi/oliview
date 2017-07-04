@@ -11,9 +11,9 @@ namespace oliview {
     TextDrawLayouter::Result
     TextDrawLayouter::Layout(NVGcontext * ctx,
                              const std::list<std::string> & lines,
-                             const Optional<float> & width_limit)
+                             const Optional<float> & max_width)
     {
-        width_limit_ = width_limit;
+        max_width_ = max_width;
         
         Result result;
         
@@ -118,9 +118,9 @@ namespace oliview {
             }
             
             auto & position = positions[index];
-            if (width_limit_) {
+            if (max_width_) {
                 if (index > 0 &&
-                    *width_limit_ < position.maxx)
+                    *max_width_ < position.maxx)
                 {
                     //  wrap
                     return result;

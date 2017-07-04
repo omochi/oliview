@@ -29,11 +29,33 @@ namespace oliview {
         glfw_window_ = nullptr;
     }
     
+    void Window::TryClose() {
+        if (should_close_) {
+            if (!should_close_()) {
+                return;
+            }
+        }
+        
+        Close();
+    }
+    
     Ptr<Application> Window::application() const {
         return application_.lock();
     }
 
-    void Window::Update() {
+
+    void Window::MakeContextCurrent() {
+        glfwMakeContextCurrent(glfw_window_);
+    }
+
+
+    Ptr<Window> Window::Create(const Ptr<Application> & application) {
+        auto thiz = RHETORIC_NEW(Window, application);
+        thiz->Init();
+        return thiz;
+    }
+    
+    void Window::_Update() {
         int layout_count = 0;
         while (true) {
             bool updated = root_view_->_InvokeLayout();
@@ -52,35 +74,21 @@ namespace oliview {
         
         Draw();
     }
-
-    void Window::MakeContextCurrent() {
-        glfwMakeContextCurrent(glfw_window_);
-    }
-
-    void Window::MayTryClose() {
-        if (glfwWindowShouldClose(glfw_window_)) {
-            bool do_close = true;
-            if (should_close_) {
-                do_close = should_close_();
-            }
-            if (do_close) {
-                Close();
-            }
+    
+    void Window::_MayTryClose() {
+        if (!glfwWindowShouldClose(glfw_window_)) {
+            return;
         }
+        
+        TryClose();
     }
-
-    void Window::OnWindowSizeChange(int w, int h) {
+    
+    void Window::_OnWindowSizeChange(int w, int h) {
         set_window_size(Size(w, h));
     }
-
-    void Window::OnFramebufferSizeChange(int w, int h) {
+    
+    void Window::_OnFramebufferSizeChange(int w, int h) {
         framebuffer_size_ = Size(w, h);
-    }
-
-    Ptr<Window> Window::Create(const Ptr<Application> & application) {
-        auto thiz = RHETORIC_NEW(Window, application);
-        thiz->Init();
-        return thiz;
     }
 
     Window::Window(const Ptr<Application> & application):
@@ -152,6 +160,9 @@ namespace oliview {
             draws.push_back(command);
         }
         root_view_->_CollectDrawCommand(&draws);
+        
+        auto app = application();
+        auto ctx = app->nvg_context();
 
         MakeContextCurrent();
         OLIVIEW_GL_ASSERT_NO_ERROR();
@@ -162,9 +173,6 @@ namespace oliview {
         OLIVIEW_GL_ASSERT_NO_ERROR();
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
         OLIVIEW_GL_ASSERT_NO_ERROR();
-        
-        auto app = application();
-        auto ctx = app->nvg_context();
         
         nvgBeginFrame(ctx,
                       (int)window_size_.width(),
@@ -190,16 +198,16 @@ namespace oliview {
 
     void Window::RefreshHandler(GLFWwindow * window) {
         auto thiz = (Window *)glfwGetWindowUserPointer(window);
-        thiz->Update();
+        thiz->_Update();
     }
 
     void Window::WindowSizeHandler(GLFWwindow * window, int w, int h) {
         auto thiz = (Window *)glfwGetWindowUserPointer(window);
-        thiz->OnWindowSizeChange(w, h);
+        thiz->_OnWindowSizeChange(w, h);
     }
 
     void Window::FramebufferSizeHandler(GLFWwindow * window, int w, int h) {
         auto thiz = (Window *)glfwGetWindowUserPointer(window);
-        thiz->OnFramebufferSizeChange(w, h);
+        thiz->_OnFramebufferSizeChange(w, h);
     }
 }

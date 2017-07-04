@@ -19,6 +19,7 @@ namespace oliview {
         RHETORIC_ACCESSOR_TRIVIAL(std::function<bool()>, should_close)
 
         void Close();
+        void TryClose();
         
         Ptr<Application> application() const;
         RHETORIC_GETTER(Size, window_size)
@@ -26,14 +27,16 @@ namespace oliview {
         RHETORIC_GETTER(Ptr<View>, root_view)
         RHETORIC_GETTER(GLFWwindow *, glfw_window)
 
-        void Update();
         void MakeContextCurrent();
-        void MayTryClose();
-        
-        void OnWindowSizeChange(int w, int h);
-        void OnFramebufferSizeChange(int w, int h);
 
         static Ptr<Window> Create(const Ptr<Application> & application);
+        
+        void _Update();
+        void _MayTryClose();
+        
+        void _OnWindowSizeChange(int w, int h);
+        void _OnFramebufferSizeChange(int w, int h);
+        
     private:
         Window(const Ptr<Application> & application);
         void Init();

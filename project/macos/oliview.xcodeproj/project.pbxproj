@@ -46,6 +46,8 @@
 		D678E3B11F0BBC3700B9A4C0 /* measure_query.h in Headers */ = {isa = PBXBuildFile; fileRef = D678E3AF1F0BBC3700B9A4C0 /* measure_query.h */; };
 		D678E3B41F0BC0E200B9A4C0 /* nanovg_util.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D678E3B21F0BC0E200B9A4C0 /* nanovg_util.cpp */; };
 		D678E3B51F0BC0E200B9A4C0 /* nanovg_util.h in Headers */ = {isa = PBXBuildFile; fileRef = D678E3B31F0BC0E200B9A4C0 /* nanovg_util.h */; };
+		D678E3B81F0BD24F00B9A4C0 /* layouter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D678E3B61F0BD24F00B9A4C0 /* layouter.cpp */; };
+		D678E3B91F0BD24F00B9A4C0 /* layouter.h in Headers */ = {isa = PBXBuildFile; fileRef = D678E3B71F0BD24F00B9A4C0 /* layouter.h */; };
 		D6C3F7381E9D29D90020D65A /* glfw3.h in Headers */ = {isa = PBXBuildFile; fileRef = D6C3F7331E9D29D90020D65A /* glfw3.h */; };
 		D6C3F7391E9D29D90020D65A /* glfw3native.h in Headers */ = {isa = PBXBuildFile; fileRef = D6C3F7341E9D29D90020D65A /* glfw3native.h */; };
 		D6C3F7461E9D29F70020D65A /* fontstash.h in Headers */ = {isa = PBXBuildFile; fileRef = D6C3F73D1E9D29F70020D65A /* fontstash.h */; };
@@ -96,6 +98,8 @@
 		D678E3AF1F0BBC3700B9A4C0 /* measure_query.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = measure_query.h; sourceTree = "<group>"; };
 		D678E3B21F0BC0E200B9A4C0 /* nanovg_util.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nanovg_util.cpp; sourceTree = "<group>"; };
 		D678E3B31F0BC0E200B9A4C0 /* nanovg_util.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nanovg_util.h; sourceTree = "<group>"; };
+		D678E3B61F0BD24F00B9A4C0 /* layouter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = layouter.cpp; sourceTree = "<group>"; };
+		D678E3B71F0BD24F00B9A4C0 /* layouter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = layouter.h; sourceTree = "<group>"; };
 		D6C3F6AA1E99AAB50020D65A /* liboliview.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = liboliview.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		D6C3F7331E9D29D90020D65A /* glfw3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = glfw3.h; sourceTree = "<group>"; };
 		D6C3F7341E9D29D90020D65A /* glfw3native.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = glfw3native.h; sourceTree = "<group>"; };
@@ -160,6 +164,8 @@
 				D646505E1EA644F40067BA12 /* gl_assert.h */,
 				D64650AC1EA671960067BA12 /* label.cpp */,
 				D64650AD1EA671960067BA12 /* label.h */,
+				D678E3B61F0BD24F00B9A4C0 /* layouter.cpp */,
+				D678E3B71F0BD24F00B9A4C0 /* layouter.h */,
 				D646505F1EA644F40067BA12 /* math.cpp */,
 				D64650601EA644F40067BA12 /* math.h */,
 				D64650611EA644F40067BA12 /* matrix3x3.cpp */,
@@ -169,7 +175,6 @@
 				D64650631EA644F40067BA12 /* nanovg_gl_impl.cpp */,
 				D678E3B21F0BC0E200B9A4C0 /* nanovg_util.cpp */,
 				D678E3B31F0BC0E200B9A4C0 /* nanovg_util.h */,
-				D646507A1EA644F40067BA12 /* window.h */,
 				D64650661EA644F40067BA12 /* oliview.h */,
 				D603008C1EFAE98E006D0A9D /* unicode_util.cpp */,
 				D603008D1EFAE98E006D0A9D /* unicode_util.h */,
@@ -186,6 +191,7 @@
 				D64650771EA644F40067BA12 /* view.cpp */,
 				D64650781EA644F40067BA12 /* view.h */,
 				D64650791EA644F40067BA12 /* window.cpp */,
+				D646507A1EA644F40067BA12 /* window.h */,
 			);
 			path = oliview;
 			sourceTree = "<group>";
@@ -268,6 +274,7 @@
 				D6C3F7471E9D29F70020D65A /* nanovg.h in Headers */,
 				D646508C1EA644F40067BA12 /* math.h in Headers */,
 				D678E3AD1F053BEF00B9A4C0 /* size.h in Headers */,
+				D678E3B91F0BD24F00B9A4C0 /* layouter.h in Headers */,
 				D6C3F7481E9D29F70020D65A /* nanovg_gl.h in Headers */,
 				D6C3F74B1E9D29F70020D65A /* stb_truetype.h in Headers */,
 				D646507C1EA644F40067BA12 /* application.h in Headers */,
@@ -355,6 +362,7 @@
 				D678E3B41F0BC0E200B9A4C0 /* nanovg_util.cpp in Sources */,
 				D678E3AC1F053BEF00B9A4C0 /* size.cpp in Sources */,
 				D64650A11EA644F40067BA12 /* vector3.cpp in Sources */,
+				D678E3B81F0BD24F00B9A4C0 /* layouter.cpp in Sources */,
 				D678E3A81F053A8700B9A4C0 /* text_draw_layouter.cpp in Sources */,
 				D646509F1EA644F40067BA12 /* vector2.cpp in Sources */,
 				D64650891EA644F40067BA12 /* gl_assert.cpp in Sources */,

@@ -17,7 +17,7 @@ namespace oliview {
     background_color_(1, 1, 1, 0),
     needs_layout_(true),
     self_layouting_(false),
-    clip_children_(false)
+    clipping_children_(false)
     {}
     
     View::~View() {}
@@ -72,43 +72,57 @@ namespace oliview {
         return window_.lock();
     }
 
-    Rect View::frame() const {
-        return frame_;
-    }
-
     void View::set_frame(const Rect & value) {
         frame_ = value;
         
         SetNeedsLayout();
     }
 
-    Color View::background_color() const {
-        return background_color_;
-    }
-
     void View::set_background_color(const Color & value) {
         background_color_ = value;
     }
     
-    bool View::clip_children() const {
-        return clip_children_;
-    }
-    
-    void View::set_clip_children(bool value) {
-        clip_children_ = value;
-    }
-    
-    void View::Layout() {
+    void View::set_clipping_children(bool value) {
+        clipping_children_ = value;
     }
     
     void View::SetNeedsLayout() {
         needs_layout_ = true;
     }
     
-    void View::set_layout_function(const std::function<void()> & value) {
-        layout_function_ = value;
+    void View::set_layouter(const Ptr<Layouter> & value) {
+        layouter_ = value;
+        
+        if (layouter_) {
+            layouter_->_set_owner(shared_from_this());
+        }
         
         SetNeedsLayout();
+    }
+    
+    void View::OnLayout() {
+    }
+    
+    Size View::Measure(const MeasureQuery & query) const {
+        if (layouter_) {
+            return layouter_->Measure(query);
+        }
+        
+        return OnMeasure(query);
+    }
+    
+    Size View::OnMeasure(const MeasureQuery & query) const {
+        float width = frame().size().width();
+        float height = frame().size().height();
+        
+        if (query.max_width()) {
+            width = std::min(width, *query.max_width());
+        }
+        if (query.max_height()) {
+            height = std::min(height, *query.max_height());
+        }
+        
+        return Size(width, height);
     }
 
     void View::Draw() {
@@ -116,11 +130,7 @@ namespace oliview {
         auto ctx = app->nvg_context();
         
         nvgBeginPath(ctx);
-        nvgRect(ctx,
-                0,
-                0,
-                frame_.size().width(),
-                frame_.size().height());
+        NVGRect(ctx, Rect(Vector2(), frame_.size()));
         nvgFillColor(ctx, background_color_.ToNanoVG());
         nvgFill(ctx);
     }
@@ -132,7 +142,7 @@ namespace oliview {
             needs_layout_ = false;
             
             self_layouting_ = true;
-            LayoutSelf();
+            Layout();
             self_layouting_ = false;
             
             updated = true;
@@ -159,7 +169,7 @@ namespace oliview {
 
         DrawInfo child_info = draw_info_;
         
-        if (clip_children_) {
+        if (clipping_children_) {
             child_info.parent_clip_frame = child_info.content_clip_frame;
         }
         
@@ -232,14 +242,13 @@ namespace oliview {
         }
     }
     
-    void View::LayoutSelf() {
-        if (layout_function_) {
-            layout_function_();
-            
+    void View::Layout() {
+        if (layouter_) {
+            layouter_->Layout();
             return;
         }
         
-        Layout();
+        OnLayout();
     }
     
     void View::DrawShadow() {

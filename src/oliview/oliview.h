@@ -1,13 +1,17 @@
 #pragma once
 
+#include "./dependency.h"
+
 #include "./application.h"
 #include "./color.h"
-#include "./dependency.h"
 #include "./font.h"
+#include "./font_manager.h"
 #include "./gl_assert.h"
 #include "./label.h"
 #include "./math.h"
 #include "./matrix3x3.h"
+#include "./measure_query.h"
+#include "./nanovg_util.h"
 #include "./rect.h"
 #include "./size.h"
 #include "./text_draw_layouter.h"

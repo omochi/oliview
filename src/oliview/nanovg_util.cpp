@@ -20,4 +20,18 @@ namespace oliview {
                      m.get(0, 1), m.get(1, 1),
                      m.get(0, 2), m.get(1, 2));
     }
+    
+    void NVGRect(NVGcontext * ctx,
+                 const Rect & rect)
+    {
+        nvgRect(ctx,
+                rect.origin().x(), rect.origin().y(),
+                rect.size().width(), rect.size().height());
+    }
+    
+    void NVGFillColor(NVGcontext * ctx,
+                      const Color & color)
+    {
+        nvgFillColor(ctx, color.ToNanoVG());
+    }
 }

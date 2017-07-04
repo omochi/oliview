@@ -23,7 +23,7 @@ namespace oliview {
         
         Result Layout(NVGcontext * ctx,
                       const std::list<std::string> & lines,
-                      const Optional<float> & width_limit);
+                      const Optional<float> & max_width);
     private:
         struct SingleLineResult {
             int length;
@@ -42,6 +42,6 @@ namespace oliview {
                                           int string_length);
         
         float line_height_;
-        Optional<float> width_limit_;
+        Optional<float> max_width_;
     };
 }

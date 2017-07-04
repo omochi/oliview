@@ -3,9 +3,12 @@
 #include "./dependency.h"
 
 #include "./color.h"
+#include "./layouter.h"
 #include "./matrix3x3.h"
+#include "./measure_query.h"
 #include "./nanovg_util.h"
 #include "./rect.h"
+#include "./size.h"
 
 namespace oliview {
     class Application;
@@ -44,20 +47,25 @@ namespace oliview {
 
         Ptr<Window> window() const;
 
-        Rect frame() const;
+        RHETORIC_GETTER(Rect, frame)
         void set_frame(const Rect & value);
 
-        Color background_color() const;
+        RHETORIC_GETTER(Color, background_color)
         void set_background_color(const Color & value);
         
-        bool clip_children() const;
-        void set_clip_children(bool value);
+        RHETORIC_GETTER(bool, clipping_children)
+        void set_clipping_children(bool value);
         
-        virtual void Layout();
         void SetNeedsLayout();
         
-        RHETORIC_GETTER(std::function<void()>, layout_function)
-        void set_layout_function(const std::function<void()> & value);
+        
+        RHETORIC_GETTER(Ptr<Layouter>, layouter)
+        void set_layouter(const Ptr<Layouter> & value);
+        
+        virtual void OnLayout();
+        
+        virtual Size Measure(const MeasureQuery & query) const;
+        virtual Size OnMeasure(const MeasureQuery & query) const;
         
         virtual void Draw();
 
@@ -68,7 +76,7 @@ namespace oliview {
         void _SetParent(const Ptr<View> & parent);
         void _SetWindow(const Ptr<Window> & window);
     private:
-        void LayoutSelf();
+        void Layout();
         void DrawShadow();
         
         WeakPtr<Application> application_;
@@ -82,9 +90,10 @@ namespace oliview {
         Color background_color_;
         
         bool needs_layout_;
-        std::function<void()> layout_function_;
+        Ptr<Layouter> layouter_;
+        
         bool self_layouting_;
-        bool clip_children_;
+        bool clipping_children_;
 
         DrawInfo draw_info_;
     };

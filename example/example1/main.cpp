@@ -19,7 +19,7 @@ class Example1 : public Application {
         view2->set_frame(Rect(Vector2(20, 120),
                               Size(100, 100)));
         view2->set_background_color(Color(0, 0, 1, 1));
-        view2->set_clip_children(true);
+        view2->set_clipping_children(true);
 
         auto view3 = New<View>(app);
         view2->AddChild(view3);
