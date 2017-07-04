@@ -15,9 +15,9 @@ namespace oliview {
         virtual void OnInit() {}
         virtual void OnFinish() {}
         
-        RHETORIC_GETTER(NVGcontext *, nvg_context)
         RHETORIC_GETTER(Ptr<FontManager>, font_manager)
         
+        NVGcontext * _nvg_context() const;
         void _AddWindow(const Ptr<Window> & window);
         void _RemoveWindow(const Ptr<Window> & window);
         Ptr<Window> _shared_context_window() const;

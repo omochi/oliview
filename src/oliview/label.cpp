@@ -23,33 +23,17 @@ namespace oliview {
         SetNeedsLayout();
     }
     
-    void Label::Layout() {
-        auto app = application();
-        auto ctx = app->nvg_context();
-        auto fm = app->font_manager();
-        
-        auto font = this->font();
-        if (!font) {
-            font = fm->default_font();
-        }
-        
-        nvgFontFaceId(ctx, font->nvg_handle());
-        nvgFontSize(ctx, font_size());
-        nvgFillColor(ctx, Color(0.0f, 0.0f, 0.0f, 1.0f).ToNanoVG());
-        
-        TextDrawLayouter layouter;
-        
-        text_layout_ = layouter.Layout(ctx,
-                                       lines_,
-                                       Some(frame().size().width()));
+    Size Label::OnMeasure(NVGcontext * ctx, const MeasureQuery & query) const {
+        auto text_layout = LayoutText(ctx, query.max_width());
+        return Size(text_layout.whole_frame.size());
+    }
+    
+    void Label::OnLayout(NVGcontext * ctx) {
+        text_layout_ = LayoutText(ctx, Some(frame().size().width()));
     }
 
-    void Label::Draw() {
-        View::Draw();
-        
+    void Label::Draw(NVGcontext * ctx) {
         auto app = application();
-        
-        auto ctx = app->nvg_context();
         
         auto fm = app->font_manager();
         auto font = this->font();
@@ -71,5 +55,26 @@ namespace oliview {
                     draw.string,
                     draw.string + draw.length);
         }
+    }
+    
+    TextDrawLayouter::Result Label::LayoutText(NVGcontext * ctx,
+                                               const Optional<float> & max_width) const
+    {
+        auto app = application();
+        auto fm = app->font_manager();
+        
+        auto font = this->font();
+        if (!font) {
+            font = fm->default_font();
+        }
+        
+        nvgFontFaceId(ctx, font->nvg_handle());
+        nvgFontSize(ctx, font_size());
+        
+        TextDrawLayouter layouter;
+        
+        return layouter.Layout(ctx,
+                               lines_,
+                               max_width);
     }
 }

@@ -37,6 +37,7 @@ namespace oliview {
     };
 
     Vector2 operator*(float a, const Vector2 & b);
+    Vector2 operator*(const Vector2 & a, float b);
     Vector2 operator/(const Vector2 & a, float b);
     Vector2 & operator/=(Vector2 & a, float b);
 }

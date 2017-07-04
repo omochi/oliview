@@ -13,7 +13,9 @@ namespace oliview {
     {        
     }
     
-    Font::~Font() {}
+    Font::~Font() {
+        // no destructor in nanovg...
+    }
 
 }
 

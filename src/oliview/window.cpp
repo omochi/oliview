@@ -43,11 +43,9 @@ namespace oliview {
         return application_.lock();
     }
 
-
     void Window::MakeContextCurrent() {
         glfwMakeContextCurrent(glfw_window_);
     }
-
 
     Ptr<Window> Window::Create(const Ptr<Application> & application) {
         auto thiz = RHETORIC_NEW(Window, application);
@@ -56,23 +54,15 @@ namespace oliview {
     }
     
     void Window::_Update() {
-        int layout_count = 0;
-        while (true) {
-            bool updated = root_view_->_InvokeLayout();
-            layout_count += 1;
-            if (!updated) {
-                break;
-            }
-            
-            RHETORIC_ASSERT(layout_count < 100);
-        }
+        NVGcontext * ctx = BeginNVG();
         
-        View::DrawInfo draw_info;
+        Layout(ctx);
         
-        draw_info.parent_clip_frame = Rect(Vector2(0, 0), window_size_);
-        root_view_->_PreDraw(draw_info);
+        Draw(ctx);
         
-        Draw();
+        EndNVG(ctx);
+        
+        glfwSwapBuffers(glfw_window_);
     }
     
     void Window::_MayTryClose() {
@@ -88,7 +78,7 @@ namespace oliview {
     }
     
     void Window::_OnFramebufferSizeChange(int w, int h) {
-        framebuffer_size_ = Size(w, h);
+        set_framebuffer_size(Size(w, h));
     }
 
     Window::Window(const Ptr<Application> & application):
@@ -142,15 +132,54 @@ namespace oliview {
         set_window_size(Size(w, h));
         
         glfwGetFramebufferSize(glfw_window_, &w, &h);
-        framebuffer_size_ = Size(w, h);
+        set_framebuffer_size(Size(w, h));
         
         app->_AddWindow(shared_from_this());
     }
     
-    void Window::Draw() {
-        if (window_size_.width() == 0 || window_size_.height() == 0) {
+    NVGcontext * Window::BeginNVG() {
+        auto app = application();
+        auto ctx = app->_nvg_context();
+        
+        MakeContextCurrent();
+        OLIVIEW_GL_ASSERT_NO_ERROR();
+        
+        float pixel_ratio = last_valid_framebuffer_size_.width() / last_valid_window_size_.width();
+        nvgBeginFrame(ctx,
+                      (int)last_valid_window_size_.width(),
+                      (int)last_valid_window_size_.height(),
+                      pixel_ratio);
+        
+        return ctx;
+    }
+    
+    void Window::EndNVG(NVGcontext * ctx) {
+        nvgEndFrame(ctx);
+    }
+    
+    void Window::Layout(NVGcontext * ctx) {
+        int layout_count = 0;
+        while (true) {
+            bool updated = root_view_->_InvokeLayout(ctx);
+            layout_count += 1;
+            if (!updated) {
+                break;
+            }
+            
+            RHETORIC_ASSERT(layout_count < 100);
+        }
+    }
+    
+    void Window::Draw(NVGcontext * ctx) {
+        if (framebuffer_size_.width() == 0 ||
+            framebuffer_size_.height() == 0)
+        {
             return;
         }
+        
+        View::DrawInfo draw_info;
+        draw_info.parent_clip_frame = Rect(Vector2(0, 0), window_size_);
+        root_view_->_PrepareToDraw(draw_info);
         
         std::list<View::DrawCommand> draws;
         {
@@ -161,12 +190,6 @@ namespace oliview {
         }
         root_view_->_CollectDrawCommand(&draws);
         
-        auto app = application();
-        auto ctx = app->nvg_context();
-
-        MakeContextCurrent();
-        OLIVIEW_GL_ASSERT_NO_ERROR();
-        
         glViewport(0, 0, (int)framebuffer_size_.width(), (int)framebuffer_size_.height());
         OLIVIEW_GL_ASSERT_NO_ERROR();
         glClearColor(0, 0, 0, 0);
@@ -174,26 +197,29 @@ namespace oliview {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
         OLIVIEW_GL_ASSERT_NO_ERROR();
         
-        nvgBeginFrame(ctx,
-                      (int)window_size_.width(),
-                      (int)window_size_.height(),
-                      framebuffer_size_.width() / window_size_.width());
-        
         for (auto & draw : draws) {
             auto view = draw.view.lock();
             if (!view) { continue; }
-            view->_InvokeDraw(draw.shadow);
+            view->_InvokeDraw(ctx, draw.shadow);
         }
-        
-        nvgEndFrame(ctx);
-        
-        glfwSwapBuffers(glfw_window_);
     }
     
     void Window::set_window_size(const Size & value) {
         window_size_ = value;
         
+        if (window_size_.width() != 0 && window_size_.height() != 0) {
+            last_valid_window_size_ = window_size_;
+        }
+        
         root_view_->set_frame(Rect(Vector2(0, 0), window_size_));
+    }
+    
+    void Window::set_framebuffer_size(const Size & value) {
+        framebuffer_size_ = value;
+        
+        if (framebuffer_size_.width() != 0 && framebuffer_size_.height() != 0) {
+            last_valid_framebuffer_size_ = framebuffer_size_;
+        }
     }
 
     void Window::RefreshHandler(GLFWwindow * window) {

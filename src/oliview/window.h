@@ -41,10 +41,15 @@ namespace oliview {
         Window(const Ptr<Application> & application);
         void Init();
         void Open();
-                
-        void Draw();
+        
+        NVGcontext * BeginNVG();
+        void EndNVG(NVGcontext * ctx);
+        
+        void Layout(NVGcontext * ctx);
+        void Draw(NVGcontext * ctx);
         
         void set_window_size(const Size & value);
+        void set_framebuffer_size(const Size & value);
 
         WeakPtr<Application> application_;
         
@@ -54,6 +59,10 @@ namespace oliview {
 
         Size window_size_;
         Size framebuffer_size_;
+        
+        Size last_valid_window_size_;
+        Size last_valid_framebuffer_size_;
+        
         Ptr<View> root_view_;
 
         static void RefreshHandler(GLFWwindow * window);

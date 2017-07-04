@@ -19,6 +19,10 @@ namespace oliview {
 
 //  nanovg
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunused-parameter"
+#pragma clang diagnostic ignored "-Wshadow"
+
 #include <nanovg.h>
 
 #ifndef NANOVG_GL3_IMPLEMENTATION
@@ -26,6 +30,8 @@ namespace oliview {
 #endif
 #include <nanovg_gl.h>
 #include <nanovg_gl_utils.h>
+
+#pragma clang diagnostic pop
 
 //  std
 

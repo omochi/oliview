@@ -19,7 +19,6 @@ namespace oliview {
     private:
         FontManager();
         Result<None> Init(const Ptr<Application> & application);
-        NVGcontext * nvg_context() const;
         
         WeakPtr<Application> application_;
         

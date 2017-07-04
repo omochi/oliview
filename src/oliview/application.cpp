@@ -3,14 +3,15 @@
 namespace oliview {
     Application::Application():
     nvg_context_(nullptr)
-    {
-    }
+    {}
 
     Application::~Application()
-    {
-    }
+    {}
 
     int Application::Main(int argc, char * argv[]) {
+        RHETORIC_UNUSED(argc);
+        RHETORIC_UNUSED(argv);
+        
         Init();
 
         while (true) {
@@ -37,6 +38,10 @@ namespace oliview {
         Finish();
 
         return EXIT_SUCCESS;
+    }
+    
+    NVGcontext * Application::_nvg_context() const {
+        return nvg_context_;
     }
 
     void Application::_AddWindow(const Ptr<Window> & window) {

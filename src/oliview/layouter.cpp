@@ -3,6 +3,8 @@
 #include "./view.h"
 
 namespace oliview {
+    Layouter::~Layouter() {}
+    
     Ptr<View> Layouter::owner() const {
         return owner_.lock();
     }

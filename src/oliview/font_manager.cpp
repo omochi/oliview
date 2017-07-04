@@ -6,7 +6,11 @@ namespace oliview {
     FontManager::~FontManager() {}
     
     Result<Ptr<Font>> FontManager::Open(const FilePath & path) {
-        auto ctx = nvg_context();
+        auto app = application_.lock();
+        RHETORIC_ASSERT(app != nullptr);
+        
+        auto ctx = app->_nvg_context();
+        RHETORIC_ASSERT(ctx != nullptr);
         
         RHETORIC_TRY_ASSIGN(auto data, path.Read())
         
@@ -85,8 +89,4 @@ namespace oliview {
         return Success(None());        
     }
 
-    NVGcontext * FontManager::nvg_context() const {
-        auto app = application_.lock();
-        return app->nvg_context();
-    }
 }

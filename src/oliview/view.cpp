@@ -25,7 +25,7 @@ namespace oliview {
     Ptr<Application> View::application() const {
         return application_.lock();
     }
-
+    
     Ptr<View> View::parent() const {
         return parent_.lock();
     }
@@ -100,18 +100,21 @@ namespace oliview {
         SetNeedsLayout();
     }
     
-    void View::OnLayout() {
+    void View::OnLayout(NVGcontext * ctx) {
+        RHETORIC_UNUSED(ctx);
     }
     
-    Size View::Measure(const MeasureQuery & query) const {
+    Size View::Measure(NVGcontext * ctx, const MeasureQuery & query) const {
         if (layouter_) {
-            return layouter_->Measure(query);
+            return layouter_->Measure(ctx, query);
         }
         
-        return OnMeasure(query);
+        return OnMeasure(ctx, query);
     }
     
-    Size View::OnMeasure(const MeasureQuery & query) const {
+    Size View::OnMeasure(NVGcontext * ctx, const MeasureQuery & query) const {
+        RHETORIC_UNUSED(ctx);
+        
         float width = frame().size().width();
         float height = frame().size().height();
         
@@ -125,31 +128,25 @@ namespace oliview {
         return Size(width, height);
     }
 
-    void View::Draw() {
-        auto app = application();
-        auto ctx = app->nvg_context();
-        
-        nvgBeginPath(ctx);
-        NVGRect(ctx, Rect(Vector2(), frame_.size()));
-        nvgFillColor(ctx, background_color_.ToNanoVG());
-        nvgFill(ctx);
+    void View::Draw(NVGcontext * ctx) {
+        RHETORIC_UNUSED(ctx);
     }
     
-    bool View::_InvokeLayout() {
+    bool View::_InvokeLayout(NVGcontext * ctx) {
         bool updated = false;
         
         if (needs_layout_) {
             needs_layout_ = false;
             
             self_layouting_ = true;
-            Layout();
+            Layout(ctx);
             self_layouting_ = false;
             
             updated = true;
         }
         
         for (auto & child : children()) {
-            if (child->_InvokeLayout()) {
+            if (child->_InvokeLayout(ctx)) {
                 updated = true;
             }
         }
@@ -157,7 +154,7 @@ namespace oliview {
         return updated;
     }
 
-    void View::_PreDraw(const DrawInfo & info) {
+    void View::_PrepareToDraw(const DrawInfo & info) {
         draw_info_ = info;
         
         auto wtr = draw_info_.window_transform;
@@ -174,23 +171,21 @@ namespace oliview {
         }
         
         for (auto & child : children_) {
-            child->_PreDraw(child_info);
+            child->_PrepareToDraw(child_info);
         }
     }
     
-    void View::_InvokeDraw(bool shadow) {
+    void View::_InvokeDraw(NVGcontext * ctx, bool shadow) {
         if (shadow) {
-            DrawShadow();
+            DrawShadow(ctx);
             return;
         }
-        
-        auto app = application();
-        auto ctx = app->nvg_context();
-        
+                
         nvgSave(ctx);
         NVGScissor(ctx, draw_info_.content_clip_frame);
         NVGTransform(ctx, draw_info_.window_transform);
-        Draw();
+        DrawBackground(ctx);
+        Draw(ctx);
         nvgRestore(ctx);
     }
 
@@ -242,17 +237,23 @@ namespace oliview {
         }
     }
     
-    void View::Layout() {
+    void View::Layout(NVGcontext * ctx) {
         if (layouter_) {
-            layouter_->Layout();
-            return;
+            layouter_->Layout(ctx);
+        } else {
+            OnLayout(ctx);
         }
-        
-        OnLayout();
     }
     
-    void View::DrawShadow() {
-        
+    void View::DrawBackground(NVGcontext * ctx) {
+        nvgBeginPath(ctx);
+        NVGRect(ctx, Rect(Vector2(), frame_.size()));
+        NVGFillColor(ctx, background_color_);
+        nvgFill(ctx);
+    }
+    
+    void View::DrawShadow(NVGcontext * ctx) {
+        RHETORIC_UNUSED(ctx);
     }
     
     

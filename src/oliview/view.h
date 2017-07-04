@@ -58,26 +58,26 @@ namespace oliview {
         
         void SetNeedsLayout();
         
-        
         RHETORIC_GETTER(Ptr<Layouter>, layouter)
         void set_layouter(const Ptr<Layouter> & value);
         
-        virtual void OnLayout();
+        virtual void OnLayout(NVGcontext * ctx);
         
-        virtual Size Measure(const MeasureQuery & query) const;
-        virtual Size OnMeasure(const MeasureQuery & query) const;
+        virtual Size Measure(NVGcontext * ctx, const MeasureQuery & query) const;
+        virtual Size OnMeasure(NVGcontext * ctx, const MeasureQuery & query) const;
         
-        virtual void Draw();
+        virtual void Draw(NVGcontext * ctx);
 
-        bool _InvokeLayout();
-        void _PreDraw(const DrawInfo & info);
+        bool _InvokeLayout(NVGcontext * ctx);
+        void _PrepareToDraw(const DrawInfo & info);
         void _CollectDrawCommand(std::list<DrawCommand> * commands);
-        void _InvokeDraw(bool shadow);
+        void _InvokeDraw(NVGcontext * ctx, bool shadow);
         void _SetParent(const Ptr<View> & parent);
         void _SetWindow(const Ptr<Window> & window);
     private:
-        void Layout();
-        void DrawShadow();
+        void Layout(NVGcontext * ctx);
+        void DrawBackground(NVGcontext * ctx);
+        void DrawShadow(NVGcontext * ctx);
         
         WeakPtr<Application> application_;
         
