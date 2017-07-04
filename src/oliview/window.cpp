@@ -36,9 +36,9 @@ namespace oliview {
     void Window::Update() {
         int layout_count = 0;
         while (true) {
-            bool occured = LayoutView(root_view_);
+            bool updated = root_view_->_InvokeLayout();
             layout_count += 1;
-            if (!occured) {
+            if (!updated) {
                 break;
             }
             
@@ -47,9 +47,8 @@ namespace oliview {
         
         View::DrawInfo draw_info;
         
-        draw_info.clip_frame = Rect(Vector2(0, 0),
-                                    window_size_);
-        root_view_->PreDraw(draw_info);
+        draw_info.parent_clip_frame = Rect(Vector2(0, 0), window_size_);
+        root_view_->_PreDraw(draw_info);
         
         Draw();
     }
@@ -71,7 +70,7 @@ namespace oliview {
     }
 
     void Window::OnWindowSizeChange(int w, int h) {
-        window_size_ = Size(w, h);
+        set_window_size(Size(w, h));
     }
 
     void Window::OnFramebufferSizeChange(int w, int h) {
@@ -95,7 +94,6 @@ namespace oliview {
 
         root_view_ = New<View>(app);
         root_view_->_SetWindow(shared_from_this());
-        
         root_view_->set_background_color(Color(1, 1, 1, 1));
         
         Open();
@@ -123,48 +121,37 @@ namespace oliview {
         
         glfw_window_ = glfwCreateWindow(960, 540, "window", nullptr, gfscw);
         RHETORIC_ASSERT(glfw_window_ != nullptr);
+        glfwSetWindowUserPointer(glfw_window_, this);
+        glfwSetWindowRefreshCallback(glfw_window_, &Window::RefreshHandler);
+        glfwSetWindowSizeCallback(glfw_window_, &Window::WindowSizeHandler);
+        glfwSetFramebufferSizeCallback(glfw_window_, &Window::FramebufferSizeHandler);
+
+        MakeContextCurrent();
         
         int w, h;
         
-        glfwSetWindowUserPointer(glfw_window_, this);
-        
-        glfwSetWindowRefreshCallback(glfw_window_, &Window::RefreshHandler);
-        
         glfwGetWindowSize(glfw_window_, &w, &h);
-        window_size_ = Size(w, h);
-        glfwSetWindowSizeCallback(glfw_window_, &Window::WindowSizeHandler);
+        set_window_size(Size(w, h));
         
         glfwGetFramebufferSize(glfw_window_, &w, &h);
         framebuffer_size_ = Size(w, h);
-        glfwSetFramebufferSizeCallback(glfw_window_, &Window::FramebufferSizeHandler);
-        
-        MakeContextCurrent();
         
         app->_AddWindow(shared_from_this());
-    }
-    
-    bool Window::LayoutView(const Ptr<View> & view) {
-        bool ret = false;
-        
-        bool occured = view->MayLayout();
-        if (occured) {
-            ret = true;
-        }
-        
-        for (auto & v : view->children()) {
-            occured = LayoutView(v);
-            if (occured) {
-                ret = true;
-            }
-        }
-        
-        return ret;
     }
     
     void Window::Draw() {
         if (window_size_.width() == 0 || window_size_.height() == 0) {
             return;
         }
+        
+        std::list<View::DrawCommand> draws;
+        {
+            View::DrawCommand command;
+            command.view = root_view_;
+            command.shadow = false;
+            draws.push_back(command);
+        }
+        root_view_->_CollectDrawCommand(&draws);
 
         MakeContextCurrent();
         OLIVIEW_GL_ASSERT_NO_ERROR();
@@ -184,17 +171,26 @@ namespace oliview {
                       (int)window_size_.height(),
                       framebuffer_size_.width() / window_size_.width());
         
-        root_view_->set_frame(Rect(Vector2(0, 0), window_size_));
-        root_view_->Draw();
+        for (auto & draw : draws) {
+            auto view = draw.view.lock();
+            if (!view) { continue; }
+            view->_InvokeDraw(draw.shadow);
+        }
         
         nvgEndFrame(ctx);
         
         glfwSwapBuffers(glfw_window_);
     }
+    
+    void Window::set_window_size(const Size & value) {
+        window_size_ = value;
+        
+        root_view_->set_frame(Rect(Vector2(0, 0), window_size_));
+    }
 
     void Window::RefreshHandler(GLFWwindow * window) {
         auto thiz = (Window *)glfwGetWindowUserPointer(window);
-        thiz->Draw();
+        thiz->Update();
     }
 
     void Window::WindowSizeHandler(GLFWwindow * window, int w, int h) {

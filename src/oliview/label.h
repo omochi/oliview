@@ -19,7 +19,7 @@ namespace oliview {
         RHETORIC_ACCESSOR_TRIVIAL(float, font_size)
 
         virtual void Layout() override;
-        virtual void DrawContent() override;
+        virtual void Draw() override;
     private:
         std::list<std::string> lines_;
         Ptr<Font> font_;

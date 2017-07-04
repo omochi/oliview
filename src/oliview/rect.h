@@ -1,6 +1,7 @@
 #pragma once
 
 #include "./dependency.h"
+
 #include "./size.h"
 #include "./vector2.h"
 #include "./matrix3x3.h"

@@ -24,13 +24,10 @@ namespace oliview {
     }
     
     void Label::Layout() {
-        Print("layout label");
-        
         auto app = application();
-        
         auto ctx = app->nvg_context();
-        
         auto fm = app->font_manager();
+        
         auto font = this->font();
         if (!font) {
             font = fm->default_font();
@@ -47,8 +44,8 @@ namespace oliview {
                                        Some(frame().size().width()));
     }
 
-    void Label::DrawContent() {
-        View::DrawContent();
+    void Label::Draw() {
+        View::Draw();
         
         auto app = application();
         

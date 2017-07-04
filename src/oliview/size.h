@@ -1,6 +1,7 @@
 #pragma once
 
 #include "./dependency.h"
+
 #include "./vector2.h"
 
 namespace oliview {

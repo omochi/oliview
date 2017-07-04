@@ -19,6 +19,7 @@ class Example1 : public Application {
         view2->set_frame(Rect(Vector2(20, 120),
                               Size(100, 100)));
         view2->set_background_color(Color(0, 0, 1, 1));
+        view2->set_clip_children(true);
 
         auto view3 = New<View>(app);
         view2->AddChild(view3);
@@ -36,7 +37,7 @@ class Example1 : public Application {
 
 void EitherTest() {
     Either2<int, std::string> a = EitherCase<0>(3);
-    Print(Format("%d", a.AsCase0()));
+    RHETORIC_ASSERT(a.AsCase0() == 3);
 }
 
 int main(int argc, char * argv[]) {

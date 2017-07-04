@@ -42,6 +42,10 @@
 		D678E3A91F053A8700B9A4C0 /* text_draw_layouter.h in Headers */ = {isa = PBXBuildFile; fileRef = D678E3A71F053A8700B9A4C0 /* text_draw_layouter.h */; };
 		D678E3AC1F053BEF00B9A4C0 /* size.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D678E3AA1F053BEF00B9A4C0 /* size.cpp */; };
 		D678E3AD1F053BEF00B9A4C0 /* size.h in Headers */ = {isa = PBXBuildFile; fileRef = D678E3AB1F053BEF00B9A4C0 /* size.h */; };
+		D678E3B01F0BBC3700B9A4C0 /* measure_query.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D678E3AE1F0BBC3700B9A4C0 /* measure_query.cpp */; };
+		D678E3B11F0BBC3700B9A4C0 /* measure_query.h in Headers */ = {isa = PBXBuildFile; fileRef = D678E3AF1F0BBC3700B9A4C0 /* measure_query.h */; };
+		D678E3B41F0BC0E200B9A4C0 /* nanovg_util.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D678E3B21F0BC0E200B9A4C0 /* nanovg_util.cpp */; };
+		D678E3B51F0BC0E200B9A4C0 /* nanovg_util.h in Headers */ = {isa = PBXBuildFile; fileRef = D678E3B31F0BC0E200B9A4C0 /* nanovg_util.h */; };
 		D6C3F7381E9D29D90020D65A /* glfw3.h in Headers */ = {isa = PBXBuildFile; fileRef = D6C3F7331E9D29D90020D65A /* glfw3.h */; };
 		D6C3F7391E9D29D90020D65A /* glfw3native.h in Headers */ = {isa = PBXBuildFile; fileRef = D6C3F7341E9D29D90020D65A /* glfw3native.h */; };
 		D6C3F7461E9D29F70020D65A /* fontstash.h in Headers */ = {isa = PBXBuildFile; fileRef = D6C3F73D1E9D29F70020D65A /* fontstash.h */; };
@@ -88,6 +92,10 @@
 		D678E3A71F053A8700B9A4C0 /* text_draw_layouter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = text_draw_layouter.h; sourceTree = "<group>"; };
 		D678E3AA1F053BEF00B9A4C0 /* size.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = size.cpp; sourceTree = "<group>"; };
 		D678E3AB1F053BEF00B9A4C0 /* size.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = size.h; sourceTree = "<group>"; };
+		D678E3AE1F0BBC3700B9A4C0 /* measure_query.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = measure_query.cpp; sourceTree = "<group>"; };
+		D678E3AF1F0BBC3700B9A4C0 /* measure_query.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = measure_query.h; sourceTree = "<group>"; };
+		D678E3B21F0BC0E200B9A4C0 /* nanovg_util.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nanovg_util.cpp; sourceTree = "<group>"; };
+		D678E3B31F0BC0E200B9A4C0 /* nanovg_util.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nanovg_util.h; sourceTree = "<group>"; };
 		D6C3F6AA1E99AAB50020D65A /* liboliview.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = liboliview.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		D6C3F7331E9D29D90020D65A /* glfw3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = glfw3.h; sourceTree = "<group>"; };
 		D6C3F7341E9D29D90020D65A /* glfw3native.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = glfw3native.h; sourceTree = "<group>"; };
@@ -156,7 +164,12 @@
 				D64650601EA644F40067BA12 /* math.h */,
 				D64650611EA644F40067BA12 /* matrix3x3.cpp */,
 				D64650621EA644F40067BA12 /* matrix3x3.h */,
+				D678E3AE1F0BBC3700B9A4C0 /* measure_query.cpp */,
+				D678E3AF1F0BBC3700B9A4C0 /* measure_query.h */,
 				D64650631EA644F40067BA12 /* nanovg_gl_impl.cpp */,
+				D678E3B21F0BC0E200B9A4C0 /* nanovg_util.cpp */,
+				D678E3B31F0BC0E200B9A4C0 /* nanovg_util.h */,
+				D646507A1EA644F40067BA12 /* window.h */,
 				D64650661EA644F40067BA12 /* oliview.h */,
 				D603008C1EFAE98E006D0A9D /* unicode_util.cpp */,
 				D603008D1EFAE98E006D0A9D /* unicode_util.h */,
@@ -173,7 +186,6 @@
 				D64650771EA644F40067BA12 /* view.cpp */,
 				D64650781EA644F40067BA12 /* view.h */,
 				D64650791EA644F40067BA12 /* window.cpp */,
-				D646507A1EA644F40067BA12 /* window.h */,
 			);
 			path = oliview;
 			sourceTree = "<group>";
@@ -246,6 +258,7 @@
 				D64650AF1EA671960067BA12 /* label.h in Headers */,
 				D64650971EA644F40067BA12 /* rect.h in Headers */,
 				D6C3F74A1E9D29F70020D65A /* stb_image.h in Headers */,
+				D678E3B51F0BC0E200B9A4C0 /* nanovg_util.h in Headers */,
 				D6C3F7491E9D29F70020D65A /* nanovg_gl_utils.h in Headers */,
 				D64650A01EA644F40067BA12 /* vector2.h in Headers */,
 				D64650A21EA644F40067BA12 /* vector3.h in Headers */,
@@ -262,6 +275,7 @@
 				D64650A41EA644F40067BA12 /* view.h in Headers */,
 				D678E3A91F053A8700B9A4C0 /* text_draw_layouter.h in Headers */,
 				D646508A1EA644F40067BA12 /* gl_assert.h in Headers */,
+				D678E3B11F0BBC3700B9A4C0 /* measure_query.h in Headers */,
 				D64650A61EA644F40067BA12 /* window.h in Headers */,
 				D64650921EA644F40067BA12 /* oliview.h in Headers */,
 				D6C3F7391E9D29D90020D65A /* glfw3native.h in Headers */,
@@ -332,11 +346,13 @@
 				D64651B91EAB50300067BA12 /* font.cpp in Sources */,
 				D64650961EA644F40067BA12 /* rect.cpp in Sources */,
 				D646508F1EA644F40067BA12 /* nanovg_gl_impl.cpp in Sources */,
+				D678E3B01F0BBC3700B9A4C0 /* measure_query.cpp in Sources */,
 				D64650821EA644F40067BA12 /* color.cpp in Sources */,
 				D603008A1EFA94AC006D0A9D /* font_manager.cpp in Sources */,
 				D646507B1EA644F40067BA12 /* application.cpp in Sources */,
 				D603008F1EFAE98E006D0A9D /* unicode_util.cpp in Sources */,
 				D64650A51EA644F40067BA12 /* window.cpp in Sources */,
+				D678E3B41F0BC0E200B9A4C0 /* nanovg_util.cpp in Sources */,
 				D678E3AC1F053BEF00B9A4C0 /* size.cpp in Sources */,
 				D64650A11EA644F40067BA12 /* vector3.cpp in Sources */,
 				D678E3A81F053A8700B9A4C0 /* text_draw_layouter.cpp in Sources */,

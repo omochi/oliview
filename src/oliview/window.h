@@ -1,6 +1,7 @@
 #pragma once
 
 #include "./dependency.h"
+
 #include "./gl_assert.h"
 #include "./size.h"
 #include "./view.h"
@@ -37,10 +38,10 @@ namespace oliview {
         Window(const Ptr<Application> & application);
         void Init();
         void Open();
-        
-        bool LayoutView(const Ptr<View> & view);
-        
+                
         void Draw();
+        
+        void set_window_size(const Size & value);
 
         WeakPtr<Application> application_;
         
