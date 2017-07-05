@@ -1,7 +1,6 @@
 #include "./grid_layouter.h"
 
 namespace oliview {
-    
     GridLayouter::Dimension GridLayouter::RotateDimension(GridLayouter::Dimension dimension) {
         switch (dimension) {
             case Dimension::Row:

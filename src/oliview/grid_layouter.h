@@ -3,6 +3,7 @@
 #include "./layouter.h"
 #include "./view.h"
 
+
 namespace oliview {
     class GridLayouter : public Layouter {
     public:
