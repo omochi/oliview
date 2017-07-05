@@ -36,8 +36,9 @@ class Example1 : public Application {
 };
 
 void EitherTest() {
-    Either2<int, std::string> a = EitherCase<0>(3);
+    Either2<int, std::string> a = EitherCase<Either2Tag::Case0>(3);
     RHETORIC_ASSERT(a.AsCase0() == 3);
+    RHETORIC_ASSERT(a.AsCase<Either2Tag::Case0>() == 3);
 }
 
 int main(int argc, char * argv[]) {
