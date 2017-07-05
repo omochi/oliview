@@ -5,11 +5,18 @@
 namespace oliview {
     Layouter::~Layouter() {}
     
-    Ptr<View> Layouter::owner() const {
-        return owner_.lock();
+    Ptr<View> Layouter::view() const {
+        return view_.lock();
     }
     
-    void Layouter::_set_owner(const Ptr<View> & owner) {
-        owner_ = owner;
+    void Layouter::SetNeedsLayout() const {
+        auto view = this->view();
+        if (view) {
+            view->SetNeedsLayout();
+        }
+    }
+    
+    void Layouter::_set_view(const Ptr<View> & view) {
+        view_ = view;
     }
 }

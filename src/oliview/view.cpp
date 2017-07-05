@@ -91,10 +91,14 @@ namespace oliview {
     }
     
     void View::set_layouter(const Ptr<Layouter> & value) {
+        if (layouter_) {
+            layouter_->_set_view(nullptr);
+        }
+        
         layouter_ = value;
         
         if (layouter_) {
-            layouter_->_set_owner(shared_from_this());
+            layouter_->_set_view(shared_from_this());
         }
         
         SetNeedsLayout();
