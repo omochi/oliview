@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		D62AD00F1ED82E33009FF226 /* librhetoric.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D62AD00E1ED82E33009FF226 /* librhetoric.a */; };
+		D639A0471F0D57BE0059B6BA /* example1_app.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D639A0451F0D57BE0059B6BA /* example1_app.cpp */; };
 		D675A60A1EB7452F00576E18 /* libfreetype.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D675A6091EB7452F00576E18 /* libfreetype.a */; };
 		D6C3F6D41E99B4320020D65A /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D6C3F6D31E99B4320020D65A /* main.cpp */; };
 		D6C3F6E61E9A0A960020D65A /* liboliview.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D6C3F6E51E9A0A960020D65A /* liboliview.a */; };
@@ -33,6 +34,8 @@
 
 /* Begin PBXFileReference section */
 		D62AD00E1ED82E33009FF226 /* librhetoric.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = librhetoric.a; path = "../../../../../../Library/Developer/Xcode/DerivedData/oliview-fboadbrsbgoyhsekesybjbtrxohz/Build/Products/Debug/librhetoric.a"; sourceTree = "<group>"; };
+		D639A0451F0D57BE0059B6BA /* example1_app.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = example1_app.cpp; sourceTree = "<group>"; };
+		D639A0461F0D57BE0059B6BA /* example1_app.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = example1_app.h; sourceTree = "<group>"; };
 		D675A6091EB7452F00576E18 /* libfreetype.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libfreetype.a; path = ../../../../../../../../usr/local/Cellar/freetype/2.6.3/lib/libfreetype.a; sourceTree = "<group>"; };
 		D6C3F6C11E99AEAA0020D65A /* example1 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = example1; sourceTree = BUILT_PRODUCTS_DIR; };
 		D6C3F6D31E99B4320020D65A /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
@@ -85,6 +88,8 @@
 		D6C3F6D21E99B4240020D65A /* example1 */ = {
 			isa = PBXGroup;
 			children = (
+				D639A0451F0D57BE0059B6BA /* example1_app.cpp */,
+				D639A0461F0D57BE0059B6BA /* example1_app.h */,
 				D6C3F6D31E99B4320020D65A /* main.cpp */,
 			);
 			name = example1;
@@ -164,6 +169,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D639A0471F0D57BE0059B6BA /* example1_app.cpp in Sources */,
 				D6C3F6D41E99B4320020D65A /* main.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

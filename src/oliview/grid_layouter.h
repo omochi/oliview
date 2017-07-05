@@ -1,19 +1,12 @@
 #pragma once
 
 #include "./layouter.h"
+#include "./table_dimension.h"
 #include "./view.h"
-
 
 namespace oliview {
     class GridLayouter : public Layouter {
     public:
-        enum class Dimension {
-            Row,
-            Column
-        };
-        
-        static Dimension RotateDimension(Dimension dimension);
-        
         class TrackSizeDef {
         public:
             RHETORIC_ACCESSOR(Optional<float>, fixed_value)
@@ -34,7 +27,7 @@ namespace oliview {
             RHETORIC_ACCESSOR(Range<int>, row_position)
             RHETORIC_ACCESSOR(Range<int>, column_position)
             
-            Range<int> GetPositionFor(Dimension dimension) const;
+            Range<int> GetPositionFor(TableDimension dimension) const;
         private:
             WeakPtr<View> item_;
             Range<int> row_position_;
@@ -46,6 +39,9 @@ namespace oliview {
         
         RHETORIC_GETTER(std::vector<TrackSizeDef>, column_size_defs);
         void set_column_size_defs(const std::vector<TrackSizeDef> & value);
+        
+        RHETORIC_GETTER(std::vector<ItemAreaDef>, item_area_defs);
+        void set_item_area_defs(const std::vector<ItemAreaDef> & value);
         
         virtual void Layout(NVGcontext * ctx) const override;
         virtual Size Measure(NVGcontext * ctx, const MeasureQuery & query) const override;
@@ -59,13 +55,13 @@ namespace oliview {
             std::vector<float> left_list;
         };
         
-        std::vector<TrackSizeDef> GetSizeDefsFor(Dimension dimension) const;
+        std::vector<TrackSizeDef> GetSizeDefsFor(TableDimension dimension) const;
         
         LayoutResult ResolveLayout(NVGcontext * ctx,
                                    const MeasureQuery & query) const;
         void CalcLayoutResult(LayoutResult * layout) const;
         
-        std::vector<ItemAreaDef> GetSingleAreas(Dimension dimension,
+        std::vector<ItemAreaDef> GetSingleAreas(TableDimension dimension,
                                                 int index) const;
         
         std::vector<TrackSizeDef> row_size_defs_;

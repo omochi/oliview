@@ -1,16 +1,6 @@
 #include "./grid_layouter.h"
 
 namespace oliview {
-    GridLayouter::Dimension GridLayouter::RotateDimension(GridLayouter::Dimension dimension) {
-        switch (dimension) {
-            case Dimension::Row:
-                return Dimension::Column;
-            case Dimension::Column:
-                return Dimension::Row;
-        }
-        RHETORIC_FATAL("never");
-    }
-    
     Ptr<View> GridLayouter::ItemAreaDef::item() const {
         return item_.lock();
     }
@@ -19,11 +9,11 @@ namespace oliview {
         item_ = value;
     }
     
-    Range<int> GridLayouter::ItemAreaDef::GetPositionFor(GridLayouter::Dimension dimension) const {
+    Range<int> GridLayouter::ItemAreaDef::GetPositionFor(TableDimension dimension) const {
         switch (dimension) {
-            case Dimension::Row:
+            case TableDimension::Row:
                 return row_position();
-            case Dimension::Column:
+            case TableDimension::Column:
                 return column_position();
         }
         RHETORIC_FATAL("never");
@@ -36,6 +26,11 @@ namespace oliview {
     
     void GridLayouter::set_column_size_defs(const std::vector<TrackSizeDef> & value) {
         column_size_defs_ = value;
+        SetNeedsLayout();
+    }
+    
+    void GridLayouter::set_item_area_defs(const std::vector<ItemAreaDef> & value) {
+        item_area_defs_ = value;
         SetNeedsLayout();
     }
     
@@ -80,11 +75,12 @@ namespace oliview {
         return ret;
     }
     
-    std::vector<GridLayouter::TrackSizeDef> GridLayouter::GetSizeDefsFor(Dimension dimension) const {
+    std::vector<GridLayouter::TrackSizeDef>
+    GridLayouter::GetSizeDefsFor(TableDimension dimension) const {
         switch (dimension) {
-            case Dimension::Row:
+            case TableDimension::Row:
                 return row_size_defs_;
-            case Dimension::Column:
+            case TableDimension::Column:
                 return column_size_defs_;
         }
         RHETORIC_FATAL("never");
@@ -94,7 +90,8 @@ namespace oliview {
                                                            const MeasureQuery & query) const {
         GridLayouter::LayoutResult ret;
         
-        std::vector<Dimension> dimensions = { Dimension::Row, Dimension::Column };
+        std::vector<TableDimension> dimensions = {
+            TableDimension::Row, TableDimension::Column };
         
         for (auto dimension : dimensions) {
             std::vector<TrackSizeDef> size_defs = GetSizeDefsFor(dimension);
@@ -120,7 +117,8 @@ namespace oliview {
                         item_query.set_max_width(None());
                         item_query.set_max_height(None());
                         auto item_size = item->Measure(ctx, item_query);
-                        row_height = std::max(row_height, item_size.height());
+                        float item_height = GetSizeValueFor(item_size, dimension);
+                        row_height = std::max(row_height, item_height);
                     }
                 }
                 
@@ -133,8 +131,9 @@ namespace oliview {
             
             float free_height = 0.0f;
             
-            if (query.max_height()) {
-                free_height = *query.max_height();
+            auto query_max = GetMeasureQueryMaxValueFor(query, dimension);
+            if (query_max) {
+                free_height = *query_max;
                 for (auto h : ret_sizes) {
                     free_height -= h;
                 }
@@ -150,10 +149,10 @@ namespace oliview {
             }
             
             switch (dimension) {
-                case Dimension::Row:
+                case TableDimension::Row:
                     ret.row_sizes = ret_sizes;
                     break;
-                case Dimension::Column:
+                case TableDimension::Column:
                     ret.column_sizes = ret_sizes;
                     break;
             }
@@ -179,7 +178,7 @@ namespace oliview {
     }
     
     std::vector<GridLayouter::ItemAreaDef>
-    GridLayouter::GetSingleAreas(Dimension dimension,
+    GridLayouter::GetSingleAreas(TableDimension dimension,
                                  int index) const
     {
         std::vector<GridLayouter::ItemAreaDef> ret;
