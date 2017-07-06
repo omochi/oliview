@@ -3,11 +3,61 @@
 #include "./application.h"
 
 namespace oliview {
+    Window::Window():
+    glfw_window_(nullptr)
+    {}
 
     Window::~Window() {
         Close();
     }
 
+    void Window::Init(const Ptr<Application> & app) {
+        application_ = app;
+        
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
+        glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+        glfwWindowHint(GLFW_RED_BITS, 8);
+        glfwWindowHint(GLFW_GREEN_BITS, 8);
+        glfwWindowHint(GLFW_BLUE_BITS, 8);
+        glfwWindowHint(GLFW_ALPHA_BITS, 8);
+        glfwWindowHint(GLFW_DEPTH_BITS, 24);
+        glfwWindowHint(GLFW_STENCIL_BITS, 8);
+        
+        GLFWwindow * gsw = nullptr;
+        auto sw = app->_shared_context_window();
+        if (sw) {
+            gsw = sw->glfw_window();
+        }
+        
+        GLFWwindow * gw = glfwCreateWindow(960, 540, "window", nullptr, gsw);
+        RHETORIC_ASSERT(gw != nullptr);
+        glfw_window_ = gw;
+        
+        glfwSetWindowUserPointer(gw, this);
+        glfwSetWindowRefreshCallback(gw, &Window::RefreshHandler);
+        glfwSetWindowSizeCallback(gw, &Window::WindowSizeHandler);
+        glfwSetFramebufferSizeCallback(gw, &Window::FramebufferSizeHandler);
+        glfwSetCharCallback(gw, &Window::CharHandler);
+        
+        MakeContextCurrent();
+        
+        root_view_ = OLIVIEW_INIT(View, app);
+        root_view_->_SetWindow(shared_from_this());
+        root_view_->set_background_color(Color(1, 1, 1, 1));
+        
+        int w, h;
+        
+        glfwGetWindowSize(gw, &w, &h);
+        set_window_size(Size(w, h));
+        
+        glfwGetFramebufferSize(gw, &w, &h);
+        set_framebuffer_size(Size(w, h));
+        
+        app->_AddWindow(shared_from_this());
+    }
+    
     bool Window::closed() const {
         return glfw_window_ == nullptr;
     }
@@ -29,30 +79,14 @@ namespace oliview {
         glfw_window_ = nullptr;
     }
     
-    void Window::TryClose() {
-        if (should_close_) {
-            if (!should_close_()) {
-                return;
-            }
-        }
-        
-        Close();
-    }
-    
-    Ptr<Application> Window::application() const {
-        return application_.lock();
-    }
-
     void Window::MakeContextCurrent() {
         glfwMakeContextCurrent(glfw_window_);
     }
-
-    Ptr<Window> Window::Create(const Ptr<Application> & application) {
-        auto thiz = RHETORIC_NEW(Window, application);
-        thiz->Init();
-        return thiz;
-    }
     
+    bool Window::ShouldClose() const {
+        return true;
+    }
+
     void Window::_Update() {
         NVGcontext * ctx = BeginNVG();
         
@@ -65,76 +99,16 @@ namespace oliview {
         glfwSwapBuffers(glfw_window_);
     }
     
-    void Window::_MayTryClose() {
+    void Window::_MayClose() {
         if (!glfwWindowShouldClose(glfw_window_)) {
             return;
         }
         
-        TryClose();
-    }
-    
-    void Window::_OnWindowSizeChange(int w, int h) {
-        set_window_size(Size(w, h));
-    }
-    
-    void Window::_OnFramebufferSizeChange(int w, int h) {
-        set_framebuffer_size(Size(w, h));
-    }
-
-    Window::Window(const Ptr<Application> & application):
-    application_(application),
-    glfw_window_(nullptr)
-    {
-    }
-    
-    void Window::Init() {
-        auto app = application();
-
-        root_view_ = New<View>(app);
-        root_view_->_SetWindow(shared_from_this());
-        root_view_->set_background_color(Color(1, 1, 1, 1));
-        
-        Open();
-    }
-    
-    void Window::Open() {
-        auto app = application();
-        
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
-        glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-        glfwWindowHint(GLFW_RED_BITS, 8);
-        glfwWindowHint(GLFW_GREEN_BITS, 8);
-        glfwWindowHint(GLFW_BLUE_BITS, 8);
-        glfwWindowHint(GLFW_ALPHA_BITS, 8);
-        glfwWindowHint(GLFW_DEPTH_BITS, 24);
-        glfwWindowHint(GLFW_STENCIL_BITS, 8);
-        
-        GLFWwindow * gfscw = nullptr;
-        auto scw = app->_shared_context_window();
-        if (scw) {
-            gfscw = scw->glfw_window();
+        if (!ShouldClose()) {
+            return;
         }
         
-        glfw_window_ = glfwCreateWindow(960, 540, "window", nullptr, gfscw);
-        RHETORIC_ASSERT(glfw_window_ != nullptr);
-        glfwSetWindowUserPointer(glfw_window_, this);
-        glfwSetWindowRefreshCallback(glfw_window_, &Window::RefreshHandler);
-        glfwSetWindowSizeCallback(glfw_window_, &Window::WindowSizeHandler);
-        glfwSetFramebufferSizeCallback(glfw_window_, &Window::FramebufferSizeHandler);
-
-        MakeContextCurrent();
-        
-        int w, h;
-        
-        glfwGetWindowSize(glfw_window_, &w, &h);
-        set_window_size(Size(w, h));
-        
-        glfwGetFramebufferSize(glfw_window_, &w, &h);
-        set_framebuffer_size(Size(w, h));
-        
-        app->_AddWindow(shared_from_this());
+        Close();
     }
     
     NVGcontext * Window::BeginNVG() {
@@ -229,11 +203,16 @@ namespace oliview {
 
     void Window::WindowSizeHandler(GLFWwindow * window, int w, int h) {
         auto thiz = (Window *)glfwGetWindowUserPointer(window);
-        thiz->_OnWindowSizeChange(w, h);
+        thiz->set_window_size(Size(w, h));
     }
 
     void Window::FramebufferSizeHandler(GLFWwindow * window, int w, int h) {
         auto thiz = (Window *)glfwGetWindowUserPointer(window);
-        thiz->_OnFramebufferSizeChange(w, h);
+        thiz->set_framebuffer_size(Size(w, h));
+    }
+    
+    void Window::CharHandler(GLFWwindow * window, unsigned int code) {
+        // test
+        Print(Format("0x%04x", code));
     }
 }

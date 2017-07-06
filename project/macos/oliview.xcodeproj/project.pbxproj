@@ -13,6 +13,8 @@
 		D60300901EFAE98E006D0A9D /* unicode_util.h in Headers */ = {isa = PBXBuildFile; fileRef = D603008D1EFAE98E006D0A9D /* unicode_util.h */; };
 		D639A04A1F0D5FAC0059B6BA /* table_dimension.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D639A0481F0D5FAC0059B6BA /* table_dimension.cpp */; };
 		D639A04B1F0D5FAC0059B6BA /* table_dimension.h in Headers */ = {isa = PBXBuildFile; fileRef = D639A0491F0D5FAC0059B6BA /* table_dimension.h */; };
+		D639A04E1F0E70D20059B6BA /* text_box.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D639A04C1F0E70D20059B6BA /* text_box.cpp */; };
+		D639A04F1F0E70D20059B6BA /* text_box.h in Headers */ = {isa = PBXBuildFile; fileRef = D639A04D1F0E70D20059B6BA /* text_box.h */; };
 		D646507B1EA644F40067BA12 /* application.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D646504F1EA644F40067BA12 /* application.cpp */; };
 		D646507C1EA644F40067BA12 /* application.h in Headers */ = {isa = PBXBuildFile; fileRef = D64650501EA644F40067BA12 /* application.h */; };
 		D64650821EA644F40067BA12 /* color.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D64650561EA644F40067BA12 /* color.cpp */; };
@@ -69,6 +71,9 @@
 		D603008D1EFAE98E006D0A9D /* unicode_util.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = unicode_util.h; sourceTree = "<group>"; };
 		D639A0481F0D5FAC0059B6BA /* table_dimension.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = table_dimension.cpp; sourceTree = "<group>"; };
 		D639A0491F0D5FAC0059B6BA /* table_dimension.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = table_dimension.h; sourceTree = "<group>"; };
+		D639A04C1F0E70D20059B6BA /* text_box.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = text_box.cpp; sourceTree = "<group>"; };
+		D639A04D1F0E70D20059B6BA /* text_box.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = text_box.h; sourceTree = "<group>"; };
+		D639A0581F0EA0160059B6BA /* init_macro.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = init_macro.h; sourceTree = "<group>"; };
 		D646504F1EA644F40067BA12 /* application.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = application.cpp; sourceTree = "<group>"; };
 		D64650501EA644F40067BA12 /* application.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = application.h; sourceTree = "<group>"; };
 		D64650561EA644F40067BA12 /* color.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = color.cpp; sourceTree = "<group>"; };
@@ -172,10 +177,9 @@
 				D646505E1EA644F40067BA12 /* gl_assert.h */,
 				D6C060831F0BFDEA00F9516C /* grid_layouter.cpp */,
 				D6C060841F0BFDEA00F9516C /* grid_layouter.h */,
+				D639A0581F0EA0160059B6BA /* init_macro.h */,
 				D64650AC1EA671960067BA12 /* label.cpp */,
 				D64650AD1EA671960067BA12 /* label.h */,
-				D639A0481F0D5FAC0059B6BA /* table_dimension.cpp */,
-				D639A0491F0D5FAC0059B6BA /* table_dimension.h */,
 				D678E3B61F0BD24F00B9A4C0 /* layouter.cpp */,
 				D678E3B71F0BD24F00B9A4C0 /* layouter.h */,
 				D646505F1EA644F40067BA12 /* math.cpp */,
@@ -188,14 +192,18 @@
 				D678E3B21F0BC0E200B9A4C0 /* nanovg_util.cpp */,
 				D678E3B31F0BC0E200B9A4C0 /* nanovg_util.h */,
 				D64650661EA644F40067BA12 /* oliview.h */,
-				D603008C1EFAE98E006D0A9D /* unicode_util.cpp */,
-				D603008D1EFAE98E006D0A9D /* unicode_util.h */,
 				D646506A1EA644F40067BA12 /* rect.cpp */,
 				D646506B1EA644F40067BA12 /* rect.h */,
 				D678E3AA1F053BEF00B9A4C0 /* size.cpp */,
 				D678E3AB1F053BEF00B9A4C0 /* size.h */,
+				D639A0481F0D5FAC0059B6BA /* table_dimension.cpp */,
+				D639A0491F0D5FAC0059B6BA /* table_dimension.h */,
+				D639A04C1F0E70D20059B6BA /* text_box.cpp */,
+				D639A04D1F0E70D20059B6BA /* text_box.h */,
 				D678E3A61F053A8700B9A4C0 /* text_draw_layouter.cpp */,
 				D678E3A71F053A8700B9A4C0 /* text_draw_layouter.h */,
+				D603008C1EFAE98E006D0A9D /* unicode_util.cpp */,
+				D603008D1EFAE98E006D0A9D /* unicode_util.h */,
 				D64650731EA644F40067BA12 /* vector2.cpp */,
 				D64650741EA644F40067BA12 /* vector2.h */,
 				D64650751EA644F40067BA12 /* vector3.cpp */,
@@ -284,6 +292,7 @@
 				D6C3F7381E9D29D90020D65A /* glfw3.h in Headers */,
 				D64651BA1EAB50300067BA12 /* font.h in Headers */,
 				D6C3F7461E9D29F70020D65A /* fontstash.h in Headers */,
+				D639A04F1F0E70D20059B6BA /* text_box.h in Headers */,
 				D6C3F7471E9D29F70020D65A /* nanovg.h in Headers */,
 				D646508C1EA644F40067BA12 /* math.h in Headers */,
 				D678E3AD1F053BEF00B9A4C0 /* size.h in Headers */,
@@ -378,6 +387,7 @@
 				D678E3AC1F053BEF00B9A4C0 /* size.cpp in Sources */,
 				D64650A11EA644F40067BA12 /* vector3.cpp in Sources */,
 				D6C060851F0BFDEA00F9516C /* grid_layouter.cpp in Sources */,
+				D639A04E1F0E70D20059B6BA /* text_box.cpp in Sources */,
 				D678E3B81F0BD24F00B9A4C0 /* layouter.cpp in Sources */,
 				D678E3A81F053A8700B9A4C0 /* text_draw_layouter.cpp in Sources */,
 				D646509F1EA644F40067BA12 /* vector2.cpp in Sources */,

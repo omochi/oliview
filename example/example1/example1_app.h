@@ -1,14 +1,12 @@
 #pragma once
 
-#include <oliview/oliview.h>
+#include "./common.h"
 
-using namespace oliview;
+#include "./window1.h"
+#include "./window2.h"
 
 class Example1App : public Application {
 public:
     virtual void OnInit() override;
-    
 private:
-    void OpenWindow1();
-    void OpenWindow2();
 };

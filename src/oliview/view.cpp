@@ -12,8 +12,7 @@ namespace oliview {
     shadow(false)
     {}
     
-    View::View(const Ptr<Application> & application):
-    application_(application),
+    View::View():
     background_color_(1, 1, 1, 0),
     needs_layout_(true),
     self_layouting_(false),
@@ -22,18 +21,10 @@ namespace oliview {
     
     View::~View() {}
     
-    Ptr<Application> View::application() const {
-        return application_.lock();
+    void View::Init(const Ptr<Application> & application) {
+        application_ = application;
     }
     
-    Ptr<View> View::parent() const {
-        return parent_.lock();
-    }
-
-    std::vector<Ptr<View>> View::children() const {
-        return children_;
-    }
-
     void View::AddChild(const Ptr<View> & child) {
         RHETORIC_ASSERT(child->parent() == nullptr);
         
@@ -68,10 +59,6 @@ namespace oliview {
         }
     }
 
-    Ptr<Window> View::window() const {
-        return window_.lock();
-    }
-
     void View::set_frame(const Rect & value) {
         frame_ = value;
         
@@ -90,34 +77,38 @@ namespace oliview {
         needs_layout_ = true;
     }
     
-    void View::set_layouter(const Ptr<Layouter> & value) {
-        if (layouter_) {
-            layouter_->_set_view(nullptr);
+    void View::set_children_layouter(const Ptr<Layouter> & value) {
+        if (children_layouter_) {
+            children_layouter_->_set_view(nullptr);
         }
         
-        layouter_ = value;
+        children_layouter_ = value;
         
-        if (layouter_) {
-            layouter_->_set_view(shared_from_this());
+        if (children_layouter_) {
+            children_layouter_->_set_view(shared_from_this());
         }
         
         SetNeedsLayout();
     }
     
-    void View::OnLayout(NVGcontext * ctx) {
-        RHETORIC_UNUSED(ctx);
-    }
-    
     Size View::Measure(NVGcontext * ctx, const MeasureQuery & query) const {
-        if (layouter_) {
-            return layouter_->Measure(ctx, query);
+        Size size = MeasureContent(ctx, query);
+        
+        if (children_layouter_) {
+            Size layouter_size = children_layouter_->Measure(ctx, query);
+            
+            size = size.GetMax(layouter_size);
         }
         
-        return OnMeasure(ctx, query);
+        return size;
     }
     
-    Size View::OnMeasure(NVGcontext * ctx, const MeasureQuery & query) const {
+    Size View::MeasureContent(NVGcontext * ctx, const MeasureQuery & query) const {
         RHETORIC_UNUSED(ctx);
+        
+        if (children_layouter_) {
+            return Size(0, 0);
+        }
         
         float width = frame().size().width();
         float height = frame().size().height();
@@ -131,8 +122,12 @@ namespace oliview {
         
         return Size(width, height);
     }
+    
+    void View::LayoutContent(NVGcontext * ctx) {
+        RHETORIC_UNUSED(ctx);
+    }
 
-    void View::Draw(NVGcontext * ctx) {
+    void View::DrawContent(NVGcontext * ctx) {
         RHETORIC_UNUSED(ctx);
     }
     
@@ -186,10 +181,10 @@ namespace oliview {
         }
                 
         nvgSave(ctx);
-        NVGScissor(ctx, draw_info_.content_clip_frame);
+        NVGSetScissor(ctx, draw_info_.content_clip_frame);
         NVGTransform(ctx, draw_info_.window_transform);
         DrawBackground(ctx);
-        Draw(ctx);
+        DrawContent(ctx);
         nvgRestore(ctx);
     }
 
@@ -242,17 +237,17 @@ namespace oliview {
     }
     
     void View::Layout(NVGcontext * ctx) {
-        if (layouter_) {
-            layouter_->Layout(ctx);
-        } else {
-            OnLayout(ctx);
+        LayoutContent(ctx);
+        
+        if (children_layouter_) {
+            children_layouter_->Layout(ctx);
         }
     }
     
     void View::DrawBackground(NVGcontext * ctx) {
         nvgBeginPath(ctx);
-        NVGRect(ctx, Rect(Vector2(), frame_.size()));
-        NVGFillColor(ctx, background_color_);
+        NVGAddRectPath(ctx, Rect(Vector2(), frame_.size()));
+        NVGSetFillColor(ctx, background_color_);
         nvgFill(ctx);
     }
     

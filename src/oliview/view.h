@@ -14,7 +14,8 @@ namespace oliview {
     class Application;
     class Window;
 
-    class View : public std::enable_shared_from_this<View> {
+    class View :
+    public std::enable_shared_from_this<View> {
     public:
         struct DrawInfo {
             Matrix3x3 window_transform;
@@ -32,20 +33,20 @@ namespace oliview {
             DrawCommand();
         };
 
-        View(const Ptr<Application> & application);
+        View();
         virtual ~View();
+        virtual void Init(const Ptr<Application> & application);
         
-        Ptr<Application> application() const;
-
-        Ptr<View> parent() const;
-        std::vector<Ptr<View>> children() const;
+        RHETORIC_GETTER_WEAK(Ptr<Application>, application)
+        RHETORIC_GETTER_WEAK(Ptr<View>, parent)
+        RHETORIC_GETTER(std::vector<Ptr<View>>, children)
         
         void AddChild(const Ptr<View> & child);
         void RemoveChild(const Ptr<View> & child);
         void RemoveChildAt(int index);
         void RemoveFromParent();
 
-        Ptr<Window> window() const;
+        RHETORIC_GETTER_WEAK(Ptr<Window>, window)        
 
         RHETORIC_GETTER(Rect, frame)
         void set_frame(const Rect & value);
@@ -58,15 +59,15 @@ namespace oliview {
         
         void SetNeedsLayout();
         
-        RHETORIC_GETTER(Ptr<Layouter>, layouter)
-        void set_layouter(const Ptr<Layouter> & value);
+        RHETORIC_GETTER(Ptr<Layouter>, children_layouter)
+        void set_children_layouter(const Ptr<Layouter> & value);
         
-        virtual void OnLayout(NVGcontext * ctx);
-        
-        virtual Size Measure(NVGcontext * ctx, const MeasureQuery & query) const;
-        virtual Size OnMeasure(NVGcontext * ctx, const MeasureQuery & query) const;
-        
-        virtual void Draw(NVGcontext * ctx);
+        Size Measure(NVGcontext * ctx, const MeasureQuery & query) const;
+        virtual Size MeasureContent(NVGcontext * ctx, const MeasureQuery & query) const;
+
+        virtual void LayoutContent(NVGcontext * ctx);
+    
+        virtual void DrawContent(NVGcontext * ctx);
 
         bool _InvokeLayout(NVGcontext * ctx);
         void _PrepareToDraw(const DrawInfo & info);
@@ -80,7 +81,6 @@ namespace oliview {
         void DrawShadow(NVGcontext * ctx);
         
         WeakPtr<Application> application_;
-        
         WeakPtr<View> parent_;
         std::vector<Ptr<View>> children_;
 
@@ -90,7 +90,7 @@ namespace oliview {
         Color background_color_;
         
         bool needs_layout_;
-        Ptr<Layouter> layouter_;
+        Ptr<Layouter> children_layouter_;
         
         bool self_layouting_;
         bool clipping_children_;
