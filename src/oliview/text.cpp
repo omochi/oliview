@@ -52,22 +52,7 @@ namespace oliview {
     }
     
     Text::Position Text::begin_position() const {
-        Position pos;
-        
-        while (true) {
-            if (pos == end_position()) {
-                break;
-            }
-            
-            auto acc = AccessCharAt(pos);
-            if (acc.kind.tag() == Utf8ByteKind::HeadTag) {
-                break;
-            }
-            
-            pos = AdvancePositionByte(pos);
-        }
-        
-        return pos;
+        return SkipBodyBytes(Position(0, 0));
     }
     
     Text::Position Text::end_position() const {
@@ -79,7 +64,7 @@ namespace oliview {
         
         while (true) {
             if (pos == end_position()) {
-                break;
+                return pos;
             }
 
             auto acc = AccessCharAt(pos);
@@ -87,20 +72,16 @@ namespace oliview {
                 case Utf8ByteKind::HeadTag: {
                     int len = acc.kind.AsHead().length;
                     if (acc.offset + len >= (int)acc.string->size()) {
-                        pos = Position(pos.line_index() + 1, 0);
+                        return Position(pos.line_index() + 1, 0);
                     } else {
-                        pos = Position(pos.line_index(), acc.offset + len);
+                        return Position(pos.line_index(), acc.offset + len);
                     }
-                    break;
                 }
                 case Utf8ByteKind::BodyTag: {
-                    pos = AdvancePositionByte(pos);
-                    break;
+                    return SkipBodyBytes(pos);
                 }
             }
         }
-        
-        return pos;
     }
     
     Text::StringAccess::StringAccess(std::string * string,
@@ -137,6 +118,23 @@ namespace oliview {
 
         }
         RHETORIC_FATAL("never");
+    }
+    
+    Text::Position Text::SkipBodyBytes(const Position & pos_) const {
+        Position pos = pos_;
+        
+        while (true) {
+            if (pos == end_position()) {
+                return pos;
+            }
+            
+            auto acc = AccessCharAt(pos);
+            if (acc.kind.tag() == Utf8ByteKind::HeadTag) {
+                return pos;
+            }
+            
+            pos = AdvancePositionByte(pos);
+        }
     }
     
     Text::Position Text::AdvancePositionByte(const Position & pos_) const {

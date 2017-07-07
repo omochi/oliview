@@ -52,6 +52,7 @@ namespace oliview {
         };
         
         StringAccess AccessCharAt(const Position & position) const;
+        Position SkipBodyBytes(const Position & pos) const;
         Position AdvancePositionByte(const Position & pos) const;
 
         std::vector<Ptr<std::string>> lines_;

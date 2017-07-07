@@ -17,6 +17,7 @@
 #include "./rect.h"
 #include "./size.h"
 #include "./table_dimension.h"
+#include "./text.h"
 #include "./text_box.h"
 #include "./text_draw_layouter.h"
 #include "./unicode_util.h"
