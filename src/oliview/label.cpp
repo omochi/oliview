@@ -28,7 +28,9 @@ namespace oliview {
     }
     
     void Label::set_text(const std::string & value) {
+        text_ = New<Text>();
         text_->set_string(value);
+        text_draw_info_ = nullptr;
         
         SetNeedsLayout();
     }
@@ -57,19 +59,19 @@ namespace oliview {
         auto layout = text_layouter_->Layout(ctx,
                                              text_,
                                              query.max_width());
-        return text_layouter_->GetResultSize(ctx, layout);
+        return layout->size();
     }
     
     void Label::LayoutContent(NVGcontext * ctx) {
-        text_layout_result_ = text_layouter_->Layout(ctx,
-                                                     text_,
-                                                     Some(frame().size().width()));
+        text_draw_info_ = text_layouter_->Layout(ctx,
+                                                 text_,
+                                                 Some(frame().size().width()));
     }
 
     void Label::DrawContent(NVGcontext * ctx) {
         NVGSetFillColor(ctx, font_color());
         
-        text_layouter_->DrawResult(ctx, text_layout_result_);
+        text_layouter_->Draw(ctx, text_, text_draw_info_);
     }
 
 }

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "./dependency.h"
+#include "./string_slice.h"
 #include "./utf8.h"
 
 namespace oliview {
@@ -16,6 +17,11 @@ namespace oliview {
             
             bool operator==(const Position & other) const;
             RHETORIC_EQUATABLE_DEFAULT(Position)
+            
+            bool operator<(const Position & other) const;
+            RHETORIC_COMPARABLE_DEFAULT(Position)
+            
+            std::string ToString() const;
         private:
             int line_index_;
             int byte_offset_;
@@ -24,16 +30,16 @@ namespace oliview {
         std::string string() const;
         void set_string(const std::string & value);
         
-        std::vector<Ptr<std::string>> line_ptrs() const;
-        void set_line_ptrs(const std::vector<Ptr<std::string>> & value);
+        std::vector<Ptr<std::string>> lines() const;
+        void set_lines(const std::vector<Ptr<std::string>> & value);
         
         int line_num() const;
         
-        Ptr<std::string> GetLinePtrAt(int index) const;
-        void SetLinePtrAt(int index, const Ptr<std::string> & value);
+        Ptr<std::string> GetLineAt(int index) const;
+        void SetLineAt(int index, const Ptr<std::string> & value);
         
         // utf-8
-        std::string GetCharAt(const Position & position) const;
+        StringSlice GetCharAt(const Position & position) const;
         void SetCharAt(const Position & position, const std::string & chr);
         
         Position begin_position() const;
@@ -42,12 +48,12 @@ namespace oliview {
         Position AdvancePosition(const Position & pos) const;
     private:
         struct StringAccess {
-            std::string * string;
+            Ptr<std::string> string;
             int offset;
             int length;
             Utf8ByteKind kind;
             
-            StringAccess(std::string * string,
+            StringAccess(const Ptr<std::string> & string,
                          int offset,
                          int length,
                          Utf8ByteKind kind);

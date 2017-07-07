@@ -19,35 +19,35 @@ void TextTest() {
     auto pos = text->begin_position();
     
     RHETORIC_ASSERT(pos == Text::Position(0, 0));
-    RHETORIC_ASSERT(text->GetCharAt(pos) == "迷");
+    RHETORIC_ASSERT(text->GetCharAt(pos).AsString() == "迷");
     pos = text->AdvancePosition(pos);
     
     RHETORIC_ASSERT(pos == Text::Position(0, 3));
-    RHETORIC_ASSERT(text->GetCharAt(pos) == "っ");
+    RHETORIC_ASSERT(text->GetCharAt(pos).AsString() == "っ");
     pos = text->AdvancePosition(pos);
     
     RHETORIC_ASSERT(pos == Text::Position(0, 6));
-    RHETORIC_ASSERT(text->GetCharAt(pos) == "た");
+    RHETORIC_ASSERT(text->GetCharAt(pos).AsString() == "た");
     pos = text->AdvancePosition(pos);
     
     RHETORIC_ASSERT(pos == Text::Position(0, 9));
-    RHETORIC_ASSERT(text->GetCharAt(pos) == "ら");
+    RHETORIC_ASSERT(text->GetCharAt(pos).AsString() == "ら");
     pos = text->AdvancePosition(pos);
     
     RHETORIC_ASSERT(pos == Text::Position(0, 12));
-    RHETORIC_ASSERT(text->GetCharAt(pos) == "\n");
+    RHETORIC_ASSERT(text->GetCharAt(pos).AsString() == "\n");
     pos = text->AdvancePosition(pos);
     
     RHETORIC_ASSERT(pos == Text::Position(1, 0));
-    RHETORIC_ASSERT(text->GetCharAt(pos) == "型");
+    RHETORIC_ASSERT(text->GetCharAt(pos).AsString() == "型");
     pos = text->AdvancePosition(pos);
     
     RHETORIC_ASSERT(pos == Text::Position(1, 3));
-    RHETORIC_ASSERT(text->GetCharAt(pos) == "付");
+    RHETORIC_ASSERT(text->GetCharAt(pos).AsString() == "付");
     pos = text->AdvancePosition(pos);
     
     RHETORIC_ASSERT(pos == Text::Position(1, 6));
-    RHETORIC_ASSERT(text->GetCharAt(pos) == "け");
+    RHETORIC_ASSERT(text->GetCharAt(pos).AsString() == "け");
     pos = text->AdvancePosition(pos);
     
     RHETORIC_ASSERT(pos == text->end_position());

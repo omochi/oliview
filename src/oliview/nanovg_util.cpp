@@ -40,4 +40,14 @@ namespace oliview {
     {
         nvgFontFaceId(ctx, font->nvg_handle());
     }
+    
+    void NVGDrawText(NVGcontext * ctx,
+                     float x,
+                     float y,
+                     const StringSlice & string)
+    {
+        nvgText(ctx, x, y,
+                string.c_str(),
+                string.c_str() + string.length());
+    }
 }

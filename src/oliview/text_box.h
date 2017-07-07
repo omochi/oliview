@@ -2,6 +2,7 @@
 
 #include "./font.h"
 #include "./text.h"
+#include "./text_draw_info.h"
 #include "./text_draw_layouter.h"
 #include "./view.h"
 
@@ -26,6 +27,6 @@ namespace oliview {
         Color font_color_;
         
         Ptr<TextDrawLayouter> text_layouter_;
-        TextDrawLayouter::Result text_layout_result_;
+        Ptr<TextDrawInfo> text_draw_info_;
     };
 }

@@ -6,6 +6,7 @@
 #include "./font.h"
 #include "./matrix3x3.h"
 #include "./rect.h"
+#include "./string_slice.h"
 
 namespace oliview {
     void NVGSetScissor(NVGcontext * ctx,
@@ -18,5 +19,9 @@ namespace oliview {
                          const Color & color);
     void NVGSetFont(NVGcontext * ctx,
                     const Ptr<Font> & font);
+    void NVGDrawText(NVGcontext * ctx,
+                     float x,
+                     float y,
+                     const StringSlice & string);
 }
 

@@ -13,6 +13,22 @@ namespace oliview {
         byte_offset_ == other.byte_offset_;
     }
     
+    bool Text::Position::operator<(const Position & other) const {
+        if (line_index_ == other.line_index_) {
+            if (byte_offset_ < other.byte_offset_) {
+                return true;
+            }
+        }
+        if (line_index_ < other.line_index_) {
+            return true;
+        }
+        return false;
+    }
+    
+    std::string Text::Position::ToString() const {
+        return Format("Text::Position(%d, %d)", line_index_, byte_offset_);
+    }
+    
     std::string Text::string() const {
         return JoinMap(lines_, "", [](auto x) { return *x; });
     }
@@ -22,14 +38,14 @@ namespace oliview {
         SplitLinesIterate(value, [&](auto x) {
             lines.push_back(New<std::string>(x));
         });
-        set_line_ptrs(lines);
+        set_lines(lines);
     }
     
-    std::vector<Ptr<std::string>> Text::line_ptrs() const {
+    std::vector<Ptr<std::string>> Text::lines() const {
         return lines_;
     }
     
-    void Text::set_line_ptrs(const std::vector<Ptr<std::string>> & value) {
+    void Text::set_lines(const std::vector<Ptr<std::string>> & value) {
         lines_ = value;
     }
     
@@ -37,17 +53,17 @@ namespace oliview {
         return (int)lines_.size();
     }
     
-    Ptr<std::string> Text::GetLinePtrAt(int index) const {
+    Ptr<std::string> Text::GetLineAt(int index) const {
         return lines_[index];
     }
     
-    void Text::SetLinePtrAt(int index, const Ptr<std::string> & value) {
+    void Text::SetLineAt(int index, const Ptr<std::string> & value) {
         lines_[index] = value;
     }
     
-    std::string Text::GetCharAt(const Position & position) const {
+    StringSlice Text::GetCharAt(const Position & position) const {
         auto acc = AccessCharAt(position);
-        return acc.string->substr(acc.offset, acc.length);
+        return StringSlice(acc.string, acc.offset, acc.length);
     }
     
     void Text::SetCharAt(const Position & position, const std::string & chr) {
@@ -88,10 +104,10 @@ namespace oliview {
         }
     }
     
-    Text::StringAccess::StringAccess(std::string * string,
-                                      int offset,
-                                      int length,
-                                      Utf8ByteKind kind):
+    Text::StringAccess::StringAccess(const Ptr<std::string> & string,
+                                     int offset,
+                                     int length,
+                                     Utf8ByteKind kind):
     string(string),
     offset(offset),
     length(length),
@@ -99,7 +115,7 @@ namespace oliview {
     {}
     
     Text::StringAccess Text::AccessCharAt(const Position & position) const {
-        std::string * str = lines_[position.line_index()].get();
+        Ptr<std::string> str = lines_[position.line_index()];
         int start = position.byte_offset();
         char c = (*str)[start];
         auto kind = GetUtf8ByteKind((uint8_t)c);
@@ -117,9 +133,6 @@ namespace oliview {
                                     start,
                                     0,
                                     kind);
-                
-                
-
         }
         RHETORIC_FATAL("never");
     }
