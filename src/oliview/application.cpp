@@ -26,7 +26,7 @@ namespace oliview {
             for (auto & window : windows) {
                 window->MakeContextCurrent();
 
-                window->_MayTryClose();
+                window->_MayClose();
                 if (window->closed()) {
                     continue;
                 }

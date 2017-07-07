@@ -15,6 +15,16 @@ namespace oliview {
     Size(vector.x(), vector.y())
     {}
     
+    Size Size::GetMin(const Size & other) const {
+        return Size(std::min(width(), other.width()),
+                    std::min(height(), other.height()));
+    }
+    
+    Size Size::GetMax(const Size & other) const {
+        return Size(std::max(width(), other.width()),
+                    std::max(height(), other.height()));
+    }
+    
     Vector2 Size::ToVector() const {
         return Vector2(width_, height_);
     }

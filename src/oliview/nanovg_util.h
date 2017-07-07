@@ -3,17 +3,20 @@
 #include "./dependency.h"
 
 #include "./color.h"
+#include "./font.h"
 #include "./matrix3x3.h"
 #include "./rect.h"
 
 namespace oliview {
-    void NVGScissor(NVGcontext * ctx,
-                    const Rect & rect);
+    void NVGSetScissor(NVGcontext * ctx,
+                       const Rect & rect);
     void NVGTransform(NVGcontext * ctx,
                       const Matrix3x3 & matrix);
-    void NVGRect(NVGcontext * ctx,
-                 const Rect & rect);
-    void NVGFillColor(NVGcontext * ctx,
-                      const Color & color);
+    void NVGAddRectPath(NVGcontext * ctx,
+                        const Rect & rect);
+    void NVGSetFillColor(NVGcontext * ctx,
+                         const Color & color);
+    void NVGSetFont(NVGcontext * ctx,
+                    const Ptr<Font> & font);
 }
 

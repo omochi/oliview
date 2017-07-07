@@ -2,46 +2,39 @@
 
 #include "./dependency.h"
 
+#include "./init_macro.h"
 #include "./gl_assert.h"
 #include "./size.h"
 #include "./view.h"
 #include "./vector2.h"
 
 namespace oliview {
-    class Application;
-
-    class Window : public std::enable_shared_from_this<Window> {
+    class Window :
+    public std::enable_shared_from_this<Window> {
     public:
+        Window();
         virtual ~Window();
-
-        bool closed() const;
         
-        RHETORIC_ACCESSOR_TRIVIAL(std::function<bool()>, should_close)
+        virtual void Init(const Ptr<Application> & application);
+
+        RHETORIC_GETTER_WEAK(Ptr<Application>, application)
+        
+        bool closed() const;
 
         void Close();
-        void TryClose();
         
-        Ptr<Application> application() const;
         RHETORIC_GETTER(Size, window_size)
         RHETORIC_GETTER(Size, framebuffer_size)
         RHETORIC_GETTER(Ptr<View>, root_view)
         RHETORIC_GETTER(GLFWwindow *, glfw_window)
 
         void MakeContextCurrent();
+        
+        virtual bool ShouldClose() const;
 
-        static Ptr<Window> Create(const Ptr<Application> & application);
-        
         void _Update();
-        void _MayTryClose();
-        
-        void _OnWindowSizeChange(int w, int h);
-        void _OnFramebufferSizeChange(int w, int h);
-        
-    private:
-        Window(const Ptr<Application> & application);
-        void Init();
-        void Open();
-        
+        void _MayClose();
+    private:        
         NVGcontext * BeginNVG();
         void EndNVG(NVGcontext * ctx);
         
@@ -52,7 +45,6 @@ namespace oliview {
         void set_framebuffer_size(const Size & value);
 
         WeakPtr<Application> application_;
-        
         GLFWwindow * glfw_window_;
 
         std::function<bool()> should_close_;
@@ -68,5 +60,6 @@ namespace oliview {
         static void RefreshHandler(GLFWwindow * window);
         static void WindowSizeHandler(GLFWwindow * window, int w, int h);
         static void FramebufferSizeHandler(GLFWwindow * window, int w, int h);
+        static void CharHandler(GLFWwindow * window, unsigned int code);
     };
 }

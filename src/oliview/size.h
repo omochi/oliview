@@ -15,6 +15,9 @@ namespace oliview {
         RHETORIC_ACCESSOR_TRIVIAL(float, width)
         RHETORIC_ACCESSOR_TRIVIAL(float, height)
         
+        Size GetMin(const Size & other) const;
+        Size GetMax(const Size & other) const;
+        
         Vector2 ToVector() const;
     private:
         float width_;

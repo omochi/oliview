@@ -5,21 +5,17 @@
 #include "./view.h"
 
 namespace oliview {
-    class Application;
-    
-    class Label : public View {
+    class TextBox : public View {
     public:
         virtual void Init(const Ptr<Application> & application) override;
-        virtual void Init(const Ptr<Application> & application,
-                          const std::string & text);
-
+        
         std::string text() const;
         void set_text(const std::string & value);
-
+        
         RHETORIC_ACCESSOR(Ptr<Font>, font)
         RHETORIC_ACCESSOR_TRIVIAL(float, font_size)
         RHETORIC_ACCESSOR(Color, font_color)
-
+        
         virtual Size MeasureContent(NVGcontext * ctx, const MeasureQuery & query) const override;
         virtual void LayoutContent(NVGcontext * ctx) override;
         virtual void DrawContent(NVGcontext * ctx) override;
