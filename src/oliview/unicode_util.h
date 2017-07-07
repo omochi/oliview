@@ -8,4 +8,6 @@ namespace oliview {
     };
     
     std::vector<UnicodeScalarIndex> GetUnicodeScalarIndices(const std::string & string);
+    
+    
 }

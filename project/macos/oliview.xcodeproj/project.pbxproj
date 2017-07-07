@@ -60,6 +60,10 @@
 		D6C3F7491E9D29F70020D65A /* nanovg_gl_utils.h in Headers */ = {isa = PBXBuildFile; fileRef = D6C3F7401E9D29F70020D65A /* nanovg_gl_utils.h */; };
 		D6C3F74A1E9D29F70020D65A /* stb_image.h in Headers */ = {isa = PBXBuildFile; fileRef = D6C3F7411E9D29F70020D65A /* stb_image.h */; };
 		D6C3F74B1E9D29F70020D65A /* stb_truetype.h in Headers */ = {isa = PBXBuildFile; fileRef = D6C3F7421E9D29F70020D65A /* stb_truetype.h */; };
+		D6F1F2641F0F4D9400A61981 /* text.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D6F1F2621F0F4D9400A61981 /* text.cpp */; };
+		D6F1F2651F0F4D9400A61981 /* text.h in Headers */ = {isa = PBXBuildFile; fileRef = D6F1F2631F0F4D9400A61981 /* text.h */; };
+		D6F1F2691F0F646D00A61981 /* utf8.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D6F1F2671F0F646D00A61981 /* utf8.cpp */; };
+		D6F1F26A1F0F646D00A61981 /* utf8.h in Headers */ = {isa = PBXBuildFile; fileRef = D6F1F2681F0F646D00A61981 /* utf8.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -117,6 +121,10 @@
 		D6C3F7401E9D29F70020D65A /* nanovg_gl_utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nanovg_gl_utils.h; sourceTree = "<group>"; };
 		D6C3F7411E9D29F70020D65A /* stb_image.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stb_image.h; sourceTree = "<group>"; };
 		D6C3F7421E9D29F70020D65A /* stb_truetype.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stb_truetype.h; sourceTree = "<group>"; };
+		D6F1F2621F0F4D9400A61981 /* text.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = text.cpp; sourceTree = "<group>"; };
+		D6F1F2631F0F4D9400A61981 /* text.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = text.h; sourceTree = "<group>"; };
+		D6F1F2671F0F646D00A61981 /* utf8.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = utf8.cpp; sourceTree = "<group>"; };
+		D6F1F2681F0F646D00A61981 /* utf8.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = utf8.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -194,8 +202,12 @@
 				D646506B1EA644F40067BA12 /* rect.h */,
 				D678E3AA1F053BEF00B9A4C0 /* size.cpp */,
 				D678E3AB1F053BEF00B9A4C0 /* size.h */,
+				D6F1F2621F0F4D9400A61981 /* text.cpp */,
+				D6F1F2631F0F4D9400A61981 /* text.h */,
 				D678E3A61F053A8700B9A4C0 /* text_draw_layouter.cpp */,
 				D678E3A71F053A8700B9A4C0 /* text_draw_layouter.h */,
+				D6F1F2671F0F646D00A61981 /* utf8.cpp */,
+				D6F1F2681F0F646D00A61981 /* utf8.h */,
 				D64650731EA644F40067BA12 /* vector2.cpp */,
 				D64650741EA644F40067BA12 /* vector2.h */,
 				D64650751EA644F40067BA12 /* vector3.cpp */,
@@ -272,8 +284,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				D60300901EFAE98E006D0A9D /* unicode_util.h in Headers */,
+				D6F1F2651F0F4D9400A61981 /* text.h in Headers */,
 				D603008B1EFA94AC006D0A9D /* font_manager.h in Headers */,
 				D64650AF1EA671960067BA12 /* label.h in Headers */,
+				D6F1F26A1F0F646D00A61981 /* utf8.h in Headers */,
 				D6C060861F0BFDEA00F9516C /* grid_layouter.h in Headers */,
 				D64650971EA644F40067BA12 /* rect.h in Headers */,
 				D6C3F74A1E9D29F70020D65A /* stb_image.h in Headers */,
@@ -370,12 +384,14 @@
 				D678E3B01F0BBC3700B9A4C0 /* measure_query.cpp in Sources */,
 				D64650821EA644F40067BA12 /* color.cpp in Sources */,
 				D603008A1EFA94AC006D0A9D /* font_manager.cpp in Sources */,
+				D6F1F2691F0F646D00A61981 /* utf8.cpp in Sources */,
 				D639A04A1F0D5FAC0059B6BA /* table_dimension.cpp in Sources */,
 				D646507B1EA644F40067BA12 /* application.cpp in Sources */,
 				D603008F1EFAE98E006D0A9D /* unicode_util.cpp in Sources */,
 				D64650A51EA644F40067BA12 /* window.cpp in Sources */,
 				D678E3B41F0BC0E200B9A4C0 /* nanovg_util.cpp in Sources */,
 				D678E3AC1F053BEF00B9A4C0 /* size.cpp in Sources */,
+				D6F1F2641F0F4D9400A61981 /* text.cpp in Sources */,
 				D64650A11EA644F40067BA12 /* vector3.cpp in Sources */,
 				D6C060851F0BFDEA00F9516C /* grid_layouter.cpp in Sources */,
 				D678E3B81F0BD24F00B9A4C0 /* layouter.cpp in Sources */,
