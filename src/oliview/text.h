@@ -27,8 +27,10 @@ namespace oliview {
         std::vector<Ptr<std::string>> line_ptrs() const;
         void set_line_ptrs(const std::vector<Ptr<std::string>> & value);
         
-        std::string GetLineAt(int index) const;
-        void SetLineAt(int index, const std::string & value);
+        int line_num() const;
+        
+        Ptr<std::string> GetLinePtrAt(int index) const;
+        void SetLinePtrAt(int index, const Ptr<std::string> & value);
         
         // utf-8
         std::string GetCharAt(const Position & position) const;

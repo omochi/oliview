@@ -1,143 +1,200 @@
 #include "./text_draw_layouter.h"
 
 namespace oliview {
-    TextDrawLayouter::DrawEntry::DrawEntry():
-    string(nullptr),
-    length(0),
-    y(0),
-    draw_width(0)
+    TextDrawLayouter::CharPosition::CharPosition(const char * chr,
+                                                 int index,
+                                                 int length,
+                                                 float left,
+                                                 float right):
+    chr(chr),
+    index(index),
+    length(length),
+    left(left),
+    right(right)
     {}
+    
+    TextDrawLayouter::LineEntry::LineEntry(int original_line_index,
+                                           bool wrapped_line):
+    original_line_index_(original_line_index),
+    wrapped_line_(wrapped_line)
+    {}
+    
+    int TextDrawLayouter::LineEntry::chars_num() const {
+        return (int)chars_.size();
+    }
+    
+    const char * TextDrawLayouter::LineEntry::str() const {
+        if (chars_.size() == 0) {
+            return nullptr;
+        }
+        return chars_.front()->chr;
+    }
+    
+    int TextDrawLayouter::LineEntry::length() const {
+        if (chars_.size() == 0) {
+            return 0;
+        }
+        auto ch = chars_.back();
+        return ch->index + ch->length;
+    }
+    
+    float TextDrawLayouter::LineEntry::draw_width() const {
+        if (chars_.size() == 0) {
+            return 0;
+        }
+        return chars_.back()->right;
+    }
     
     TextDrawLayouter::Result
     TextDrawLayouter::Layout(NVGcontext * ctx,
-                             const std::list<std::string> & lines,
+                             const Ptr<Text> & text,
                              const Optional<float> & max_width)
     {
-        max_width_ = max_width;
-        
         Result result;
         
-        float draw_y = 0.0f;
-        
-        nvgTextMetrics(ctx, nullptr, nullptr, &line_height_);
-        
-        for (auto & line : lines) {
-            auto draws = LayoutLine(ctx, line, draw_y, &draw_y);
+        for (int i = 0; i < text->line_num(); i++) {
+            auto line = text->GetLinePtrAt(i);
+            auto line_result = LayoutLine(ctx,
+                                          line->c_str(),
+                                          (int)line->size(),
+                                          max_width);
             
-            for (auto & draw : draws) {
-                result.entries.push_back(draw);
+            for (auto entry : line_result.lines) {
+                entry.set_original_line_index(i);
+                
+                result.lines.push_back(entry);
             }
         }
-        
-        Rect whole_frame;
-        
-        for (auto & draw : result.entries) {
-            Rect draw_rect = Rect(Vector2(0, draw.y),
-                                  Size(draw.draw_width, line_height_));
-            whole_frame = whole_frame.GetUnion(draw_rect);
-        }
-        
-        result.whole_frame = whole_frame;
         
         return result;
     }
     
-    TextDrawLayouter::SingleLineResult::SingleLineResult():
-    length(0),
-    draw_width(0)
-    {}
     
-    std::vector<TextDrawLayouter::DrawEntry>
+    
+    TextDrawLayouter::Result
     TextDrawLayouter::LayoutLine(NVGcontext * ctx,
-                                 const std::string & line,
-                                 float draw_y,
-                                 float * next_draw_y)
+                                 const char * line,
+                                 int line_length,
+                                 const Optional<float> & max_width)
     {
-        std::vector<DrawEntry> result;
+        TextDrawLayouter::Result result;
         
-        int end_index;
-        auto find_ret = Find(line, 0, newline_chars());
-        if (find_ret) {
-            end_index = find_ret->index;
-        } else {
-            end_index = (int)line.size();
-        }
-        
-        const char * const line_end_ptr = line.c_str() + end_index;
-        const char * next_begin_ptr = line.c_str();
+        int start = 0;
         
         while (true) {
-            SingleLineResult single_result = LayoutLineSingle(ctx,
-                                                              next_begin_ptr,
-                                                              (int)(line_end_ptr - next_begin_ptr));
+            auto line_entry = LayoutSingleLine(ctx,
+                                               line + start,
+                                               line_length - start);
             
-            DrawEntry draw_entry;
-            draw_entry.string = next_begin_ptr;
-            draw_entry.length = single_result.length;
-            draw_entry.y = draw_y;
-            draw_entry.draw_width = single_result.draw_width;
-            result.push_back(draw_entry);
+            auto chars = line_entry.chars();
+            for (int i = 0; i < (int)chars.size(); i++) {
+                auto & ch = chars[i];
+                if (max_width) {
+                    if (i > 0 && *max_width < ch->right) {
+                        chars.erase(chars.begin() + i, chars.end());
+                        break;
+                    }
+                }
+            }
+            line_entry.set_chars(chars);
             
-            draw_y += line_height_;
+            start += line_entry.length();
             
-            next_begin_ptr += single_result.length;
+            if (result.lines.size() > 0) {
+                line_entry.set_wrapped_line(true);
+            }
             
-            if (line_end_ptr <= next_begin_ptr) {
+            result.lines.push_back(line_entry);
+            
+            if (start == line_length) {
                 break;
             }
         }
         
-        *next_draw_y = draw_y;
-        
         return result;
     }
     
-    TextDrawLayouter::SingleLineResult
-    TextDrawLayouter::LayoutLineSingle(NVGcontext * ctx,
-                                       const char * string_start,
-                                       int string_length)
+    
+    Size TextDrawLayouter::GetResultSize(NVGcontext * ctx,
+                                         const Result & result)
     {
-        SingleLineResult result;
+        NVGSetFont(ctx, font());
+        nvgFontSize(ctx, font_size());
         
-        std::vector<NVGglyphPosition> positions(string_length);
+        float width = 0.0f;
+        for (auto line : result.lines) {
+            width = std::max(width, line.draw_width());
+        }
+        
+        float line_height;
+        nvgTextMetrics(ctx, nullptr, nullptr, &line_height);
+        
+        float height = line_height * (float)result.lines.size();
+        
+        return Size(width, height);
+    }
+    
+    void TextDrawLayouter::DrawResult(NVGcontext * ctx,
+                                      const Result & result)
+    {
+        NVGSetFont(ctx, font());
+        nvgFontSize(ctx, font_size());
+        
+        float ascender;
+        float line_height;
+        nvgTextMetrics(ctx, &ascender, nullptr, &line_height);
+        
+        float y = 0;
+        for (auto & line : result.lines) {
+            if (line.chars_num() > 0) {
+                nvgText(ctx,
+                        0,
+                        y + ascender,
+                        line.str(),
+                        line.str() + line.length());
+            }
+            y += line_height;
+        }
+    }
+    
+    TextDrawLayouter::LineEntry
+    TextDrawLayouter::LayoutSingleLine(NVGcontext * ctx,
+                                       const char * line,
+                                       int line_length)
+    {
+        NVGSetFont(ctx, font());
+        nvgFontSize(ctx, font_size());
+        
+        std::vector<NVGglyphPosition> positions(line_length);
         int num = nvgTextGlyphPositions(ctx,
-                                        0,
-                                        0,
-                                        string_start,
-                                        string_start + string_length,
+                                        0, 0,
+                                        line,
+                                        line + line_length,
                                         positions.data(),
                                         (int)positions.size());
         positions.resize(num);
         
-        int index = 0;
+        LineEntry entry(0, false);
+        auto chars = entry.chars();
         
-        while (true) {
-            if (index >= (int)positions.size()) {
-                //  string end
-                return result;
-            }
+        for (int i = 0; i < num; i++) {
+            auto & pos = positions[i];
             
-            auto & position = positions[index];
-            if (max_width_) {
-                if (index > 0 &&
-                    *max_width_ < position.maxx)
-                {
-                    //  wrap
-                    return result;
-                }
-            }
+            auto kind = GetUtf8ByteKind(*pos.str);
+            RHETORIC_ASSERT(kind.tag() == Utf8ByteKind::HeadTag);
             
-            const char * next_glyph_str;
-            if (index + 1 < (int)positions.size()) {
-                next_glyph_str = positions[index + 1].str;
-            } else {
-                next_glyph_str = string_start + string_length;
-            }
+            int len = kind.AsHead().length;
             
-            result.length = (int)(next_glyph_str - string_start);
-            result.draw_width = std::max(result.draw_width, position.maxx);
-            
-            index += 1;
+            chars.push_back(New<CharPosition>(pos.str,
+                                              (int)(pos.str - line),
+                                              len,
+                                              pos.minx,
+                                              pos.maxx));
         }
+        entry.set_chars(chars);
+        
+        return entry;
     }
+    
+    
 }

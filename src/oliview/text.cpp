@@ -33,12 +33,16 @@ namespace oliview {
         lines_ = value;
     }
     
-    std::string Text::GetLineAt(int index) const {
-        return *lines_[index];
+    int Text::line_num() const {
+        return (int)lines_.size();
     }
     
-    void Text::SetLineAt(int index, const std::string & value) {
-        lines_[index] = New<std::string>(value);
+    Ptr<std::string> Text::GetLinePtrAt(int index) const {
+        return lines_[index];
+    }
+    
+    void Text::SetLinePtrAt(int index, const Ptr<std::string> & value) {
+        lines_[index] = value;
     }
     
     std::string Text::GetCharAt(const Position & position) const {

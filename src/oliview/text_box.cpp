@@ -6,6 +6,9 @@ namespace oliview {
     void TextBox::Init(const Ptr<Application> & application) {
         View::Init(application);
         
+        text_layouter_ = New<TextDrawLayouter>();
+        text_ = New<Text>();
+        
         auto fm = application->font_manager();
         
         set_font(fm->default_font());
@@ -14,54 +17,51 @@ namespace oliview {
     }
     
     std::string TextBox::text() const {
-        auto ls = std::vector<std::string>(lines_.cbegin(), lines_.cend());
-        return Join(ls, "");
+        return text_->string();
     }
     
     void TextBox::set_text(const std::string & value) {
-        auto ls = SplitLines(value);
-        lines_ = std::list<std::string>(ls.cbegin(), ls.cend());
+        text_->set_string(value);
         
         SetNeedsLayout();
     }
     
+    Ptr<Font> TextBox::font() const {
+        return text_layouter_->font();
+    }
+    
+    void TextBox::set_font(const Ptr<Font> & value) {
+        text_layouter_->set_font(value);
+        
+        SetNeedsLayout();
+    }
+    
+    float TextBox::font_size() const {
+        return text_layouter_->font_size();
+    }
+    
+    void TextBox::set_font_size(float value) {
+        text_layouter_->set_font_size(value);
+        
+        SetNeedsLayout();
+    }
+
     Size TextBox::MeasureContent(NVGcontext * ctx, const MeasureQuery & query) const {
-        auto text_layout = LayoutText(ctx, query.max_width());
-        return Size(text_layout.whole_frame.size());
+        auto layout = text_layouter_->Layout(ctx,
+                                             text_,
+                                             query.max_width());
+        return text_layouter_->GetResultSize(ctx, layout);
     }
     
     void TextBox::LayoutContent(NVGcontext * ctx) {
-        text_layout_ = LayoutText(ctx, Some(frame().size().width()));
+        text_layout_result_ = text_layouter_->Layout(ctx,
+                                                     text_,
+                                                     Some(frame().size().width()));
     }
     
     void TextBox::DrawContent(NVGcontext * ctx) {
-        NVGSetFont(ctx, font());
-        nvgFontSize(ctx, font_size());
         NVGSetFillColor(ctx, font_color());
         
-        float ascender;
-        nvgTextMetrics(ctx, &ascender, nullptr, nullptr);
-        
-        for (auto & draw : text_layout_.entries) {
-            nvgText(ctx,
-                    0,
-                    draw.y + ascender,
-                    draw.string,
-                    draw.string + draw.length);
-        }
-    }
-    
-    TextDrawLayouter::Result TextBox::LayoutText(NVGcontext * ctx,
-                                                 const Optional<float> & max_width) const
-    {
-        NVGSetFont(ctx, font());
-        nvgFontSize(ctx, font_size());
-        NVGSetFillColor(ctx, font_color());
-        
-        TextDrawLayouter layouter;
-        
-        return layouter.Layout(ctx,
-                               lines_,
-                               max_width);
+        text_layouter_->DrawResult(ctx, text_layout_result_);
     }
 }
