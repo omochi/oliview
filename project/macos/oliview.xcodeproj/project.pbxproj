@@ -87,6 +87,7 @@
 		D639A05E1F0FCEE30059B6BA /* string_slice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = string_slice.h; sourceTree = "<group>"; };
 		D639A0611F0FD96C0059B6BA /* text_draw_info.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = text_draw_info.cpp; sourceTree = "<group>"; };
 		D639A0621F0FD96C0059B6BA /* text_draw_info.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = text_draw_info.h; sourceTree = "<group>"; };
+		D639A0651F0FFBFF0059B6BA /* math_inline.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = math_inline.h; sourceTree = "<group>"; };
 		D678E3A71F053A8700B9A4C0 /* text_draw_layouter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = text_draw_layouter.h; sourceTree = "<group>"; };
 		D6C3F6AA1E99AAB50020D65A /* liboliview.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = liboliview.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		D6C3F7331E9D29D90020D65A /* glfw3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = glfw3.h; sourceTree = "<group>"; };
@@ -213,6 +214,7 @@
 				D6F1F27C1F0F7D9E00A61981 /* layouter.h */,
 				D6F1F27D1F0F7D9E00A61981 /* math.cpp */,
 				D6F1F27E1F0F7D9E00A61981 /* math.h */,
+				D639A0651F0FFBFF0059B6BA /* math_inline.h */,
 				D6F1F27F1F0F7D9E00A61981 /* matrix3x3.cpp */,
 				D6F1F2801F0F7D9E00A61981 /* matrix3x3.h */,
 				D6F1F2811F0F7D9E00A61981 /* measure_query.cpp */,
@@ -229,14 +231,14 @@
 				D639A05E1F0FCEE30059B6BA /* string_slice.h */,
 				D6F1F28B1F0F7D9E00A61981 /* table_dimension.cpp */,
 				D6F1F28C1F0F7D9E00A61981 /* table_dimension.h */,
+				D6F1F2911F0F7D9E00A61981 /* text.cpp */,
+				D6F1F2921F0F7D9E00A61981 /* text.h */,
 				D6F1F28D1F0F7D9E00A61981 /* text_box.cpp */,
 				D6F1F28E1F0F7D9E00A61981 /* text_box.h */,
 				D639A0611F0FD96C0059B6BA /* text_draw_info.cpp */,
 				D639A0621F0FD96C0059B6BA /* text_draw_info.h */,
 				D6F1F28F1F0F7D9E00A61981 /* text_draw_layouter.cpp */,
 				D6F1F2901F0F7D9E00A61981 /* text_draw_layouter.h */,
-				D6F1F2911F0F7D9E00A61981 /* text.cpp */,
-				D6F1F2921F0F7D9E00A61981 /* text.h */,
 				D6F1F2931F0F7D9E00A61981 /* unicode_util.cpp */,
 				D6F1F2941F0F7D9E00A61981 /* unicode_util.h */,
 				D6F1F2951F0F7D9E00A61981 /* utf8.cpp */,

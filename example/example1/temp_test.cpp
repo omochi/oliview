@@ -3,6 +3,7 @@
 void RunTests() {
     EitherTest();
     TextTest();
+    Utf8Test();
 }
 
 void EitherTest() {
@@ -51,4 +52,10 @@ void TextTest() {
     pos = text->AdvancePosition(pos);
     
     RHETORIC_ASSERT(pos == text->end_position());
+}
+
+void Utf8Test() {
+    
+    std::string str = "とても暑い\nお風呂のようだ\r夏はクソ\nぴ";
+    Utf8LineReader(str.c_str(), (int)str.size());
 }

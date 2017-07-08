@@ -64,13 +64,6 @@ namespace oliview {
                         0,
                         line->draw_y() + ascender,
                         str);
-            
-            for (auto & ch : line->chars()) {
-                
-                Print(Format("%s, %s",
-                             ch->text_position().ToString().c_str(),
-                             text->GetCharAt(ch->text_position()).AsString().c_str()));
-            }
         }
     }
     

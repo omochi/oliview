@@ -1,6 +1,7 @@
 #pragma once
 
 #include "./dependency.h"
+#include "./math.h"
 #include "./string_slice.h"
 #include "./utf8.h"
 
@@ -46,17 +47,22 @@ namespace oliview {
         Position end_position() const;
         
         Position AdvancePosition(const Position & pos) const;
+        Position FixPosition(const Position & pos) const;
+        
+        void Insert(const Position & position,
+                    const std::string & string,
+                    Position * result_position);
     private:
         struct StringAccess {
             Ptr<std::string> string;
             int offset;
             int length;
-            Utf8ByteKind kind;
+            Optional<Utf8ByteKind> kind;
             
             StringAccess(const Ptr<std::string> & string,
                          int offset,
                          int length,
-                         Utf8ByteKind kind);
+                         Optional<Utf8ByteKind> kind);
         };
         
         StringAccess AccessCharAt(const Position & position) const;

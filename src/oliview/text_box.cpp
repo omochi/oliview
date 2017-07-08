@@ -47,6 +47,11 @@ namespace oliview {
         
         SetNeedsLayout();
     }
+    
+    void TextBox::set_cursor_position(const Text::Position & value) {
+        auto pos = text_->FixPosition(value);
+        cursor_position_ = pos;
+    }
 
     Size TextBox::MeasureContent(NVGcontext * ctx, const MeasureQuery & query) const {
         auto layout = text_layouter_->Layout(ctx,

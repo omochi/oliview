@@ -88,9 +88,14 @@ namespace oliview {
             }
 
             auto acc = AccessCharAt(pos);
-            switch (acc.kind.tag()) {
+            if (acc.length == 0) {
+                RHETORIC_ASSERT(!acc.kind.presented());
+                return Position(pos.line_index() + 1, 0);
+            }
+            
+            switch (acc.kind->tag()) {
                 case Utf8ByteKind::HeadTag: {
-                    int len = acc.kind.AsHead().length;
+                    int len = acc.kind->AsHead().length;
                     if (acc.offset + len >= (int)acc.string->size()) {
                         return Position(pos.line_index() + 1, 0);
                     } else {
@@ -104,10 +109,33 @@ namespace oliview {
         }
     }
     
+    Text::Position Text::FixPosition(const Position & pos) const {
+        int line_index = pos.line_index();
+        int offset = pos.byte_offset();
+        if (line_index < 0) {
+            line_index = 0;
+            offset = 0;
+        } else if (line_index >= line_num()) {
+            line_index = line_num();
+            offset = 0;
+        } else {
+            auto line = GetLineAt(line_index);
+            offset = Clamp(offset, 0, (int)line->size());
+        }
+        return Position(line_index, offset);
+    }
+    
+    void Text::Insert(const Text::Position & position,
+                      const std::string & string,
+                      Text::Position * result_position)
+    {
+        
+    }
+    
     Text::StringAccess::StringAccess(const Ptr<std::string> & string,
                                      int offset,
                                      int length,
-                                     Utf8ByteKind kind):
+                                     Optional<Utf8ByteKind> kind):
     string(string),
     offset(offset),
     length(length),
@@ -115,24 +143,31 @@ namespace oliview {
     {}
     
     Text::StringAccess Text::AccessCharAt(const Position & position) const {
-        Ptr<std::string> str = lines_[position.line_index()];
-        int start = position.byte_offset();
-        char c = (*str)[start];
+        Ptr<std::string> str = GetLineAt(position.line_index());
+        int offset = position.byte_offset();
+        if (offset == (int)str->size()) {
+            return StringAccess(str,
+                                offset,
+                                0,
+                                None());
+        }
+        
+        char c = (*str)[offset];
         auto kind = GetUtf8ByteKind((uint8_t)c);
         switch (kind.tag()) {
             case Utf8ByteKind::HeadTag: {
-                int end = std::min(start + kind.AsHead().length, (int)str->size());
+                int end = std::min(offset + kind.AsHead().length, (int)str->size());
                 return StringAccess(str,
-                                    start,
-                                    end - start,
-                                    kind);
+                                    offset,
+                                    end - offset,
+                                    Some(kind));
             }
                 
             case Utf8ByteKind::BodyTag:
                 return StringAccess(str,
-                                    start,
+                                    offset,
                                     0,
-                                    kind);
+                                    Some(kind));
         }
         RHETORIC_FATAL("never");
     }
@@ -146,7 +181,7 @@ namespace oliview {
             }
             
             auto acc = AccessCharAt(pos);
-            if (acc.kind.tag() == Utf8ByteKind::HeadTag) {
+            if (acc.kind && acc.kind->tag() == Utf8ByteKind::HeadTag) {
                 return pos;
             }
             
