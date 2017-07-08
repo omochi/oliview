@@ -26,11 +26,11 @@ namespace oliview {
         elements_[1] = value;
     }
 
-    float Vector2::get(int index) const {
+    float Vector2::get(size_t index) const {
         return elements_[index];
     }
 
-    void Vector2::set(int index, float value) {
+    void Vector2::set(size_t index, float value) {
         elements_[index] = value;
     }
 

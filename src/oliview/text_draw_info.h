@@ -1,5 +1,6 @@
 #pragma once
 
+#include "./math.h"
 #include "./size.h"
 #include "./string_slice.h"
 #include "./text.h"
@@ -32,7 +33,7 @@ namespace oliview {
             RHETORIC_ACCESSOR(Text::Position, text_position)
             RHETORIC_ACCESSOR_TRIVIAL(bool, wrapped_line)
             RHETORIC_ACCESSOR(std::vector<Ptr<CharPosition>>, chars)
-            int chars_num() const;
+            size_t chars_num() const;
             
             StringSlice GetLine(const Ptr<Text> & text) const;
             
@@ -48,10 +49,10 @@ namespace oliview {
         };
         
         struct CharPositionIndex {
-            int line_index;
-            int char_index;
+            size_t line_index;
+            size_t char_index;
             
-            CharPositionIndex(int line_index = 0, int char_index = 0);
+            CharPositionIndex(size_t line_index = 0, size_t char_index = 0);
             
             bool operator==(const CharPositionIndex & other) const;
             RHETORIC_EQUATABLE_DEFAULT(CharPositionIndex)
@@ -63,7 +64,7 @@ namespace oliview {
         CharPositionIndex GetIndexFor(const Text::Position & position) const;
         
         RHETORIC_ACCESSOR(std::vector<Ptr<LineEntry>>, lines)
-        int line_num() const;
+        size_t line_num() const;
         RHETORIC_ACCESSOR(Size, size)
         
     private:

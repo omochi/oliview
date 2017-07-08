@@ -10,7 +10,7 @@ namespace oliview {
        
         std::vector<Ptr<TextDrawInfo::LineEntry>> result_lines;
         
-        for (int line_index = 0; line_index < text->line_num(); line_index++) {
+        for (size_t line_index = 0; line_index < text->line_num(); line_index++) {
             auto line_result = LayoutLine(ctx,
                                           text,
                                           line_index,
@@ -28,7 +28,7 @@ namespace oliview {
 
         float draw_width = 0;
         float draw_y = 0;
-        for (int i = 0; i < (int)result_lines.size(); i++) {
+        for (size_t i = 0; i < result_lines.size(); i++) {
             auto line = result_lines[i];
             line->set_draw_y(draw_y);
             
@@ -70,7 +70,7 @@ namespace oliview {
     Ptr<TextDrawInfo>
     TextDrawLayouter::LayoutLine(NVGcontext * ctx,
                                  const Ptr<Text> & text,
-                                 int line_index,
+                                 size_t line_index,
                                  const Optional<float> & max_width)
     {
         Ptr<TextDrawInfo> result = New<TextDrawInfo>();
@@ -85,11 +85,11 @@ namespace oliview {
             
             auto chars = line_entry->chars();
             RHETORIC_ASSERT(chars.size() > 0);
-            for (int i = 0; i < (int)chars.size(); i++) {
+            for (size_t i = 0; i < chars.size(); i++) {
                 auto & ch = chars[i];
                 if (max_width) {
                     if (i > 0 && *max_width < ch->draw_right()) {
-                        chars.erase(chars.begin() + i, chars.end());
+                        chars.erase(chars.begin() + ToSigned(i), chars.end());
                         break;
                     }
                 }
@@ -129,22 +129,22 @@ namespace oliview {
         const char * end = line->c_str() + line->size();
         RHETORIC_ASSERT(line == start_char.base());
         
-        std::vector<NVGglyphPosition> glyphs((int)(end - start));
-        int num = nvgTextGlyphPositions(ctx,
-                                        0, 0,
-                                        start,
-                                        end,
-                                        glyphs.data(),
-                                        (int)glyphs.size());
-        glyphs.resize(num);
+        std::vector<NVGglyphPosition> glyphs(ToUnsigned(end - start));
+        size_t num = (size_t)nvgTextGlyphPositions(ctx,
+                                                   0, 0,
+                                                   start,
+                                                   end,
+                                                   glyphs.data(),
+                                                   (int)glyphs.size());
+        glyphs.resize((size_t)num);
         
         auto entry = New<TextDrawInfo::LineEntry>(pos, false);
         auto chars = entry->chars();
         
-        for (int i = 0; i < num; i++) {
+        for (size_t i = 0; i < num; i++) {
             auto & glyph = glyphs[i];
             
-            auto kind = GetUtf8ByteKind(*glyph.str);
+            auto kind = GetUtf8ByteKind((uint8_t)(glyph.str[0]));
             RHETORIC_ASSERT(kind.tag() == Utf8ByteKind::HeadTag);
             
             Text::Position next_pos = text->AdvancePosition(pos);

@@ -31,11 +31,11 @@ namespace oliview {
         elements_[2] = value;
     }
 
-    float Vector3::get(int index) const {
+    float Vector3::get(size_t index) const {
         return elements_[index];
     }
 
-    void Vector3::set(int index, float value) {
+    void Vector3::set(size_t index, float value) {
         elements_[index] = value;
     }
 

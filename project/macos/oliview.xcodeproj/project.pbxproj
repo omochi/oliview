@@ -65,8 +65,6 @@
 		D6F1F2C41F0F7D9E00A61981 /* text_draw_layouter.h in Headers */ = {isa = PBXBuildFile; fileRef = D6F1F2901F0F7D9E00A61981 /* text_draw_layouter.h */; };
 		D6F1F2C51F0F7D9E00A61981 /* text.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D6F1F2911F0F7D9E00A61981 /* text.cpp */; };
 		D6F1F2C61F0F7D9E00A61981 /* text.h in Headers */ = {isa = PBXBuildFile; fileRef = D6F1F2921F0F7D9E00A61981 /* text.h */; };
-		D6F1F2C71F0F7D9E00A61981 /* unicode_util.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D6F1F2931F0F7D9E00A61981 /* unicode_util.cpp */; };
-		D6F1F2C81F0F7D9E00A61981 /* unicode_util.h in Headers */ = {isa = PBXBuildFile; fileRef = D6F1F2941F0F7D9E00A61981 /* unicode_util.h */; };
 		D6F1F2C91F0F7D9E00A61981 /* utf8.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D6F1F2951F0F7D9E00A61981 /* utf8.cpp */; };
 		D6F1F2CA1F0F7D9E00A61981 /* utf8.h in Headers */ = {isa = PBXBuildFile; fileRef = D6F1F2961F0F7D9E00A61981 /* utf8.h */; };
 		D6F1F2CB1F0F7D9E00A61981 /* vector2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D6F1F2971F0F7D9E00A61981 /* vector2.cpp */; };
@@ -140,8 +138,6 @@
 		D6F1F2901F0F7D9E00A61981 /* text_draw_layouter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = text_draw_layouter.h; sourceTree = "<group>"; };
 		D6F1F2911F0F7D9E00A61981 /* text.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = text.cpp; sourceTree = "<group>"; };
 		D6F1F2921F0F7D9E00A61981 /* text.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = text.h; sourceTree = "<group>"; };
-		D6F1F2931F0F7D9E00A61981 /* unicode_util.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = unicode_util.cpp; sourceTree = "<group>"; };
-		D6F1F2941F0F7D9E00A61981 /* unicode_util.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = unicode_util.h; sourceTree = "<group>"; };
 		D6F1F2951F0F7D9E00A61981 /* utf8.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = utf8.cpp; sourceTree = "<group>"; };
 		D6F1F2961F0F7D9E00A61981 /* utf8.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = utf8.h; sourceTree = "<group>"; };
 		D6F1F2971F0F7D9E00A61981 /* vector2.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = vector2.cpp; sourceTree = "<group>"; };
@@ -239,8 +235,6 @@
 				D639A0621F0FD96C0059B6BA /* text_draw_info.h */,
 				D6F1F28F1F0F7D9E00A61981 /* text_draw_layouter.cpp */,
 				D6F1F2901F0F7D9E00A61981 /* text_draw_layouter.h */,
-				D6F1F2931F0F7D9E00A61981 /* unicode_util.cpp */,
-				D6F1F2941F0F7D9E00A61981 /* unicode_util.h */,
 				D6F1F2951F0F7D9E00A61981 /* utf8.cpp */,
 				D6F1F2961F0F7D9E00A61981 /* utf8.h */,
 				D6F1F2971F0F7D9E00A61981 /* vector2.cpp */,
@@ -333,7 +327,6 @@
 				D639A0601F0FCEE30059B6BA /* string_slice.h in Headers */,
 				D6F1F2C41F0F7D9E00A61981 /* text_draw_layouter.h in Headers */,
 				D6F1F2BA1F0F7D9E00A61981 /* oliview.h in Headers */,
-				D6F1F2C81F0F7D9E00A61981 /* unicode_util.h in Headers */,
 				D6F1F2BC1F0F7D9E00A61981 /* rect.h in Headers */,
 				D6F1F2D01F0F7D9E00A61981 /* view.h in Headers */,
 				D6F1F2B41F0F7D9E00A61981 /* matrix3x3.h in Headers */,
@@ -432,7 +425,6 @@
 				D6F1F2AD1F0F7D9E00A61981 /* label.cpp in Sources */,
 				D6F1F2B71F0F7D9E00A61981 /* nanovg_gl_impl.cpp in Sources */,
 				D6F1F2A41F0F7D9E00A61981 /* font_manager.cpp in Sources */,
-				D6F1F2C71F0F7D9E00A61981 /* unicode_util.cpp in Sources */,
 				D6F1F2B11F0F7D9E00A61981 /* math.cpp in Sources */,
 				D6F1F2D11F0F7D9E00A61981 /* window.cpp in Sources */,
 				D6F1F2B81F0F7D9E00A61981 /* nanovg_util.cpp in Sources */,
@@ -472,6 +464,7 @@
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_IMPLICIT_SIGN_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
@@ -495,6 +488,7 @@
 				);
 				GCC_TREAT_IMPLICIT_FUNCTION_DECLARATIONS_AS_ERRORS = YES;
 				GCC_TREAT_INCOMPATIBLE_POINTER_TYPE_WARNINGS_AS_ERRORS = YES;
+				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_MISSING_FIELD_INITIALIZERS = YES;
 				GCC_WARN_ABOUT_MISSING_NEWLINE = YES;
@@ -538,6 +532,7 @@
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_IMPLICIT_SIGN_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
@@ -555,6 +550,7 @@
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_TREAT_IMPLICIT_FUNCTION_DECLARATIONS_AS_ERRORS = YES;
 				GCC_TREAT_INCOMPATIBLE_POINTER_TYPE_WARNINGS_AS_ERRORS = YES;
+				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_MISSING_FIELD_INITIALIZERS = YES;
 				GCC_WARN_ABOUT_MISSING_NEWLINE = YES;

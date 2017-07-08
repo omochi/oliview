@@ -18,8 +18,8 @@ namespace oliview {
         float z() const;
         void set_z(float value);
 
-        float get(int index) const;
-        void set(int index, float value);
+        float get(size_t index) const;
+        void set(size_t index, float value);
 
         const float * elements() const;
         float * elements();

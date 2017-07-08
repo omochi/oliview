@@ -20,7 +20,7 @@ namespace oliview {
         int handle = nvgCreateFontMem(ctx,
                                       name.c_str(),
                                       (uint8_t *)data->bytes(),
-                                      data->size(),
+                                      (int)data->size(),
                                       false);
         if (handle < 0) {
             return Failure(GenericError::Create("nvgCreateFontMem(%s)",

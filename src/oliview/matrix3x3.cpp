@@ -4,16 +4,16 @@
 
 namespace oliview {
     Matrix3x3::Matrix3x3() {
-        for (int i = 0; i < RHETORIC_ARRAY_SIZE(elements_); i++) {
+        for (size_t i = 0; i < RHETORIC_ARRAY_SIZE(elements_); i++) {
             elements_[i] = 0;
         }
     }
     
-    float Matrix3x3::get(int row, int column) const {
+    float Matrix3x3::get(size_t row, size_t column) const {
         return elements_[row * 3 + column];
     }
 
-    void Matrix3x3::set(int row, int column, float value) {
+    void Matrix3x3::set(size_t row, size_t column, float value) {
         elements_[row * 3 + column] = value;
     }
 
@@ -27,10 +27,10 @@ namespace oliview {
 
     Matrix3x3 Matrix3x3::operator*(const Matrix3x3 & other) const {
         Matrix3x3 ret;
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 3; j++) {
+        for (size_t i = 0; i < 3; i++) {
+            for (size_t j = 0; j < 3; j++) {
                 float x = 0;
-                for (int k = 0; k < 3; k++) {
+                for (size_t k = 0; k < 3; k++) {
                     x += get(i, k) * other.get(k, j);
                 }
                 ret.set(i, j, x);
@@ -46,8 +46,8 @@ namespace oliview {
 
     Matrix3x3 Matrix3x3::Transpose() const {
         Matrix3x3 ret;
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 3; j++) {
+        for (size_t i = 0; i < 3; i++) {
+            for (size_t j = 0; j < 3; j++) {
                 ret.set(i, j, get(j, i));
             }
         }
@@ -94,9 +94,9 @@ namespace oliview {
 
     Vector3 operator*(const Vector3 & a, const Matrix3x3 & b) {
         Vector3 ret;
-        for (int i = 0; i < 3; i++) {
+        for (size_t i = 0; i < 3; i++) {
             float x = 0;
-            for (int j = 0; j < 3; j++) {
+            for (size_t j = 0; j < 3; j++) {
                 x += a.get(j) * b.get(j, i);
             }
             ret.set(i, x);

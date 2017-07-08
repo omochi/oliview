@@ -56,8 +56,8 @@ void Window2::Init(const Ptr<Application> & app) {
     {
         GridLayouter::ItemAreaDef def;
         def.set_item(view1);
-        def.set_row_position(MakeRange(0, 1));
-        def.set_column_position(MakeRange(0, 1));
+        def.set_row_position(MakeIndexRange(0, 1));
+        def.set_column_position(MakeIndexRange(0, 1));
         area_defs.push_back(def);
     }
     
@@ -67,8 +67,8 @@ void Window2::Init(const Ptr<Application> & app) {
     {
         GridLayouter::ItemAreaDef def;
         def.set_item(view2);
-        def.set_row_position(MakeRange(0, 1));
-        def.set_column_position(MakeRange(1, 2));
+        def.set_row_position(MakeIndexRange(0, 1));
+        def.set_column_position(MakeIndexRange(1, 2));
         area_defs.push_back(def);
     }
     
@@ -78,8 +78,8 @@ void Window2::Init(const Ptr<Application> & app) {
     {
         GridLayouter::ItemAreaDef def;
         def.set_item(view3);
-        def.set_row_position(MakeRange(1, 2));
-        def.set_column_position(MakeRange(0, 1));
+        def.set_row_position(MakeIndexRange(1, 2));
+        def.set_column_position(MakeIndexRange(0, 1));
         area_defs.push_back(def);
     }
     
@@ -89,8 +89,8 @@ void Window2::Init(const Ptr<Application> & app) {
     {
         GridLayouter::ItemAreaDef def;
         def.set_item(view4);
-        def.set_row_position(MakeRange(2, 3));
-        def.set_column_position(MakeRange(0, 1));
+        def.set_row_position(MakeIndexRange(2, 3));
+        def.set_column_position(MakeIndexRange(0, 1));
         area_defs.push_back(def);
     }
     
@@ -100,8 +100,8 @@ void Window2::Init(const Ptr<Application> & app) {
     {
         GridLayouter::ItemAreaDef def;
         def.set_item(view5);
-        def.set_row_position(MakeRange(3, 4));
-        def.set_column_position(MakeRange(0, 3));
+        def.set_row_position(MakeIndexRange(3, 4));
+        def.set_column_position(MakeIndexRange(0, 3));
         area_defs.push_back(def);
     }
     
@@ -111,8 +111,8 @@ void Window2::Init(const Ptr<Application> & app) {
     {
         GridLayouter::ItemAreaDef def;
         def.set_item(view6);
-        def.set_row_position(MakeRange(1, 2));
-        def.set_column_position(MakeRange(2, 3));
+        def.set_row_position(MakeIndexRange(1, 2));
+        def.set_column_position(MakeIndexRange(2, 3));
         area_defs.push_back(def);
     }
     

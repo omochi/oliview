@@ -5,12 +5,12 @@ namespace oliview {
     {}
     
     StringSlice::StringSlice(const Ptr<const std::string> & base):
-    StringSlice(base, 0, (int)base->size())
+    StringSlice(base, 0, base->size())
     {}
     
     StringSlice::StringSlice(const Ptr<const std::string> & base,
-                             int offset,
-                             int length):
+                             size_t offset,
+                             size_t length):
     base_(base),
     offset_(offset),
     length_(length)
@@ -23,15 +23,15 @@ namespace oliview {
         return base_->c_str() + offset_;
     }
     
-    StringSlice StringSlice::Slice(int offset) const {
+    StringSlice StringSlice::Slice(size_t offset) const {
         return Slice(offset, this->length() - offset);
     }
     
-    StringSlice StringSlice::Slice(int offset, int length) const {
+    StringSlice StringSlice::Slice(size_t offset, size_t length) const {
         RHETORIC_ASSERT(offset >= 0);
         
-        int start = this->offset() + offset;
-        int end = std::min(start + length, this->offset() + this->length());
+        size_t start = this->offset() + offset;
+        size_t end = std::min(start + length, this->offset() + this->length());
         
         return StringSlice(base_, start, end - start);
     }

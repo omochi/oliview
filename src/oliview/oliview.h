@@ -22,7 +22,6 @@
 #include "./text_box.h"
 #include "./text_draw_info.h"
 #include "./text_draw_layouter.h"
-#include "./unicode_util.h"
 #include "./utf8.h"
 #include "./vector2.h"
 #include "./vector3.h"

@@ -24,14 +24,14 @@ namespace oliview {
         public:
             Ptr<View> item() const;
             void set_item(const Ptr<View> & value);
-            RHETORIC_ACCESSOR(Range<int>, row_position)
-            RHETORIC_ACCESSOR(Range<int>, column_position)
+            RHETORIC_ACCESSOR(Range<size_t>, row_position)
+            RHETORIC_ACCESSOR(Range<size_t>, column_position)
             
-            Range<int> GetPositionFor(TableDimension dimension) const;
+            Range<size_t> GetPositionFor(TableDimension dimension) const;
         private:
             WeakPtr<View> item_;
-            Range<int> row_position_;
-            Range<int> column_position_;
+            Range<size_t> row_position_;
+            Range<size_t> column_position_;
         };
         
         RHETORIC_GETTER(std::vector<TrackSizeDef>, row_size_defs);
@@ -62,7 +62,7 @@ namespace oliview {
         void CalcLayoutResult(LayoutResult * layout) const;
         
         std::vector<ItemAreaDef> GetSingleAreas(TableDimension dimension,
-                                                int index) const;
+                                                size_t index) const;
         
         std::vector<TrackSizeDef> row_size_defs_;
         std::vector<TrackSizeDef> column_size_defs_;

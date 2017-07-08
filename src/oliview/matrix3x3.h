@@ -11,8 +11,8 @@ namespace oliview {
     public:
         Matrix3x3();
 
-        float get(int row, int column) const;
-        void set(int row, int column, float value);
+        float get(size_t row, size_t column) const;
+        void set(size_t row, size_t column, float value);
 
         const float * elements() const;
         float * elements();

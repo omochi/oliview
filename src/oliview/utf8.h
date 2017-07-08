@@ -4,9 +4,9 @@
 
 namespace oliview {
     struct Utf8HeadByteKind {
-        int length;
+        size_t length;
         
-        Utf8HeadByteKind(int length):
+        Utf8HeadByteKind(size_t length):
         length(length) {};
     };
     struct Utf8BodyByteKind {};
@@ -34,29 +34,29 @@ namespace oliview {
     
     class Utf8Reader {
     public:
-        Utf8Reader(const uint8_t * ptr, int length);
-        Utf8Reader(const char * ptr, int length);
+        Utf8Reader(const uint8_t * ptr, size_t length);
+        Utf8Reader(const char * ptr, size_t length);
         
-        RHETORIC_ACCESSOR_TRIVIAL(int, position)
+        RHETORIC_ACCESSOR_TRIVIAL(size_t, position)
         
         Optional<std::string> Read();
     private:
         const uint8_t * ptr_;
-        int length_;
-        int position_;
+        size_t length_;
+        size_t position_;
     };
     
     class Utf8LineReader {
     public:
         struct Line {
             std::string string;
-            int element_num;
+            size_t element_num;
             
             Line();
         };
         
-        Utf8LineReader(const uint8_t * ptr, int length);
-        Utf8LineReader(const char * ptr, int length);
+        Utf8LineReader(const uint8_t * ptr, size_t length);
+        Utf8LineReader(const char * ptr, size_t length);
         
         Optional<Line> Read();
     private:

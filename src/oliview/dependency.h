@@ -22,6 +22,7 @@ namespace oliview {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wunused-parameter"
 #pragma clang diagnostic ignored "-Wshadow"
+#pragma clang diagnostic ignored "-Wsign-conversion"
 
 #include <nanovg.h>
 

@@ -10,4 +10,5 @@ namespace oliview {
         return (float)(radian * 180.0f / M_PI);
     }
     
+
 }

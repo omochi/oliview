@@ -20,8 +20,8 @@ namespace oliview {
     draw_y_(0)
     {}
     
-    int TextDrawInfo::LineEntry::chars_num() const {
-        return (int)chars_.size();
+    size_t TextDrawInfo::LineEntry::chars_num() const {
+        return chars_.size();
     }
     
     StringSlice TextDrawInfo::LineEntry::GetLine(const Ptr<Text> & text) const {
@@ -33,7 +33,7 @@ namespace oliview {
         auto last_char = chars_.back()->GetChar(text);
         RHETORIC_ASSERT(first_char.base() == last_char.base());
         
-        int len = (int)(last_char.c_str() + last_char.length() - first_char.c_str());
+        size_t len = ToUnsigned(last_char.c_str() + last_char.length() - first_char.c_str());
         return StringSlice(first_char.base(), first_char.offset(), len);
     }
     
@@ -44,7 +44,7 @@ namespace oliview {
         return chars_.back()->draw_right();
     }
     
-    TextDrawInfo::CharPositionIndex::CharPositionIndex(int line_index, int char_index):
+    TextDrawInfo::CharPositionIndex::CharPositionIndex(size_t line_index, size_t char_index):
     line_index(line_index),
     char_index(char_index)
     {}
@@ -59,19 +59,19 @@ namespace oliview {
     }
     
     TextDrawInfo::CharPositionIndex TextDrawInfo::end_index() const {
-        return CharPositionIndex((int)lines_.size(), 0);
+        return CharPositionIndex(lines_.size(), 0);
     }
     
     TextDrawInfo::CharPositionIndex
     TextDrawInfo::GetIndexFor(const Text::Position & position) const
     {
-        for (int line_index = 0; line_index < (int)lines_.size(); line_index++) {
+        for (size_t line_index = 0; line_index < lines_.size(); line_index++) {
             auto line = lines_[line_index];
             if (line->text_position().line_index() < position.line_index()) {
                 continue;
             }
             auto line_chars = line->chars();
-            for (int char_index = 0; char_index < (int)line_chars.size(); char_index++) {
+            for (size_t char_index = 0; char_index < line_chars.size(); char_index++) {
                 auto from_char = line_chars[char_index];
                 if (from_char->text_position() < position) {
                     continue;
@@ -83,8 +83,8 @@ namespace oliview {
         return end_index();
     }
     
-    int TextDrawInfo::line_num() const {
-        return (int)lines_.size();
+    size_t TextDrawInfo::line_num() const {
+        return lines_.size();
     }
 
 }

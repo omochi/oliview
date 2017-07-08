@@ -11,10 +11,10 @@ namespace oliview {
         class Position {
         public:
             Position();
-            Position(int line_index, int byte_offset);
+            Position(size_t line_index, size_t byte_offset);
             
-            RHETORIC_ACCESSOR_TRIVIAL(int, line_index)
-            RHETORIC_ACCESSOR_TRIVIAL(int, byte_offset)
+            RHETORIC_ACCESSOR_TRIVIAL(size_t, line_index)
+            RHETORIC_ACCESSOR_TRIVIAL(size_t, byte_offset)
             
             bool operator==(const Position & other) const;
             RHETORIC_EQUATABLE_DEFAULT(Position)
@@ -24,8 +24,8 @@ namespace oliview {
             
             std::string ToString() const;
         private:
-            int line_index_;
-            int byte_offset_;
+            size_t line_index_;
+            size_t byte_offset_;
         };
         
         std::string string() const;
@@ -34,10 +34,10 @@ namespace oliview {
         std::vector<Ptr<std::string>> lines() const;
         void set_lines(const std::vector<Ptr<std::string>> & value);
         
-        int line_num() const;
+        size_t line_num() const;
         
-        Ptr<std::string> GetLineAt(int index) const;
-        void SetLineAt(int index, const Ptr<std::string> & value);
+        Ptr<std::string> GetLineAt(size_t index) const;
+        void SetLineAt(size_t index, const Ptr<std::string> & value);
         
         // utf-8
         StringSlice GetCharAt(const Position & position) const;
@@ -55,13 +55,13 @@ namespace oliview {
     private:
         struct StringAccess {
             Ptr<std::string> string;
-            int offset;
-            int length;
+            size_t offset;
+            size_t length;
             Optional<Utf8ByteKind> kind;
             
             StringAccess(const Ptr<std::string> & string,
-                         int offset,
-                         int length,
+                         size_t offset,
+                         size_t length,
                          Optional<Utf8ByteKind> kind);
         };
         

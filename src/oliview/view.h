@@ -43,7 +43,7 @@ namespace oliview {
         
         void AddChild(const Ptr<View> & child);
         void RemoveChild(const Ptr<View> & child);
-        void RemoveChildAt(int index);
+        void RemoveChildAt(size_t index);
         void RemoveFromParent();
 
         RHETORIC_GETTER_WEAK(Ptr<Window>, window)        

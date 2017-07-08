@@ -9,7 +9,7 @@ namespace oliview {
         item_ = value;
     }
     
-    Range<int> GridLayouter::ItemAreaDef::GetPositionFor(TableDimension dimension) const {
+    Range<size_t> GridLayouter::ItemAreaDef::GetPositionFor(TableDimension dimension) const {
         switch (dimension) {
             case TableDimension::Row:
                 return row_position();
@@ -98,7 +98,7 @@ namespace oliview {
             std::vector<float> ret_sizes;
             
             float weight_sum = 0.0f;
-            for (int i = 0; i < (int)size_defs.size(); i++) {
+            for (size_t i = 0; i < size_defs.size(); i++) {
                 auto def = size_defs[i];
                 
                 float row_height = 0.0f;
@@ -140,7 +140,7 @@ namespace oliview {
                 free_height = std::max(0.0f, free_height);
             }
             
-            for (int i = 0; i < (int)size_defs.size(); i++) {
+            for (size_t i = 0; i < size_defs.size(); i++) {
                 auto def = size_defs[i];
                 if (def.weight()) {
                     float weight_rate = *def.weight() / weight_sum;
@@ -179,7 +179,7 @@ namespace oliview {
     
     std::vector<GridLayouter::ItemAreaDef>
     GridLayouter::GetSingleAreas(TableDimension dimension,
-                                 int index) const
+                                 size_t index) const
     {
         std::vector<GridLayouter::ItemAreaDef> ret;
         for (auto & def : item_area_defs_) {

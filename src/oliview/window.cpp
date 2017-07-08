@@ -212,6 +212,7 @@ namespace oliview {
     }
     
     void Window::CharHandler(GLFWwindow * window, unsigned int code) {
+        RHETORIC_UNUSED(window);
         // test
         Print(Format("0x%04x", code));
     }

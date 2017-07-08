@@ -44,7 +44,7 @@ namespace oliview {
         }
     }
 
-    void View::RemoveChildAt(int index) {
+    void View::RemoveChildAt(size_t index) {
         auto child = children_[index];
         ArrayRemoveAt(&children_, index);
         child->_SetParent(nullptr);

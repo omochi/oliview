@@ -19,13 +19,13 @@ namespace oliview {
         }
     }
     
-    Utf8Reader::Utf8Reader(const uint8_t * ptr, int length):
+    Utf8Reader::Utf8Reader(const uint8_t * ptr, size_t length):
     ptr_(ptr),
     length_(length),
     position_(0)
     {}
     
-    Utf8Reader::Utf8Reader(const char * ptr, int length):
+    Utf8Reader::Utf8Reader(const char * ptr, size_t length):
     Utf8Reader((const uint8_t *)(ptr), length)
     {}
     
@@ -43,7 +43,7 @@ namespace oliview {
             
             RHETORIC_ASSERT(kind.tag() == Utf8ByteKind::HeadTag);
             
-            int chr_len = kind.AsHead().length;
+            size_t chr_len = kind.AsHead().length;
             if (length_ < position_ + chr_len) {
                 position_ = length_;
                 continue;
@@ -59,11 +59,11 @@ namespace oliview {
     element_num(0)
     {}
 
-    Utf8LineReader::Utf8LineReader(const uint8_t * ptr, int length):
+    Utf8LineReader::Utf8LineReader(const uint8_t * ptr, size_t length):
     char_reader_(ptr, length)
     {}
     
-    Utf8LineReader::Utf8LineReader(const char * ptr, int length):
+    Utf8LineReader::Utf8LineReader(const char * ptr, size_t length):
     Utf8LineReader((const uint8_t *)(ptr), length)
     {}
     
