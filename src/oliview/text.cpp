@@ -167,15 +167,19 @@ namespace oliview {
     }
     
     bool Text::CheckPosition(const Position & pos) const {
-        if (pos.line_index() > lines_.size()) {
+        if (pos.line_index() >= lines_.size()) {
             return false;
         }
         auto line = lines_[pos.line_index()];
-        if (line->size() < pos.byte_offset()) {
+        if (pos.byte_offset() > line->size()) {
             return false;
         }
-        if (line->size() == pos.byte_offset()) {
-            return true;
+        if (pos.byte_offset() == line->size()) {
+            if (pos.line_index() < lines_.size() - 1) {
+                return false;
+            } else {
+                return true;
+            }
         }
         auto kind = GetUtf8ByteKind((*line)[pos.byte_offset()]);
         if (kind.tag() == Utf8ByteKind::HeadTag) {
@@ -186,28 +190,20 @@ namespace oliview {
     
     void Text::Insert(const Text::Position & position_,
                       const Ptr<Text> & text,
-                      Text::Position * result_position)
+                      Text::Position * end_position)
     {
         auto position = position_;
         
         RHETORIC_ASSERT(CheckPosition(position));
 
-        RHETORIC_UNUSED(result_position);
-        
-        Ptr<std::string> dest_line = lines_[position.line_index()];
-        if (position.byte_offset() == dest_line->size()) {
-            if (position.line_index() + 1 < lines_.size()) {
-                position = Position(position.line_index() + 1, 0);
-            }
-        }
-        
         for (size_t i = 0; i < text->line_num(); i++) {
             auto insert_line = text->GetLineAt(i);
             
-            dest_line = lines_[position.line_index()];
+            Ptr<std::string> dest_line = lines_[position.line_index()];
             dest_line->insert(position.byte_offset(), *insert_line);
             
-            position = Position(position.line_index(), position.byte_offset() + insert_line->size());
+            position = Position(position.line_index(),
+                                position.byte_offset() + insert_line->size());
 
             if (i + 1 < text->line_num()) {
                 Ptr<std::string> new_line = New<std::string>();
@@ -221,6 +217,10 @@ namespace oliview {
                 
                 position = Position(position.line_index() + 1, 0);
             }
+        }
+        
+        if (end_position) {
+            *end_position = position;
         }
     }
     

@@ -64,7 +64,7 @@ namespace oliview {
         
         void Insert(const Position & position,
                     const Ptr<Text> & text,
-                    Position * result_position);
+                    Position * end_position);
     private:
         struct StringAccess {
             Ptr<std::string> string;
