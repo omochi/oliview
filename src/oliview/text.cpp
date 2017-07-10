@@ -1,32 +1,32 @@
 #include "./text.h"
 
 namespace oliview {
-    Text::Position::Position():Position(0, 0){}
+    Text::Index::Index(): Index(0, 0){}
     
-    Text::Position::Position(size_t line_index, size_t byte_offset):
-    line_index_(line_index),
-    byte_offset_(byte_offset)
+    Text::Index::Index(size_t line, size_t byte):
+    line_(line),
+    byte_(byte)
     {}
     
-    bool Text::Position::operator==(const Position & other) const {
-        return line_index_ == other.line_index_ &&
-        byte_offset_ == other.byte_offset_;
+    bool Text::Index::operator==(const Index & other) const {
+        return line_ == other.line_ &&
+        byte_ == other.byte_;
     }
     
-    bool Text::Position::operator<(const Position & other) const {
-        if (line_index_ == other.line_index_) {
-            if (byte_offset_ < other.byte_offset_) {
+    bool Text::Index::operator<(const Index & other) const {
+        if (line_ == other.line_) {
+            if (byte_ < other.byte_) {
                 return true;
             }
         }
-        if (line_index_ < other.line_index_) {
+        if (line_ < other.line_) {
             return true;
         }
         return false;
     }
     
-    std::string Text::Position::ToString() const {
-        return Format("Text::Position(%" PRIdS ", %" PRIdS ")", line_index_, byte_offset_);
+    std::string Text::Index::ToString() const {
+        return Format("Text::Index(%" PRIdS ", %" PRIdS ")", line_, byte_);
     }
     
     Text::Text() {
@@ -38,20 +38,20 @@ namespace oliview {
     }
     
     std::string Text::string() const {
-        auto ls = ArrayMap(lines_, [](auto x) { return *x; });
+        std::vector<std::string> ls = ArrayMap(lines_, [](auto x) { return *x; });
         return Join(ls, "");
     }
     
     void Text::set_string(const std::string & value) {
         std::vector<Ptr<std::string>> lines;
         
-        auto reader = Utf8LineReader(value.c_str(), value.size());
+        auto reader = TextLineReader(New<std::string>(value));
         while (true) {
             auto line = reader.Read();
             if (!line) {
                 break;
             }
-            lines.push_back(New<std::string>(line->string));
+            lines.push_back(New<std::string>(line->AsString()));
         }
         
         lines_ = lines;
@@ -73,7 +73,7 @@ namespace oliview {
             }
             auto target_line = value[index];
             index += 1;
-            auto reader = Utf8LineReader(target_line->c_str(), target_line->size());
+            auto reader = TextLineReader(target_line);
             while (true) {
                 auto new_line = reader.Read();
                 if (!new_line) {
@@ -83,7 +83,7 @@ namespace oliview {
                 if (!line) {
                     line = New<std::string>();
                 }
-                line->append(new_line->string);
+                line->append(new_line->AsString());
                 
                 if (CheckEndWith(*line, line->size(), newline_chars())) {
                     lines.push_back(line);
@@ -114,114 +114,135 @@ namespace oliview {
         lines_[index] = value;
     }
     
-    StringSlice Text::GetCharAt(const Position & position) const {
-        auto acc = AccessCharAt(position);
+    StringSlice Text::GetCharAt(const Index & index) const {
+        auto acc = AccessCharAt(index);
         return StringSlice(acc.string, acc.offset, acc.length);
     }
     
-    void Text::SetCharAt(const Position & position, const std::string & chr) {
-        auto acc = AccessCharAt(position);
+    void Text::SetCharAt(const Index & index, const std::string & chr) {
+        auto acc = AccessCharAt(index);
         acc.string->replace(acc.offset, acc.length, chr);
     }
     
-    Text::Position Text::begin_position() const {
-        return SkipBodyBytes(Position(0, 0));
+    Text::Index Text::begin_index() const {
+        return Index(0, 0);
     }
     
-    Text::Position Text::end_position() const {
-        return Position(lines_.size() - 1, lines_.back()->size());
+    Text::Index Text::end_index() const {
+        return Index(lines_.size() - 1, lines_.back()->size());
     }
     
-    Text::Position Text::AdvancePosition(const Position & pos_) const {
-        Position pos = pos_;
+    Text::Index Text::AdvanceIndex(const Index & index_) const {
+        Index index = index_;
         
         while (true) {
-            if (pos == end_position()) {
-                return pos;
+            if (index == end_index()) {
+                return index;
             }
 
-            auto acc = AccessCharAt(pos);
-            if (acc.length == 0) {
-                RHETORIC_ASSERT(!acc.kind.presented());
-                return Position(pos.line_index() + 1, 0);
-            }
+            auto acc = AccessCharAt(index);
+            RHETORIC_ASSERT(acc.length > 0);
+            RHETORIC_ASSERT(acc.kind.presented());
             
             switch (acc.kind->tag()) {
                 case Utf8ByteKind::HeadTag: {
                     size_t len = acc.kind->AsHead().length;
                     RHETORIC_ASSERT(acc.offset + len <= acc.string->size());
-                    pos = Position(pos.line_index(), acc.offset + len);
+                    index = Index(index.line(), acc.offset + len);
                     
-                    if (pos.line_index() + 1 < lines_.size() &&
-                        pos.byte_offset() == lines_[pos.line_index()]->size())
-                    {
-                        pos = Position(pos.line_index() + 1, 0);
-                    }
-                    return pos;
+                    break;
                 }
                 case Utf8ByteKind::BodyTag: {
-                    return SkipBodyBytes(pos);
+                    index = Index(index.line(), index.byte() + 1);
                 }
             }
+            
+            if (index.line() + 1 < lines_.size() &&
+                index.byte() == lines_[index.line()]->size())
+            {
+                index = Index(index.line() + 1, 0);
+            }
+            
+            return index;
         }
     }
     
-    bool Text::CheckPosition(const Position & pos) const {
-        if (pos.line_index() >= lines_.size()) {
+    bool Text::CheckIndex(const Index & index) const {
+        if (index.line() >= lines_.size()) {
             return false;
         }
-        auto line = lines_[pos.line_index()];
-        if (pos.byte_offset() > line->size()) {
-            return false;
-        }
-        if (pos.byte_offset() == line->size()) {
-            if (pos.line_index() < lines_.size() - 1) {
+        auto line = lines_[index.line()];
+        if (index.line() < lines_.size() - 1) {
+            if (index.byte() >= line->size()) {
                 return false;
-            } else {
-                return true;
+            }
+        } else {
+            if (index.byte() > line->size()) {
+                return false;
             }
         }
-        auto kind = GetUtf8ByteKind((*line)[pos.byte_offset()]);
-        if (kind.tag() == Utf8ByteKind::HeadTag) {
-            return true;
-        }
-        return false;
+        return true;
     }
     
-    void Text::Insert(const Text::Position & position_,
+    void Text::Insert(const Text::Index & index_,
                       const Ptr<Text> & text,
-                      Text::Position * end_position)
+                      Text::Index * end_index)
     {
-        auto position = position_;
+        auto index = index_;
         
-        RHETORIC_ASSERT(CheckPosition(position));
+        RHETORIC_ASSERT(CheckIndex(index));
 
         for (size_t i = 0; i < text->line_num(); i++) {
             auto insert_line = text->GetLineAt(i);
             
-            Ptr<std::string> dest_line = lines_[position.line_index()];
-            dest_line->insert(position.byte_offset(), *insert_line);
+            Ptr<std::string> dest_line = lines_[index.line()];
+            dest_line->insert(index.byte(), *insert_line);
             
-            position = Position(position.line_index(),
-                                position.byte_offset() + insert_line->size());
+            index = Index(index.line(),
+                          index.byte() + insert_line->size());
 
             if (i + 1 < text->line_num()) {
                 Ptr<std::string> new_line = New<std::string>();
                 
-                if (position.byte_offset() < dest_line->size()) {
-                    *new_line = dest_line->substr(position.byte_offset(), dest_line->size() - position.byte_offset());
-                    ArrayRemoveRange(dest_line.get(), MakeRange(position.byte_offset(), dest_line->size()));
+                if (index.byte() < dest_line->size()) {
+                    *new_line = dest_line->substr(index.byte(),
+                                                  dest_line->size() - index.byte());
+                    ArrayRemoveRange(dest_line.get(), MakeRange(index.byte(), dest_line->size()));
                 }
                 
-                lines_.insert(lines_.begin() + ToSigned(position.line_index()) + 1, new_line);
+                lines_.insert(lines_.begin() + ToSigned(index.line()) + 1, new_line);
                 
-                position = Position(position.line_index() + 1, 0);
+                index = Index(index.line() + 1, 0);
             }
         }
         
-        if (end_position) {
-            *end_position = position;
+        if (end_index) {
+            *end_index = index;
         }
+    }
+    
+    void Text::Delete(const Index & begin,
+                      const Index & end)
+    {
+        RHETORIC_ASSERT(CheckIndex(begin));
+        RHETORIC_ASSERT(CheckIndex(end));
+        RHETORIC_ASSERT(begin <= end);
+        
+        auto end_line = lines_[end.line()];
+        auto end_after_str = end_line->substr(end.byte(),
+                                              end_line->size() - end.byte());
+        auto begin_line = lines_[begin.line()];
+        auto begin_before_str = begin_line->substr(0,
+                                                   begin.byte());
+        
+        if (begin.line() < end.line()) {
+            ArrayRemoveRange(&lines_, MakeRange(begin.line() + 1,
+                                                end.line() + 1));
+        }
+        
+        begin_line->replace(begin.byte(),
+                            begin_line->size() - begin.byte(),
+                            end_after_str);
     }
     
     Text::StringAccess::StringAccess(const Ptr<std::string> & string,
@@ -245,67 +266,30 @@ namespace oliview {
         }
     }
     
-    Text::StringAccess Text::AccessCharAt(const Position & position) const {
-        Ptr<std::string> str = GetLineAt(position.line_index());
-        size_t offset = position.byte_offset();
-        if (offset == str->size()) {
-            return StringAccess(str,
-                                offset,
-                                0,
-                                None());
+    Text::StringAccess Text::AccessCharAt(const Index & index) const {
+        Ptr<std::string> str = lines_[index.line()];
+        
+        if (index.line() < lines_.size() - 1) {
+            RHETORIC_ASSERT(index.byte() < str->size());
+        } else {
+            RHETORIC_ASSERT(index.byte() <= str->size());
+            if (index.byte() == str->size()) {
+                return StringAccess(str, index.byte(), 0, None());
+            }
         }
         
-        char c = (*str)[offset];
+        char c = (*str)[index.byte()];
         auto kind = GetUtf8ByteKind(c);
         switch (kind.tag()) {
             case Utf8ByteKind::HeadTag: {
-                size_t end = std::min(offset + kind.AsHead().length, str->size());
-                return StringAccess(str,
-                                    offset,
-                                    end - offset,
-                                    Some(kind));
+                size_t end = std::min(index.byte() + kind.AsHead().length, str->size());
+                return StringAccess(str, index.byte(), end - index.byte(), Some(kind));
             }
-                
-            case Utf8ByteKind::BodyTag:
-                return StringAccess(str,
-                                    offset,
-                                    0,
-                                    Some(kind));
+            case Utf8ByteKind::BodyTag: {
+                return StringAccess(str, index.byte(), 1, Some(kind));
+            }
         }
         RHETORIC_FATAL("never");
     }
     
-    Text::Position Text::SkipBodyBytes(const Position & pos_) const {
-        Position pos = pos_;
-        
-        while (true) {
-            if (pos == end_position()) {
-                return pos;
-            }
-            
-            auto acc = AccessCharAt(pos);
-            if (acc.kind && acc.kind->tag() == Utf8ByteKind::HeadTag) {
-                return pos;
-            }
-            
-            pos = AdvancePositionByte(pos);
-        }
-    }
-    
-    Text::Position Text::AdvancePositionByte(const Position & pos_) const {
-        auto pos = pos_;
-        
-        if (pos.line_index() >= lines_.size()) {
-            return pos;
-        }
-        
-        auto * line = lines_[pos.line_index()].get();
-        if (pos.byte_offset() + 1 >= line->size()) {
-            return Position(pos.line_index() + 1, 0);
-        }
-        
-        pos.set_byte_offset(pos.byte_offset() + 1);
-        
-        return pos;
-    }
 }

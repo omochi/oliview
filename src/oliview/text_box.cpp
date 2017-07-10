@@ -48,9 +48,9 @@ namespace oliview {
         SetNeedsLayout();
     }
     
-    void TextBox::set_cursor_position(const Text::Position & value) {
-        RHETORIC_ASSERT(text_->CheckPosition(value));
-        cursor_position_ = value;
+    void TextBox::set_cursor_index(const Text::Index & value) {
+        RHETORIC_ASSERT(text_->CheckIndex(value));
+        cursor_index_ = value;
     }
 
     Size TextBox::MeasureContent(NVGcontext * ctx, const MeasureQuery & query) const {

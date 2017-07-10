@@ -10,27 +10,27 @@ namespace oliview {
     public:
         class CharPosition {
         public:
-            CharPosition(const Text::Position & text_position,
+            CharPosition(const Text::Index & text_index,
                          float draw_left,
                          float draw_right);
             
-            RHETORIC_ACCESSOR(Text::Position, text_position)
+            RHETORIC_ACCESSOR(Text::Index, text_index)
             RHETORIC_ACCESSOR(float, draw_left)
             RHETORIC_ACCESSOR(float, draw_right)
             
             StringSlice GetChar(const Ptr<Text> & text) const;
         private:
-            Text::Position text_position_;
+            Text::Index text_index_;
             float draw_left_;
             float draw_right_;
         };
         
         class LineEntry {
         public:
-            LineEntry(const Text::Position & text_position,
+            LineEntry(const Text::Index & text_index,
                       bool wrapped_line);
             
-            RHETORIC_ACCESSOR(Text::Position, text_position)
+            RHETORIC_ACCESSOR(Text::Index, text_index)
             RHETORIC_ACCESSOR_TRIVIAL(bool, wrapped_line)
             RHETORIC_ACCESSOR(std::vector<Ptr<CharPosition>>, chars)
             size_t chars_num() const;
@@ -41,7 +41,7 @@ namespace oliview {
             
             RHETORIC_ACCESSOR_TRIVIAL(float, draw_y)
         private:
-            Text::Position text_position_;
+            Text::Index text_index_;
             bool wrapped_line_;
             std::vector<Ptr<CharPosition>> chars_;
             
@@ -61,7 +61,7 @@ namespace oliview {
         CharPositionIndex begin_index() const;
         CharPositionIndex end_index() const;
         
-        CharPositionIndex GetIndexFor(const Text::Position & position) const;
+        CharPositionIndex GetIndexFor(const Text::Index & index) const;
         
         RHETORIC_ACCESSOR(std::vector<Ptr<LineEntry>>, lines)
         size_t line_num() const;

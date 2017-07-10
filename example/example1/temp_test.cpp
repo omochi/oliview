@@ -6,6 +6,7 @@ void RunTests() {
     TextTest();
     Utf8Test();
     TextInsertTest1();
+    TextDeleteTest1();
 }
 
 void EitherTest() {
@@ -19,41 +20,41 @@ void TextTest() {
     
     text->set_string("迷ったら\n型付け");
     
-    auto pos = text->begin_position();
+    auto pos = text->begin_index();
     
-    RHETORIC_ASSERT(pos == Text::Position(0, 0));
+    RHETORIC_ASSERT(pos == Text::Index(0, 0));
     RHETORIC_ASSERT(text->GetCharAt(pos).AsString() == "迷");
-    pos = text->AdvancePosition(pos);
+    pos = text->AdvanceIndex(pos);
     
-    RHETORIC_ASSERT(pos == Text::Position(0, 3));
+    RHETORIC_ASSERT(pos == Text::Index(0, 3));
     RHETORIC_ASSERT(text->GetCharAt(pos).AsString() == "っ");
-    pos = text->AdvancePosition(pos);
+    pos = text->AdvanceIndex(pos);
     
-    RHETORIC_ASSERT(pos == Text::Position(0, 6));
+    RHETORIC_ASSERT(pos == Text::Index(0, 6));
     RHETORIC_ASSERT(text->GetCharAt(pos).AsString() == "た");
-    pos = text->AdvancePosition(pos);
+    pos = text->AdvanceIndex(pos);
     
-    RHETORIC_ASSERT(pos == Text::Position(0, 9));
+    RHETORIC_ASSERT(pos == Text::Index(0, 9));
     RHETORIC_ASSERT(text->GetCharAt(pos).AsString() == "ら");
-    pos = text->AdvancePosition(pos);
+    pos = text->AdvanceIndex(pos);
     
-    RHETORIC_ASSERT(pos == Text::Position(0, 12));
+    RHETORIC_ASSERT(pos == Text::Index(0, 12));
     RHETORIC_ASSERT(text->GetCharAt(pos).AsString() == "\n");
-    pos = text->AdvancePosition(pos);
+    pos = text->AdvanceIndex(pos);
     
-    RHETORIC_ASSERT(pos == Text::Position(1, 0));
+    RHETORIC_ASSERT(pos == Text::Index(1, 0));
     RHETORIC_ASSERT(text->GetCharAt(pos).AsString() == "型");
-    pos = text->AdvancePosition(pos);
+    pos = text->AdvanceIndex(pos);
     
-    RHETORIC_ASSERT(pos == Text::Position(1, 3));
+    RHETORIC_ASSERT(pos == Text::Index(1, 3));
     RHETORIC_ASSERT(text->GetCharAt(pos).AsString() == "付");
-    pos = text->AdvancePosition(pos);
+    pos = text->AdvanceIndex(pos);
     
-    RHETORIC_ASSERT(pos == Text::Position(1, 6));
+    RHETORIC_ASSERT(pos == Text::Index(1, 6));
     RHETORIC_ASSERT(text->GetCharAt(pos).AsString() == "け");
-    pos = text->AdvancePosition(pos);
+    pos = text->AdvanceIndex(pos);
     
-    RHETORIC_ASSERT(pos == text->end_position());
+    RHETORIC_ASSERT(pos == text->end_index());
 }
 
 void Utf8Test() {

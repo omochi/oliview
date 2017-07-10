@@ -20,8 +20,8 @@ namespace oliview {
         void set_font_size(float value);
         RHETORIC_ACCESSOR(Color, font_color)
         
-        RHETORIC_GETTER(Text::Position, cursor_position)
-        void set_cursor_position(const Text::Position & value);
+        RHETORIC_GETTER(Text::Index, cursor_index)
+        void set_cursor_index(const Text::Index & value);
         
         virtual Size MeasureContent(NVGcontext * ctx, const MeasureQuery & query) const override;
         virtual void LayoutContent(NVGcontext * ctx) override;
@@ -33,6 +33,6 @@ namespace oliview {
         Ptr<TextDrawLayouter> text_layouter_;
         Ptr<TextDrawInfo> text_draw_info_;
         
-        Text::Position cursor_position_;
+        Text::Index cursor_index_;
     };
 }

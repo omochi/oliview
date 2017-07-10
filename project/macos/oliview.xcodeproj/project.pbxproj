@@ -23,6 +23,8 @@
 		D6C3F7491E9D29F70020D65A /* nanovg_gl_utils.h in Headers */ = {isa = PBXBuildFile; fileRef = D6C3F7401E9D29F70020D65A /* nanovg_gl_utils.h */; };
 		D6C3F74A1E9D29F70020D65A /* stb_image.h in Headers */ = {isa = PBXBuildFile; fileRef = D6C3F7411E9D29F70020D65A /* stb_image.h */; };
 		D6C3F74B1E9D29F70020D65A /* stb_truetype.h in Headers */ = {isa = PBXBuildFile; fileRef = D6C3F7421E9D29F70020D65A /* stb_truetype.h */; };
+		D6D33E621F13C20C00A12F92 /* text_line_reader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D6D33E601F13C20C00A12F92 /* text_line_reader.cpp */; };
+		D6D33E631F13C20C00A12F92 /* text_line_reader.h in Headers */ = {isa = PBXBuildFile; fileRef = D6D33E611F13C20C00A12F92 /* text_line_reader.h */; };
 		D6F1F2651F0F4D9400A61981 /* text.h in Headers */ = {isa = PBXBuildFile; fileRef = D6F1F2631F0F4D9400A61981 /* text.h */; };
 		D6F1F26A1F0F646D00A61981 /* utf8.h in Headers */ = {isa = PBXBuildFile; fileRef = D6F1F2681F0F646D00A61981 /* utf8.h */; };
 		D6F1F29F1F0F7D9E00A61981 /* application.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D6F1F26B1F0F7D9E00A61981 /* application.cpp */; };
@@ -96,6 +98,8 @@
 		D6C3F7401E9D29F70020D65A /* nanovg_gl_utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nanovg_gl_utils.h; sourceTree = "<group>"; };
 		D6C3F7411E9D29F70020D65A /* stb_image.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stb_image.h; sourceTree = "<group>"; };
 		D6C3F7421E9D29F70020D65A /* stb_truetype.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stb_truetype.h; sourceTree = "<group>"; };
+		D6D33E601F13C20C00A12F92 /* text_line_reader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = text_line_reader.cpp; sourceTree = "<group>"; };
+		D6D33E611F13C20C00A12F92 /* text_line_reader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = text_line_reader.h; sourceTree = "<group>"; };
 		D6F1F2631F0F4D9400A61981 /* text.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = text.h; sourceTree = "<group>"; };
 		D6F1F2681F0F646D00A61981 /* utf8.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = utf8.h; sourceTree = "<group>"; };
 		D6F1F26B1F0F7D9E00A61981 /* application.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = application.cpp; sourceTree = "<group>"; };
@@ -235,6 +239,8 @@
 				D639A0621F0FD96C0059B6BA /* text_draw_info.h */,
 				D6F1F28F1F0F7D9E00A61981 /* text_draw_layouter.cpp */,
 				D6F1F2901F0F7D9E00A61981 /* text_draw_layouter.h */,
+				D6D33E601F13C20C00A12F92 /* text_line_reader.cpp */,
+				D6D33E611F13C20C00A12F92 /* text_line_reader.h */,
 				D6F1F2951F0F7D9E00A61981 /* utf8.cpp */,
 				D6F1F2961F0F7D9E00A61981 /* utf8.h */,
 				D6F1F2971F0F7D9E00A61981 /* vector2.cpp */,
@@ -317,6 +323,7 @@
 				D6F1F2B21F0F7D9E00A61981 /* math.h in Headers */,
 				D6F1F2D21F0F7D9E00A61981 /* window.h in Headers */,
 				D60300901EFAE98E006D0A9D /* unicode_util.h in Headers */,
+				D6D33E631F13C20C00A12F92 /* text_line_reader.h in Headers */,
 				D6F1F2A91F0F7D9E00A61981 /* gl_assert.h in Headers */,
 				D6F1F2651F0F4D9400A61981 /* text.h in Headers */,
 				D6F1F26A1F0F646D00A61981 /* utf8.h in Headers */,
@@ -440,6 +447,7 @@
 				D6F1F2CB1F0F7D9E00A61981 /* vector2.cpp in Sources */,
 				D6F1F2C51F0F7D9E00A61981 /* text.cpp in Sources */,
 				D6F1F2BD1F0F7D9E00A61981 /* size.cpp in Sources */,
+				D6D33E621F13C20C00A12F92 /* text_line_reader.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

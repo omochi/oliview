@@ -1,21 +1,21 @@
 #include "./text_draw_info.h"
 
 namespace oliview {
-    TextDrawInfo::CharPosition::CharPosition(const Text::Position & text_position,
+    TextDrawInfo::CharPosition::CharPosition(const Text::Index & text_index,
                                              float draw_left,
                                              float draw_right):
-    text_position_(text_position),
+    text_index_(text_index),
     draw_left_(draw_left),
     draw_right_(draw_right)
     {}
     
     StringSlice TextDrawInfo::CharPosition::GetChar(const Ptr<Text> & text) const {
-        return text->GetCharAt(text_position_);
+        return text->GetCharAt(text_index_);
     }
     
-    TextDrawInfo::LineEntry::LineEntry(const Text::Position & text_position,
+    TextDrawInfo::LineEntry::LineEntry(const Text::Index & text_index,
                                        bool wrapped_line):
-    text_position_(text_position),
+    text_index_(text_index),
     wrapped_line_(wrapped_line),
     draw_y_(0)
     {}
@@ -63,17 +63,17 @@ namespace oliview {
     }
     
     TextDrawInfo::CharPositionIndex
-    TextDrawInfo::GetIndexFor(const Text::Position & position) const
+    TextDrawInfo::GetIndexFor(const Text::Index & index) const
     {
         for (size_t line_index = 0; line_index < lines_.size(); line_index++) {
             auto line = lines_[line_index];
-            if (line->text_position().line_index() < position.line_index()) {
+            if (line->text_index().line() < index.line()) {
                 continue;
             }
             auto line_chars = line->chars();
             for (size_t char_index = 0; char_index < line_chars.size(); char_index++) {
                 auto from_char = line_chars[char_index];
-                if (from_char->text_position() < position) {
+                if (from_char->text_index() < index) {
                     continue;
                 }
                 

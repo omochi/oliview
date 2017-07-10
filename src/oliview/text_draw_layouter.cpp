@@ -17,7 +17,7 @@ namespace oliview {
                                           max_width);
             
             for (auto entry : line_result->lines()) {
-                entry->set_text_position(Text::Position(line_index, 0));
+                entry->set_text_index(Text::Index(line_index, 0));
                 
                 result_lines.push_back(entry);
             }
@@ -76,14 +76,14 @@ namespace oliview {
         Ptr<TextDrawInfo> result = New<TextDrawInfo>();
         auto result_lines = result->lines();
         
-        Text::Position pos(line_index, 0);
+        Text::Index index(line_index, 0);
         
         while (true) {
-            if (pos == text->end_position()) {
+            if (index == text->end_index()) {
                 break;
             }
             
-            auto line_entry = LayoutSingleLine(ctx, text, pos);
+            auto line_entry = LayoutSingleLine(ctx, text, index);
 
             auto chars = line_entry->chars();
             RHETORIC_ASSERT(chars.size() > 0);
@@ -98,15 +98,14 @@ namespace oliview {
             }
             line_entry->set_chars(chars);
             
-            pos = text->AdvancePosition(chars.back()->text_position());
+            index = text->AdvanceIndex(chars.back()->text_index());
             
             if (result_lines.size() > 0) {
                 line_entry->set_wrapped_line(true);
             }
-            
             result_lines.push_back(line_entry);
             
-            if (line_index < pos.line_index()) {
+            if (line_index < index.line()) {
                 break;
             }
         }
@@ -118,17 +117,17 @@ namespace oliview {
     Ptr<TextDrawInfo::LineEntry>
     TextDrawLayouter::LayoutSingleLine(NVGcontext * ctx,
                                        const Ptr<Text> & text,
-                                       const Text::Position & pos_)
+                                       const Text::Index & index_)
     {
-        Text::Position pos = pos_;
+        Text::Index index = index_;
         
         NVGSetFont(ctx, font());
         nvgFontSize(ctx, font_size());
         
-        StringSlice start_char = text->GetCharAt(pos);
+        StringSlice start_char = text->GetCharAt(index);
         RHETORIC_ASSERT(start_char.base() != nullptr);
         const char * start = start_char.c_str();
-        Ptr<std::string> line = text->GetLineAt(pos.line_index());
+        Ptr<std::string> line = text->GetLineAt(index.line());
         const char * end = line->c_str() + line->size();
         RHETORIC_ASSERT(line == start_char.base());
         std::vector<NVGglyphPosition> glyphs(ToUnsigned(end - start));
@@ -140,7 +139,7 @@ namespace oliview {
                                                    (int)glyphs.size());
         glyphs.resize((size_t)num);
         
-        auto entry = New<TextDrawInfo::LineEntry>(pos, false);
+        auto entry = New<TextDrawInfo::LineEntry>(index, false);
         auto chars = entry->chars();
         
         for (size_t i = 0; i < num; i++) {
@@ -149,15 +148,15 @@ namespace oliview {
             auto kind = GetUtf8ByteKind((uint8_t)(glyph.str[0]));
             RHETORIC_ASSERT(kind.tag() == Utf8ByteKind::HeadTag);
             
-            Text::Position next_pos = text->AdvancePosition(pos);
-            if (pos.line_index() == next_pos.line_index()) {
-                const char * next_pos_char = text->GetCharAt(next_pos).c_str();
-                if (next_pos_char <= glyph.str) {
-                    pos = next_pos;
+            Text::Index next_index = text->AdvanceIndex(index);
+            if (index.line() == next_index.line()) {
+                const char * next_index_char = text->GetCharAt(next_index).c_str();
+                if (next_index_char <= glyph.str) {
+                    index = next_index;
                 }
             }
             
-            chars.push_back(New<TextDrawInfo::CharPosition>(pos,
+            chars.push_back(New<TextDrawInfo::CharPosition>(index,
                                                             glyph.minx,
                                                             glyph.maxx));
         }

@@ -31,7 +31,7 @@ namespace oliview {
         
         Ptr<TextDrawInfo::LineEntry> LayoutSingleLine(NVGcontext * ctx,
                                                       const Ptr<Text> & text,
-                                                      const Text::Position & pos);
+                                                      const Text::Index & index);
         
         Ptr<Font> font_;
         float font_size_;
