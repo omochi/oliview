@@ -19,6 +19,10 @@ namespace oliview {
         }
     }
     
+    Utf8ByteKind GetUtf8ByteKind(char chr) {
+        return GetUtf8ByteKind((uint8_t)chr);
+    }
+    
     Utf8Reader::Utf8Reader(const uint8_t * ptr, size_t length):
     ptr_(ptr),
     length_(length),

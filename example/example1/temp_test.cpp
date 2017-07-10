@@ -1,9 +1,11 @@
 #include "./temp_test.h"
 
+
 void RunTests() {
     EitherTest();
     TextTest();
     Utf8Test();
+    TextInsertTest1();
 }
 
 void EitherTest() {

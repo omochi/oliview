@@ -29,6 +29,12 @@ namespace oliview {
         return Format("Text::Position(%" PRIdS ", %" PRIdS ")", line_index_, byte_offset_);
     }
     
+    Text::Text() {}
+    
+    Text::Text(const std::string & value) {
+        set_string(value);
+    }
+    
     std::string Text::string() const {
         auto ls = ArrayMap(lines_, [](auto x) { return *x; });
         return Join(ls, "");
@@ -36,9 +42,16 @@ namespace oliview {
     
     void Text::set_string(const std::string & value) {
         std::vector<Ptr<std::string>> lines;
-        SplitLinesIterate(value, [&](auto x) {
-            lines.push_back(New<std::string>(x));
-        });
+        
+        auto reader = Utf8LineReader(value.c_str(), value.size());
+        while (true) {
+            auto line = reader.Read();
+            if (!line) {
+                break;
+            }
+            lines.push_back(New<std::string>(line->string));
+        }
+        
         set_lines(lines);
     }
     
@@ -110,27 +123,70 @@ namespace oliview {
         }
     }
     
-    Text::Position Text::FixPosition(const Position & pos) const {
-        size_t line_index = pos.line_index();
-        size_t offset = pos.byte_offset();
-        if (line_index >= line_num()) {
-            line_index = line_num();
-            offset = 0;
-        } else {
-            auto line = GetLineAt(line_index);
-            offset = std::min(offset, line->size());
+    bool Text::CheckPosition(const Position & pos) const {
+        if (pos.line_index() > lines_.size()) {
+            return false;
         }
-        return Position(line_index, offset);
+        if (pos.line_index() == lines_.size()) {
+            if (pos.byte_offset() == 0) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+        auto line = lines_[pos.line_index()];
+        if (line->size() < pos.byte_offset()) {
+            return false;
+        }
+        auto kind = GetUtf8ByteKind((*line)[pos.byte_offset()]);
+        if (kind.tag() == Utf8ByteKind::HeadTag) {
+            return true;
+        }
+        return false;
     }
     
-    void Text::Insert(const Text::Position & position,
-                      const std::string & string,
+    void Text::Insert(const Text::Position & position_,
+                      const Ptr<Text> & text,
                       Text::Position * result_position)
     {
-        RHETORIC_UNUSED(position);
-        RHETORIC_UNUSED(string);
+        auto position = position_;
+        
+        RHETORIC_ASSERT(CheckPosition(position));
+
         RHETORIC_UNUSED(result_position);
-        //TODO
+        
+        if (position.line_index() == lines_.size()) {
+            lines_.push_back(New<std::string>());
+        }
+        
+        Ptr<std::string> dest_line = lines_[position.line_index()];
+        if (position.byte_offset() == dest_line->size()) {
+            if (CheckEndWith(*dest_line, dest_line->size(), newline_chars())) {
+                position = Position(position.line_index() + 1, 0);
+            }
+        }
+        
+        for (auto insert_line : text->lines()) {
+            if (position.line_index() == lines_.size()) {
+                dest_line = New<std::string>();
+                lines_.push_back(dest_line);
+            } else {
+                dest_line = lines_[position.line_index()];
+            }
+            
+            dest_line->insert(position.byte_offset(), *insert_line);
+            position = Position(position.line_index(), position.byte_offset() + insert_line->size());
+
+            if (CheckEndWith(*insert_line, insert_line->size(), newline_chars())) {
+                if (position.byte_offset() < dest_line->size()) {
+                    auto newline_line = dest_line->substr(position.byte_offset(), dest_line->size() - position.byte_offset());
+                    ArrayRemoveRange(dest_line.get(), MakeRange(position.byte_offset(), dest_line->size()));
+                    lines_.insert(lines_.begin() + ToSigned(position.line_index()) + 1, New<std::string>(newline_line));
+                }
+                
+                position = Position(position.line_index() + 1, 0);
+            }
+        }
     }
     
     Text::StringAccess::StringAccess(const Ptr<std::string> & string,
@@ -154,7 +210,7 @@ namespace oliview {
         }
         
         char c = (*str)[offset];
-        auto kind = GetUtf8ByteKind((uint8_t)c);
+        auto kind = GetUtf8ByteKind(c);
         switch (kind.tag()) {
             case Utf8ByteKind::HeadTag: {
                 size_t end = std::min(offset + kind.AsHead().length, str->size());

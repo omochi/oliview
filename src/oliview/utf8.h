@@ -31,6 +31,7 @@ namespace oliview {
     };
 
     Utf8ByteKind GetUtf8ByteKind(uint8_t chr);
+    Utf8ByteKind GetUtf8ByteKind(char chr);
     
     class Utf8Reader {
     public:

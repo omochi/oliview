@@ -28,6 +28,9 @@ namespace oliview {
             size_t byte_offset_;
         };
         
+        Text();
+        Text(const std::string & value);
+        
         std::string string() const;
         void set_string(const std::string & value);
         
@@ -47,10 +50,11 @@ namespace oliview {
         Position end_position() const;
         
         Position AdvancePosition(const Position & pos) const;
-        Position FixPosition(const Position & pos) const;
+        
+        bool CheckPosition(const Position & pos) const;
         
         void Insert(const Position & position,
-                    const std::string & string,
+                    const Ptr<Text> & text,
                     Position * result_position);
     private:
         struct StringAccess {
