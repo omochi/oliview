@@ -6,6 +6,15 @@
 #include "./utf8.h"
 
 namespace oliview {
+    /*
+     改行がある行には必ず次の行があることとする。
+     
+     "" => [""]
+     "a" => ["a"]
+     "a\n" => ["a\n", ""]
+     "a\nb" => ["a\n", "b"]
+     
+     */
     class Text {
     public:
         class Position {
@@ -68,6 +77,8 @@ namespace oliview {
                          size_t length,
                          Optional<Utf8ByteKind> kind);
         };
+        
+        void FixLastLine();
         
         StringAccess AccessCharAt(const Position & position) const;
         Position SkipBodyBytes(const Position & pos) const;

@@ -3,11 +3,13 @@
 void TextInsertTest1() {
     {
         auto t1 = New<Text>();
-        RHETORIC_ASSERT(t1->line_num() == 0);
+        RHETORIC_ASSERT(t1->line_num() == 1);
+        RHETORIC_ASSERT(*t1->lines()[0] == "");
     }
     {
         auto t1 = New<Text>("");
-        RHETORIC_ASSERT(t1->line_num() == 0);
+        RHETORIC_ASSERT(t1->line_num() == 1);
+        RHETORIC_ASSERT(*t1->lines()[0] == "");
     }
     {
         auto t1 = New<Text>("apple");
@@ -15,14 +17,15 @@ void TextInsertTest1() {
         RHETORIC_ASSERT(*t1->lines()[0] == "apple");
     }
     {
-        auto t2 = New<Text>("banana");
-        RHETORIC_ASSERT(t2->line_num() == 1);
-        RHETORIC_ASSERT(*t2->lines()[0] == "banana");
+        auto t1 = New<Text>("banana");
+        RHETORIC_ASSERT(t1->line_num() == 1);
+        RHETORIC_ASSERT(*t1->lines()[0] == "banana");
     }
     {
         auto t1 = New<Text>("apple\n");
-        RHETORIC_ASSERT(t1->line_num() == 1);
+        RHETORIC_ASSERT(t1->line_num() == 2);
         RHETORIC_ASSERT(*t1->lines()[0] == "apple\n");
+        RHETORIC_ASSERT(*t1->lines()[1] == "");
     }
     {
         auto t1 = New<Text>("apple\nbanana");
@@ -55,8 +58,9 @@ void TextInsertTest1() {
         auto t1 = New<Text>("apple\n");
         auto t2 = New<Text>("banana");
         t1->Insert(Text::Position(0, 3), t2, nullptr);
-        RHETORIC_ASSERT(t1->line_num() == 1);
+        RHETORIC_ASSERT(t1->line_num() == 2);
         RHETORIC_ASSERT(*t1->lines()[0] == "appbananale\n");
+        RHETORIC_ASSERT(*t1->lines()[1] == "");
     }
     {
         auto t1 = New<Text>("apple");
@@ -70,8 +74,9 @@ void TextInsertTest1() {
         auto t1 = New<Text>("apple\n");
         auto t2 = New<Text>("banana");
         t1->Insert(Text::Position(0, 5), t2, nullptr);
-        RHETORIC_ASSERT(t1->line_num() == 1);
+        RHETORIC_ASSERT(t1->line_num() == 2);
         RHETORIC_ASSERT(*t1->lines()[0] == "applebanana\n");
+        RHETORIC_ASSERT(*t1->lines()[1] == "");
     }
     {
         auto t1 = New<Text>("apple\n");
@@ -93,33 +98,37 @@ void TextInsertTest1() {
         auto t1 = New<Text>("apple\n");
         auto t2 = New<Text>("banana\n");
         t1->Insert(Text::Position(0, 5), t2, nullptr);
-        RHETORIC_ASSERT(t1->line_num() == 2);
+        RHETORIC_ASSERT(t1->line_num() == 3);
         RHETORIC_ASSERT(*t1->lines()[0] == "applebanana\n");
         RHETORIC_ASSERT(*t1->lines()[1] == "\n");
+        RHETORIC_ASSERT(*t1->lines()[2] == "");
     }
     {
         auto t1 = New<Text>("apple\n");
         auto t2 = New<Text>("banana\n");
         t1->Insert(Text::Position(0, 6), t2, nullptr);
-        RHETORIC_ASSERT(t1->line_num() == 2);
+        RHETORIC_ASSERT(t1->line_num() == 3);
         RHETORIC_ASSERT(*t1->lines()[0] == "apple\n");
         RHETORIC_ASSERT(*t1->lines()[1] == "banana\n");
+        RHETORIC_ASSERT(*t1->lines()[2] == "");
     }
     {
         auto t1 = New<Text>("apple\n");
         auto t2 = New<Text>("banana\n");
         t1->Insert(Text::Position(1, 0), t2, nullptr);
-        RHETORIC_ASSERT(t1->line_num() == 2);
+        RHETORIC_ASSERT(t1->line_num() == 3);
         RHETORIC_ASSERT(*t1->lines()[0] == "apple\n");
         RHETORIC_ASSERT(*t1->lines()[1] == "banana\n");
+        RHETORIC_ASSERT(*t1->lines()[2] == "");
     }
     {
         auto t1 = New<Text>("apple\n");
         auto t2 = New<Text>("banana\n");
         t1->Insert(Text::Position(0, 3), t2, nullptr);
-        RHETORIC_ASSERT(t1->line_num() == 2);
+        RHETORIC_ASSERT(t1->line_num() == 3);
         RHETORIC_ASSERT(*t1->lines()[0] == "appbanana\n");
         RHETORIC_ASSERT(*t1->lines()[1] == "le\n");
+        RHETORIC_ASSERT(*t1->lines()[2] == "");
     }
     {
         auto t1 = New<Text>("apple\nbanana");

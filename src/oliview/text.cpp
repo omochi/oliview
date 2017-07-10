@@ -29,7 +29,9 @@ namespace oliview {
         return Format("Text::Position(%" PRIdS ", %" PRIdS ")", line_index_, byte_offset_);
     }
     
-    Text::Text() {}
+    Text::Text() {
+        FixLastLine();
+    }
     
     Text::Text(const std::string & value) {
         set_string(value);
@@ -52,7 +54,8 @@ namespace oliview {
             lines.push_back(New<std::string>(line->string));
         }
         
-        set_lines(lines);
+        lines_ = lines;
+        FixLastLine();
     }
     
     std::vector<Ptr<std::string>> Text::lines() const {
@@ -60,7 +63,43 @@ namespace oliview {
     }
     
     void Text::set_lines(const std::vector<Ptr<std::string>> & value) {
-        lines_ = value;
+        std::vector<Ptr<std::string>> lines;
+        
+        size_t index = 0;
+        Ptr<std::string> line;
+        while (true) {
+            if (index == value.size()) {
+                break;
+            }
+            auto target_line = value[index];
+            index += 1;
+            auto reader = Utf8LineReader(target_line->c_str(), target_line->size());
+            while (true) {
+                auto new_line = reader.Read();
+                if (!new_line) {
+                    break;
+                }
+                
+                if (!line) {
+                    line = New<std::string>();
+                }
+                line->append(new_line->string);
+                
+                if (CheckEndWith(*line, line->size(), newline_chars())) {
+                    lines.push_back(line);
+                    line = nullptr;
+                }
+            }
+            
+        }
+        
+        if (line) {
+            lines.push_back(line);
+            line = nullptr;
+        }
+        
+        lines_ = lines;
+        FixLastLine();
     }
     
     size_t Text::line_num() const {
@@ -90,7 +129,7 @@ namespace oliview {
     }
     
     Text::Position Text::end_position() const {
-        return Position(lines_.size(), 0);
+        return Position(lines_.size() - 1, lines_.back()->size());
     }
     
     Text::Position Text::AdvancePosition(const Position & pos_) const {
@@ -110,11 +149,14 @@ namespace oliview {
             switch (acc.kind->tag()) {
                 case Utf8ByteKind::HeadTag: {
                     size_t len = acc.kind->AsHead().length;
-                    if (acc.offset + len >= acc.string->size()) {
-                        return Position(pos.line_index() + 1, 0);
-                    } else {
-                        return Position(pos.line_index(), acc.offset + len);
+                    RHETORIC_ASSERT(acc.offset + len <= acc.string->size());
+                    pos = Position(pos.line_index(), acc.offset + len);
+                    if (pos.line_index() + 1 < lines_.size() &&
+                        pos.byte_offset() == lines_[pos.line_index()]->size())
+                    {
+                        pos = Position(pos.line_index() + 1, 0);
                     }
+                    return pos;
                 }
                 case Utf8ByteKind::BodyTag: {
                     return SkipBodyBytes(pos);
@@ -127,16 +169,12 @@ namespace oliview {
         if (pos.line_index() > lines_.size()) {
             return false;
         }
-        if (pos.line_index() == lines_.size()) {
-            if (pos.byte_offset() == 0) {
-                return true;
-            } else {
-                return false;
-            }
-        }
         auto line = lines_[pos.line_index()];
         if (line->size() < pos.byte_offset()) {
             return false;
+        }
+        if (line->size() == pos.byte_offset()) {
+            return true;
         }
         auto kind = GetUtf8ByteKind((*line)[pos.byte_offset()]);
         if (kind.tag() == Utf8ByteKind::HeadTag) {
@@ -155,34 +193,30 @@ namespace oliview {
 
         RHETORIC_UNUSED(result_position);
         
-        if (position.line_index() == lines_.size()) {
-            lines_.push_back(New<std::string>());
-        }
-        
         Ptr<std::string> dest_line = lines_[position.line_index()];
         if (position.byte_offset() == dest_line->size()) {
-            if (CheckEndWith(*dest_line, dest_line->size(), newline_chars())) {
+            if (position.line_index() + 1 < lines_.size()) {
                 position = Position(position.line_index() + 1, 0);
             }
         }
         
-        for (auto insert_line : text->lines()) {
-            if (position.line_index() == lines_.size()) {
-                dest_line = New<std::string>();
-                lines_.push_back(dest_line);
-            } else {
-                dest_line = lines_[position.line_index()];
-            }
+        for (size_t i = 0; i < text->line_num(); i++) {
+            auto insert_line = text->GetLineAt(i);
             
+            dest_line = lines_[position.line_index()];
             dest_line->insert(position.byte_offset(), *insert_line);
+            
             position = Position(position.line_index(), position.byte_offset() + insert_line->size());
 
-            if (CheckEndWith(*insert_line, insert_line->size(), newline_chars())) {
+            if (i + 1 < text->line_num()) {
+                Ptr<std::string> new_line = New<std::string>();
+                
                 if (position.byte_offset() < dest_line->size()) {
-                    auto newline_line = dest_line->substr(position.byte_offset(), dest_line->size() - position.byte_offset());
+                    *new_line = dest_line->substr(position.byte_offset(), dest_line->size() - position.byte_offset());
                     ArrayRemoveRange(dest_line.get(), MakeRange(position.byte_offset(), dest_line->size()));
-                    lines_.insert(lines_.begin() + ToSigned(position.line_index()) + 1, New<std::string>(newline_line));
                 }
+                
+                lines_.insert(lines_.begin() + ToSigned(position.line_index()) + 1, new_line);
                 
                 position = Position(position.line_index() + 1, 0);
             }
@@ -198,6 +232,17 @@ namespace oliview {
     length(length),
     kind(kind)
     {}
+    
+    void Text::FixLastLine() {
+        if (lines_.size() == 0) {
+            lines_.push_back(New<std::string>());
+        } else {
+            auto last_line = lines_.back();
+            if (CheckEndWith(*last_line, last_line->size(), newline_chars())) {
+                lines_.push_back(New<std::string>());
+            }
+        }
+    }
     
     Text::StringAccess Text::AccessCharAt(const Position & position) const {
         Ptr<std::string> str = GetLineAt(position.line_index());
