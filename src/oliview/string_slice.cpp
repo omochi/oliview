@@ -17,7 +17,7 @@ namespace oliview {
     {}
     
     const char * StringSlice::c_str() const {
-        if (length() == 0) {
+        if (base_ == nullptr) {
             return nullptr;
         }
         return base_->c_str() + offset_;

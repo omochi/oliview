@@ -27,12 +27,11 @@ void Window1::Init(const Ptr<Application> & app) {
     view4->set_frame(Rect(Vector2(20, 440),
                           Size(59, 46)));
     view4->set_background_color(Color(1, 0, 0, 1));
-    
+
     auto view5 = OLIVIEW_INIT(TextBox, app);
     view5->set_background_color(Color(0.8, 0.7, 0.5, 1.0));
     root_view()->AddChild(view5);
     view5->set_frame(Rect(Vector2(200, 50),
                           Size(300, 200)));
-    
     view5->set_text("初期テキスト\nフェレットかわいい");
 }

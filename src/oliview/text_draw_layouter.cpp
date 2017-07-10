@@ -79,17 +79,19 @@ namespace oliview {
         Text::Position pos(line_index, 0);
         
         while (true) {
-            auto line_entry = LayoutSingleLine(ctx,
-                                               text,
-                                               pos);
+            if (pos == text->end_position()) {
+                break;
+            }
             
+            auto line_entry = LayoutSingleLine(ctx, text, pos);
+
             auto chars = line_entry->chars();
             RHETORIC_ASSERT(chars.size() > 0);
             for (size_t i = 0; i < chars.size(); i++) {
                 auto & ch = chars[i];
                 if (max_width) {
                     if (i > 0 && *max_width < ch->draw_right()) {
-                        chars.erase(chars.begin() + ToSigned(i), chars.end());
+                        ArrayRemoveRange(&chars, MakeIndexRange(i, chars.size()));
                         break;
                     }
                 }
@@ -124,11 +126,11 @@ namespace oliview {
         nvgFontSize(ctx, font_size());
         
         StringSlice start_char = text->GetCharAt(pos);
+        RHETORIC_ASSERT(start_char.base() != nullptr);
         const char * start = start_char.c_str();
         Ptr<std::string> line = text->GetLineAt(pos.line_index());
         const char * end = line->c_str() + line->size();
         RHETORIC_ASSERT(line == start_char.base());
-        
         std::vector<NVGglyphPosition> glyphs(ToUnsigned(end - start));
         size_t num = (size_t)nvgTextGlyphPositions(ctx,
                                                    0, 0,

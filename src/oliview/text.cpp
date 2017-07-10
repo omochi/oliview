@@ -151,6 +151,7 @@ namespace oliview {
                     size_t len = acc.kind->AsHead().length;
                     RHETORIC_ASSERT(acc.offset + len <= acc.string->size());
                     pos = Position(pos.line_index(), acc.offset + len);
+                    
                     if (pos.line_index() + 1 < lines_.size() &&
                         pos.byte_offset() == lines_[pos.line_index()]->size())
                     {
