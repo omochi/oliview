@@ -6,6 +6,12 @@
 #include "./text.h"
 
 namespace oliview {
+    /*
+     行数はTextと一致。
+     末尾改行は描画に不要だしカーソル処理が面倒なのでなし。
+     TODO
+     */
+    
     class TextDrawInfo {
     public:
         class CharPosition {
@@ -34,6 +40,7 @@ namespace oliview {
             RHETORIC_ACCESSOR_TRIVIAL(bool, wrapped_line)
             RHETORIC_ACCESSOR(std::vector<Ptr<CharPosition>>, chars)
             size_t chars_num() const;
+            Ptr<CharPosition> GetCharPositionAt(size_t index) const;
             
             StringSlice GetLine(const Ptr<Text> & text) const;
             
@@ -62,6 +69,7 @@ namespace oliview {
         CharPositionIndex end_index() const;
         
         CharPositionIndex GetIndexFor(const Text::Index & index) const;
+        CharPositionIndex GetIndexFor(const Vector2 & position) const;
         
         RHETORIC_ACCESSOR(std::vector<Ptr<LineEntry>>, lines)
         size_t line_num() const;

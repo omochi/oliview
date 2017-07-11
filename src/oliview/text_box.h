@@ -19,7 +19,6 @@ namespace oliview {
             return std::static_pointer_cast<TextBox>(View::shared_from_this());
         }
         
-        
         std::string text() const;
         void set_text(const std::string & value);
         Ptr<Font> font() const;

@@ -24,6 +24,11 @@ namespace oliview {
         return chars_.size();
     }
     
+    Ptr<TextDrawInfo::CharPosition>
+    TextDrawInfo::LineEntry::GetCharPositionAt(size_t index) const {
+        return chars_[index];
+    }
+    
     StringSlice TextDrawInfo::LineEntry::GetLine(const Ptr<Text> & text) const {
         if (chars_.size() == 0) {
             return StringSlice();
@@ -81,6 +86,56 @@ namespace oliview {
             }
         }
         return end_index();
+    }
+    
+    TextDrawInfo::CharPositionIndex
+    TextDrawInfo::GetIndexFor(const Vector2 & position) const
+    {
+        if (lines_.size() == 0) {
+            return end_index();
+        }
+        
+        CharPositionIndex ret;
+        
+        for (size_t line_index = 0; line_index < lines_.size(); line_index++) {
+            if (line_index == lines_.size() - 1) {
+                if (position.y() < size_.height()) {
+                    ret.line_index = line_index;
+                    break;
+                }
+                
+                {
+                    ret.line_index = line_index;
+                    auto line = lines_[line_index];
+                    ret.char_index = line->chars_num() - 1;;
+                    return ret;
+                }
+            }
+            
+            if (position.y() < lines_[line_index + 1]->draw_y())
+            {
+                ret.line_index = line_index;
+                break;
+            }
+        }
+        
+        auto line = lines_[ret.line_index];
+        for (size_t char_index = 0; char_index < line->chars_num(); char_index++) {
+
+            auto char_position = line->GetCharPositionAt(char_index);
+            float char_center_x = (char_position->draw_left() + char_position->draw_right()) / 2.0f;
+            if (position.x() < char_center_x) {
+                ret.char_index = char_index;
+                break;
+            }
+            
+            if (char_index == line->chars_num() - 1) {
+                ret.char_index = char_index + 1;
+                break;
+            }
+        }
+        
+        return ret;
     }
     
     size_t TextDrawInfo::line_num() const {

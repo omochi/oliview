@@ -32,7 +32,9 @@ namespace oliview {
         void MakeContextCurrent();
         
         virtual bool ShouldClose() const;
-                
+        
+        void RefreshLayout();
+        
         void HandleMouseEvent(const MouseEvent & event);
 
         void _Update();
@@ -43,6 +45,7 @@ namespace oliview {
     private:        
         NVGcontext * BeginNVG();
         void EndNVG(NVGcontext * ctx);
+        void CancelNVG(NVGcontext * ctx);
         
         void Layout(NVGcontext * ctx);
         void Draw(NVGcontext * ctx);
@@ -52,6 +55,7 @@ namespace oliview {
 
         WeakPtr<Application> application_;
         GLFWwindow * glfw_window_;
+        NVGcontext * nvg_context_;
 
         std::function<bool()> should_close_;
 

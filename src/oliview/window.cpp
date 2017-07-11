@@ -4,7 +4,8 @@
 
 namespace oliview {
     Window::Window():
-    glfw_window_(nullptr)
+    glfw_window_(nullptr),
+    nvg_context_(nullptr)
     {}
 
     Window::~Window() {
@@ -89,6 +90,16 @@ namespace oliview {
         return true;
     }
     
+    void Window::RefreshLayout() {
+        if (nvg_context_) {
+            Layout(nvg_context_);
+        } else {
+            NVGcontext * ctx = BeginNVG();
+            Layout(ctx);
+            CancelNVG(ctx);
+        }
+    }
+    
     void Window::HandleMouseEvent(const MouseEvent & event_) {
         MouseEvent event = event_;
         
@@ -122,18 +133,18 @@ namespace oliview {
                 }
             }
         }
+        
+        RefreshLayout();
     }
     
     void Window::_Update() {
         NVGcontext * ctx = BeginNVG();
-        
         Layout(ctx);
-        
         Draw(ctx);
-        
         EndNVG(ctx);
-        
         glfwSwapBuffers(glfw_window_);
+        
+        RefreshLayout();
     }
     
     void Window::_MayClose() {
@@ -162,6 +173,8 @@ namespace oliview {
     }
     
     NVGcontext * Window::BeginNVG() {
+        RHETORIC_ASSERT(nvg_context_ == nullptr);
+        
         auto app = application();
         auto ctx = app->_nvg_context();
         
@@ -174,23 +187,35 @@ namespace oliview {
                       (int)last_valid_window_size_.height(),
                       pixel_ratio);
         
+        nvg_context_ = ctx;
+        
         return ctx;
     }
     
     void Window::EndNVG(NVGcontext * ctx) {
+        RHETORIC_ASSERT(nvg_context_ == ctx);
+        
         nvgEndFrame(ctx);
+        nvg_context_ = nullptr;
+    }
+    
+    void Window::CancelNVG(NVGcontext * ctx) {
+        RHETORIC_ASSERT(nvg_context_ == ctx);
+
+        nvgCancelFrame(ctx);
+        nvg_context_ = nullptr;
     }
     
     void Window::Layout(NVGcontext * ctx) {
-        int layout_count = 0;
+        int count = 0;
         while (true) {
             bool updated = root_view_->_InvokeLayout(ctx);
-            layout_count += 1;
+            count += 1;
             if (!updated) {
                 break;
             }
             
-            RHETORIC_ASSERT(layout_count < 100);
+            RHETORIC_ASSERT(count < 100);
         }
     }
     

@@ -83,7 +83,7 @@ namespace oliview {
                 break;
             }
             
-            auto line_entry = LayoutSingleLine(ctx, text, index);
+            Ptr<TextDrawInfo::LineEntry> line_entry = LayoutSingleLine(ctx, text, index);
 
             auto chars = line_entry->chars();
             RHETORIC_ASSERT(chars.size() > 0);
@@ -98,6 +98,7 @@ namespace oliview {
             }
             line_entry->set_chars(chars);
             
+            //  TODO: skip newline char
             index = text->AdvanceIndex(chars.back()->text_index());
             
             if (result_lines.size() > 0) {
@@ -114,6 +115,7 @@ namespace oliview {
         return result;
     }
 
+    //  TODO: return newline status
     Ptr<TextDrawInfo::LineEntry>
     TextDrawLayouter::LayoutSingleLine(NVGcontext * ctx,
                                        const Ptr<Text> & text,
@@ -126,10 +128,20 @@ namespace oliview {
         
         StringSlice start_char = text->GetCharAt(index);
         RHETORIC_ASSERT(start_char.base() != nullptr);
+        
         const char * start = start_char.c_str();
+        
         Ptr<std::string> line = text->GetLineAt(index.line());
-        const char * end = line->c_str() + line->size();
+        size_t line_size = line->size();
+        auto newline_chars = rhetoric::newline_chars();
+        auto check_newline_ret = CheckEndWith(*line, line_size, newline_chars);
+        if (check_newline_ret) {
+            line_size -= newline_chars[check_newline_ret->target_index].size();
+        }
+    
+        const char * end = line->c_str() + line_size;
         RHETORIC_ASSERT(line == start_char.base());
+        
         std::vector<NVGglyphPosition> glyphs(ToUnsigned(end - start));
         size_t num = (size_t)nvgTextGlyphPositions(ctx,
                                                    0, 0,

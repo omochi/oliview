@@ -7,7 +7,7 @@ namespace oliview {
     {}
     
     Optional<StringSlice> TextLineReader::Read() {
-        std::vector<std::string> newline_list = { "\r\n", "\n", "\r" };
+        std::vector<std::string> newline_chars = rhetoric::newline_chars();
         size_t begin = index_;
         while (true) {
             if (index_ == string_->size()) {
@@ -17,9 +17,9 @@ namespace oliview {
                 break;
             }
             
-            auto check_ret = CheckStartWith(*string_, index_, newline_list);
+            auto check_ret = CheckStartWith(*string_, index_, newline_chars);
             if (check_ret) {
-                index_ += newline_list[check_ret->target_index].size();
+                index_ += newline_chars[check_ret->target_index].size();
                 break;
             }
             

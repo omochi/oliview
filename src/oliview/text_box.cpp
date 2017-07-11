@@ -85,6 +85,11 @@ namespace oliview {
     
     void TextBox::OnMouseDownEvent(const MouseEvent & event) {
         Print(Format("down %f, %f", event.pos().x(), event.pos().y()));
+        
+        RHETORIC_ASSERT(text_draw_info_ != nullptr);
+        
+        auto ret = text_draw_info_->GetIndexFor(event.pos());
+        Print(Format("text index: %d, %d", (int)ret.line_index, (int)ret.char_index));
     }
     
     void TextBox::OnMouseMoveEvent(const MouseEvent & event) {
