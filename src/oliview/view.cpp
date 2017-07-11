@@ -64,6 +64,10 @@ namespace oliview {
         
         SetNeedsLayout();
     }
+    
+    Rect View::local_frame() const {
+        return Rect(Vector2(0, 0), frame_.size());
+    }
 
     void View::set_background_color(const Color & value) {
         background_color_ = value;
@@ -131,6 +135,57 @@ namespace oliview {
         RHETORIC_UNUSED(ctx);
     }
     
+    Matrix3x3 View::local_transform() const {
+        return Matrix3x3::Translation(frame_.origin());
+    }
+    
+    Matrix3x3 View::window_transform() const {
+        return draw_info_.window_transform;
+    }
+    
+    Vector2 View::ConvertPointToWindow(const Vector2 & point) const {
+        return point.ApplyTransform(window_transform());
+    }
+    
+    Vector2 View::ConvertPointFromWindow(const Vector2 & point) const {
+        auto m = window_transform().Invert();
+        return point.ApplyTransform(m);
+    }
+    
+    Vector2 View::ConvertPointToView(const Vector2 & point, const Ptr<View> & view) const {
+        return view->ConvertPointFromWindow(ConvertPointToWindow(point));
+    }
+    
+    Vector2 View::ConvertPointFromView(const Vector2 & point, const Ptr<View> & view) const {
+        return ConvertPointFromWindow(view->ConvertPointToWindow(point));
+    }
+    
+    bool View::IsPointInside(const Vector2 & point) const {
+        return local_frame().IsPointInside(point);
+    }
+    
+    Ptr<View> View::HitTest(const Vector2 & pos) {
+        bool skip_children = false;
+        if (clipping_children()) {
+            if (!IsPointInside(pos)) {
+                skip_children = true;
+            }
+        }
+        
+        if (!skip_children) {
+            auto children = ArrayReversed(this->children());
+            for (auto & child : children) {
+                Vector2 pos_in_child = ConvertPointToView(pos, child);
+                auto ret = child->HitTest(pos_in_child);
+                if (ret) {
+                    return ret;
+                }
+            }
+        }
+        
+        return nullptr;
+    }
+    
     bool View::_InvokeLayout(NVGcontext * ctx) {
         bool updated = false;
         
@@ -157,7 +212,7 @@ namespace oliview {
         draw_info_ = info;
         
         auto wtr = draw_info_.window_transform;
-        wtr = Matrix3x3::Translation(frame_.origin()) * wtr;
+        wtr = local_transform() * wtr;
         draw_info_.window_transform = wtr;
         
         Rect frame_in_window = Rect(Vector2(), frame().size()).ApplyTransform(wtr);
@@ -188,12 +243,14 @@ namespace oliview {
         nvgRestore(ctx);
     }
 
-    void View::_CollectDrawCommand(std::list<DrawCommand> * commands) {
-        for (auto & child : children_) {
-            DrawCommand command;
-            command.view = child;
-            command.shadow = true;
-            commands->push_back(command);
+    void View::_CollectDrawCommand(std::vector<DrawCommand> * commands, bool shadow) {
+        if (shadow) {
+            for (auto & child : children_) {
+                DrawCommand command;
+                command.view = child;
+                command.shadow = true;
+                commands->push_back(command);
+            }
         }
         
         for (auto & child : children_) {
@@ -204,7 +261,7 @@ namespace oliview {
         }
 
         for (auto & child : children_) {
-            child->_CollectDrawCommand(commands);
+            child->_CollectDrawCommand(commands, shadow);
         }
     }
     

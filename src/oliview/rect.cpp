@@ -37,6 +37,13 @@ namespace oliview {
         return Rect::FromPoints(p0, p1);
     }
     
+    bool Rect::IsPointInside(const Vector2 & point) const {
+        auto origin = this->origin();
+        auto end = this->end();
+        return origin.x() <= point.x() && point.x() <= end.x() &&
+        origin.y() <= point.y() && point.y() <= end.y();
+    }
+    
     Rect Rect::FromPoints(const Vector2 & p0,
                           const Vector2 & p1)
     {

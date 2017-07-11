@@ -15,6 +15,8 @@
 		D639A0631F0FD96C0059B6BA /* text_draw_info.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D639A0611F0FD96C0059B6BA /* text_draw_info.cpp */; };
 		D639A0641F0FD96C0059B6BA /* text_draw_info.h in Headers */ = {isa = PBXBuildFile; fileRef = D639A0621F0FD96C0059B6BA /* text_draw_info.h */; };
 		D678E3A91F053A8700B9A4C0 /* text_draw_layouter.h in Headers */ = {isa = PBXBuildFile; fileRef = D678E3A71F053A8700B9A4C0 /* text_draw_layouter.h */; };
+		D6860C391F14C32E00ED2230 /* mouse_button_event.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D6860C371F14C32E00ED2230 /* mouse_button_event.cpp */; };
+		D6860C3A1F14C32E00ED2230 /* mouse_button_event.h in Headers */ = {isa = PBXBuildFile; fileRef = D6860C381F14C32E00ED2230 /* mouse_button_event.h */; };
 		D6C3F7381E9D29D90020D65A /* glfw3.h in Headers */ = {isa = PBXBuildFile; fileRef = D6C3F7331E9D29D90020D65A /* glfw3.h */; };
 		D6C3F7391E9D29D90020D65A /* glfw3native.h in Headers */ = {isa = PBXBuildFile; fileRef = D6C3F7341E9D29D90020D65A /* glfw3native.h */; };
 		D6C3F7461E9D29F70020D65A /* fontstash.h in Headers */ = {isa = PBXBuildFile; fileRef = D6C3F73D1E9D29F70020D65A /* fontstash.h */; };
@@ -89,6 +91,8 @@
 		D639A0621F0FD96C0059B6BA /* text_draw_info.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = text_draw_info.h; sourceTree = "<group>"; };
 		D639A0651F0FFBFF0059B6BA /* math_inline.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = math_inline.h; sourceTree = "<group>"; };
 		D678E3A71F053A8700B9A4C0 /* text_draw_layouter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = text_draw_layouter.h; sourceTree = "<group>"; };
+		D6860C371F14C32E00ED2230 /* mouse_button_event.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = mouse_button_event.cpp; sourceTree = "<group>"; };
+		D6860C381F14C32E00ED2230 /* mouse_button_event.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = mouse_button_event.h; sourceTree = "<group>"; };
 		D6C3F6AA1E99AAB50020D65A /* liboliview.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = liboliview.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		D6C3F7331E9D29D90020D65A /* glfw3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = glfw3.h; sourceTree = "<group>"; };
 		D6C3F7341E9D29D90020D65A /* glfw3native.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = glfw3native.h; sourceTree = "<group>"; };
@@ -165,12 +169,26 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		D6860C361F14B54200ED2230 /* Recovered References */ = {
+			isa = PBXGroup;
+			children = (
+				D603008D1EFAE98E006D0A9D /* unicode_util.h */,
+				D6F1F2631F0F4D9400A61981 /* text.h */,
+				D6F1F2681F0F646D00A61981 /* utf8.h */,
+				D639A04D1F0E70D20059B6BA /* text_box.h */,
+				D639A0491F0D5FAC0059B6BA /* table_dimension.h */,
+				D678E3A71F053A8700B9A4C0 /* text_draw_layouter.h */,
+			);
+			name = "Recovered References";
+			sourceTree = "<group>";
+		};
 		D6C3F6A11E99AAB50020D65A = {
 			isa = PBXGroup;
 			children = (
 				D6C3F72F1E9D29AA0020D65A /* ext */,
 				D6C3F6D51E99FEE20020D65A /* src */,
 				D6C3F6AB1E99AAB50020D65A /* Products */,
+				D6860C361F14B54200ED2230 /* Recovered References */,
 			);
 			sourceTree = "<group>";
 		};
@@ -219,6 +237,8 @@
 				D6F1F2801F0F7D9E00A61981 /* matrix3x3.h */,
 				D6F1F2811F0F7D9E00A61981 /* measure_query.cpp */,
 				D6F1F2821F0F7D9E00A61981 /* measure_query.h */,
+				D6860C371F14C32E00ED2230 /* mouse_button_event.cpp */,
+				D6860C381F14C32E00ED2230 /* mouse_button_event.h */,
 				D6F1F2831F0F7D9E00A61981 /* nanovg_gl_impl.cpp */,
 				D6F1F2841F0F7D9E00A61981 /* nanovg_util.cpp */,
 				D6F1F2851F0F7D9E00A61981 /* nanovg_util.h */,
@@ -335,6 +355,7 @@
 				D6F1F2C41F0F7D9E00A61981 /* text_draw_layouter.h in Headers */,
 				D6F1F2BA1F0F7D9E00A61981 /* oliview.h in Headers */,
 				D6F1F2BC1F0F7D9E00A61981 /* rect.h in Headers */,
+				D6860C3A1F14C32E00ED2230 /* mouse_button_event.h in Headers */,
 				D6F1F2D01F0F7D9E00A61981 /* view.h in Headers */,
 				D6F1F2B41F0F7D9E00A61981 /* matrix3x3.h in Headers */,
 				D6F1F2A01F0F7D9E00A61981 /* application.h in Headers */,
@@ -390,7 +411,7 @@
 		D6C3F6A21E99AAB50020D65A /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0830;
+				LastUpgradeCheck = 0900;
 				ORGANIZATIONNAME = omochimetaru;
 				TargetAttributes = {
 					D6C3F6A91E99AAB50020D65A = {
@@ -441,6 +462,7 @@
 				D6F1F2AA1F0F7D9E00A61981 /* grid_layouter.cpp in Sources */,
 				D6F1F29F1F0F7D9E00A61981 /* application.cpp in Sources */,
 				D639A05F1F0FCEE30059B6BA /* string_slice.cpp in Sources */,
+				D6860C391F14C32E00ED2230 /* mouse_button_event.cpp in Sources */,
 				D6F1F2B51F0F7D9E00A61981 /* measure_query.cpp in Sources */,
 				D6F1F2A61F0F7D9E00A61981 /* font.cpp in Sources */,
 				D6F1F2C31F0F7D9E00A61981 /* text_draw_layouter.cpp in Sources */,
@@ -465,7 +487,9 @@
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN_ASSIGN_ENUM = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_CXX0X_EXTENSIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
@@ -476,6 +500,8 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
@@ -496,7 +522,7 @@
 				);
 				GCC_TREAT_IMPLICIT_FUNCTION_DECLARATIONS_AS_ERRORS = YES;
 				GCC_TREAT_INCOMPATIBLE_POINTER_TYPE_WARNINGS_AS_ERRORS = YES;
-				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
+				GCC_TREAT_WARNINGS_AS_ERRORS = NO;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_MISSING_FIELD_INITIALIZERS = YES;
 				GCC_WARN_ABOUT_MISSING_NEWLINE = YES;
@@ -533,7 +559,9 @@
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN_ASSIGN_ENUM = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_CXX0X_EXTENSIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
@@ -544,6 +572,8 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
@@ -558,7 +588,7 @@
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_TREAT_IMPLICIT_FUNCTION_DECLARATIONS_AS_ERRORS = YES;
 				GCC_TREAT_INCOMPATIBLE_POINTER_TYPE_WARNINGS_AS_ERRORS = YES;
-				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
+				GCC_TREAT_WARNINGS_AS_ERRORS = NO;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_MISSING_FIELD_INITIALIZERS = YES;
 				GCC_WARN_ABOUT_MISSING_NEWLINE = YES;

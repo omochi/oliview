@@ -4,6 +4,7 @@
 
 #include "./init_macro.h"
 #include "./gl_assert.h"
+#include "./mouse_button_event.h"
 #include "./size.h"
 #include "./view.h"
 #include "./vector2.h"
@@ -31,6 +32,10 @@ namespace oliview {
         void MakeContextCurrent();
         
         virtual bool ShouldClose() const;
+        
+        Ptr<View> HitTest(const Vector2 & pos);
+        
+        void HandleMouseButtonEvent(const MouseButtonEvent & event);
 
         void _Update();
         void _MayClose();
@@ -60,6 +65,7 @@ namespace oliview {
         static void RefreshHandler(GLFWwindow * window);
         static void WindowSizeHandler(GLFWwindow * window, int w, int h);
         static void FramebufferSizeHandler(GLFWwindow * window, int w, int h);
+        static void MouseButtonHandler(GLFWwindow * window, int button, int action, int modifier);
         static void CharHandler(GLFWwindow * window, unsigned int code);
     };
 }

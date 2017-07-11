@@ -53,6 +53,33 @@ namespace oliview {
         }
         return ret;
     }
+    
+    float Matrix3x3::GetDeterminant() const {
+        return
+        + get(0, 0) * (get(1, 1) * get(2, 2) - get(2, 1) * get(1, 2))
+        - get(0, 1) * (get(1, 0) * get(2, 2) - get(1, 2) * get(2, 0))
+        + get(0, 2) * (get(1, 0) * get(2, 1) - get(1, 1) * get(2, 0));
+    }
+    
+    Matrix3x3 Matrix3x3::Invert() const {
+        float inv_det = 1.0f / GetDeterminant();
+        
+        float x00 = (get(1, 1) * get(2, 2) - get(2, 1) * get(1, 2)) * inv_det;
+        float x01 = (get(0, 2) * get(2, 1) - get(0, 1) * get(2, 2)) * inv_det;
+        float x02 = (get(0, 1) * get(1, 2) - get(0, 2) * get(1, 1)) * inv_det;
+        float x10 = (get(1, 2) * get(2, 0) - get(1, 0) * get(2, 2)) * inv_det;
+        float x11 = (get(0, 0) * get(2, 2) - get(0, 2) * get(2, 0)) * inv_det;
+        float x12 = (get(1, 0) * get(0, 2) - get(0, 0) * get(1, 2)) * inv_det;
+        float x20 = (get(1, 0) * get(2, 1) - get(2, 0) * get(1, 1)) * inv_det;
+        float x21 = (get(2, 0) * get(0, 1) - get(0, 0) * get(2, 1)) * inv_det;
+        float x22 = (get(0, 0) * get(1, 1) - get(1, 0) * get(0, 1)) * inv_det;
+        
+        Matrix3x3 ret;
+        ret.set(0, 0, x00); ret.set(0, 1, x01); ret.set(0, 2, x02);
+        ret.set(1, 0, x10); ret.set(1, 1, x11); ret.set(1, 2, x12);
+        ret.set(2, 0, x20); ret.set(2, 1, x21); ret.set(2, 2, x22);
+        return ret;
+    }
 
     Matrix3x3 Matrix3x3::Identity() {
         Matrix3x3 ret;

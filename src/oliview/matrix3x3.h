@@ -21,6 +21,9 @@ namespace oliview {
         Matrix3x3 & operator*=(const Matrix3x3 & other);
 
         Matrix3x3 Transpose() const;
+        
+        float GetDeterminant() const;
+        Matrix3x3 Invert() const;
 
         static Matrix3x3 Identity();
         static Matrix3x3 Translation(const Vector2 & translation);

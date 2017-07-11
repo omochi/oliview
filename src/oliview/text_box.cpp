@@ -71,4 +71,16 @@ namespace oliview {
         
         text_layouter_->Draw(ctx, text_, text_draw_info_);
     }
+    
+    Ptr<View> TextBox::HitTest(const Vector2 & point) {
+        auto ret = View::HitTest(point);
+        if (ret) {
+            return ret;
+        }
+        if (IsPointInside(point)) {
+            Print(Format("%f, %f", point.x(), point.y()));
+            return shared_from_this();
+        }
+        return nullptr;
+    }
 }

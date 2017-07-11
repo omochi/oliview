@@ -50,6 +50,8 @@ namespace oliview {
 
         RHETORIC_GETTER(Rect, frame)
         void set_frame(const Rect & value);
+        
+        Rect local_frame() const;
 
         RHETORIC_GETTER(Color, background_color)
         void set_background_color(const Color & value);
@@ -68,10 +70,21 @@ namespace oliview {
         virtual void LayoutContent(NVGcontext * ctx);
     
         virtual void DrawContent(NVGcontext * ctx);
+        
+        Matrix3x3 local_transform() const;
+        Matrix3x3 window_transform() const;
+        
+        Vector2 ConvertPointToWindow(const Vector2 & point) const;
+        Vector2 ConvertPointFromWindow(const Vector2 & point) const;
+        Vector2 ConvertPointToView(const Vector2 & point, const Ptr<View> & view) const;
+        Vector2 ConvertPointFromView(const Vector2 & point, const Ptr<View> & view) const;
+
+        virtual bool IsPointInside(const Vector2 & point) const;
+        virtual Ptr<View> HitTest(const Vector2 & point);
 
         bool _InvokeLayout(NVGcontext * ctx);
         void _PrepareToDraw(const DrawInfo & info);
-        void _CollectDrawCommand(std::list<DrawCommand> * commands);
+        void _CollectDrawCommand(std::vector<DrawCommand> * commands, bool shadow);
         void _InvokeDraw(NVGcontext * ctx, bool shadow);
         void _SetParent(const Ptr<View> & parent);
         void _SetWindow(const Ptr<Window> & window);
