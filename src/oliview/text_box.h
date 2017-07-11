@@ -35,7 +35,12 @@ namespace oliview {
         virtual void LayoutContent(NVGcontext * ctx) override;
         virtual void DrawContent(NVGcontext * ctx) override;
         
-        virtual Ptr<View> HitTest(const Vector2 & point) override;
+        virtual Ptr<View> HitTest(const MouseEvent & event) override;
+        
+        virtual void OnMouseDownEvent(const MouseEvent & event) override;
+        virtual void OnMouseMoveEvent(const MouseEvent & event) override;
+        virtual void OnMouseUpEvent(const MouseEvent & event) override;
+        virtual void OnMouseCancelEvent() override;
     private:
         Ptr<Text> text_;
         Color font_color_;

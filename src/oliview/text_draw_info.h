@@ -66,6 +66,7 @@ namespace oliview {
         RHETORIC_ACCESSOR(std::vector<Ptr<LineEntry>>, lines)
         size_t line_num() const;
         RHETORIC_ACCESSOR(Size, size)
+
         
     private:
         std::vector<Ptr<LineEntry>> lines_;

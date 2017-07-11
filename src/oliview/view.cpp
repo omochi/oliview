@@ -164,10 +164,10 @@ namespace oliview {
         return local_frame().IsPointInside(point);
     }
     
-    Ptr<View> View::HitTest(const Vector2 & pos) {
+    Ptr<View> View::HitTest(const MouseEvent & event) {
         bool skip_children = false;
         if (clipping_children()) {
-            if (!IsPointInside(pos)) {
+            if (!IsPointInside(event.pos())) {
                 skip_children = true;
             }
         }
@@ -175,8 +175,10 @@ namespace oliview {
         if (!skip_children) {
             auto children = ArrayReversed(this->children());
             for (auto & child : children) {
-                Vector2 pos_in_child = ConvertPointToView(pos, child);
-                auto ret = child->HitTest(pos_in_child);
+                Vector2 pos_in_child = ConvertPointToView(event.pos(), child);
+                MouseEvent child_event = event;
+                child_event.set_pos(pos_in_child);
+                auto ret = child->HitTest(child_event);
                 if (ret) {
                     return ret;
                 }
@@ -184,6 +186,21 @@ namespace oliview {
         }
         
         return nullptr;
+    }
+    
+    void View::OnMouseDownEvent(const MouseEvent & event) {
+        RHETORIC_UNUSED(event);
+    }
+    
+    void View::OnMouseMoveEvent(const MouseEvent & event) {
+        RHETORIC_UNUSED(event);
+    }
+    
+    void View::OnMouseUpEvent(const MouseEvent & event) {
+        RHETORIC_UNUSED(event);
+    }
+    
+    void View::OnMouseCancelEvent() {
     }
     
     bool View::_InvokeLayout(NVGcontext * ctx) {
@@ -273,11 +290,21 @@ namespace oliview {
         }
         
         parent_ = parent;
-
+        
+        auto old_window = this->window();
+        if (old_window) {
+            InvokeWindowOnRemoveView(old_window);
+        }
+        
+        Ptr<Window> new_window;
         if (parent) {
-            _SetWindow(parent->window());
-        } else {
-            _SetWindow(nullptr);
+            new_window = parent->window();
+        }
+        
+        _SetWindow(new_window);
+
+        if (new_window) {
+            InvokeWindowOnAddView(new_window);
         }
     }
 
@@ -285,12 +312,18 @@ namespace oliview {
         if (window) {
             RHETORIC_ASSERT(application() == window->application());
         }
-        
+    
         window_ = window;
 
         for (auto & child : children_) {
             child->_SetWindow(window);
         }
+    }
+    
+    MouseEvent View::_ConvertMouseEventFromWindow(const MouseEvent & event) const {
+        MouseEvent ret = event;
+        ret.set_pos(ConvertPointFromWindow(event.pos()));
+        return ret;
     }
     
     void View::Layout(NVGcontext * ctx) {
@@ -310,6 +343,22 @@ namespace oliview {
     
     void View::DrawShadow(NVGcontext * ctx) {
         RHETORIC_UNUSED(ctx);
+    }
+    
+    void View::InvokeWindowOnAddView(const Ptr<Window> & window) {
+        window->_OnAddView(shared_from_this());
+        
+        for (auto & child : children()) {
+            child->InvokeWindowOnAddView(window);
+        }
+    }
+    
+    void View::InvokeWindowOnRemoveView(const Ptr<Window> & window) {
+        for (auto & child : children()) {
+            child->InvokeWindowOnRemoveView(window);
+        }
+        
+        window->_OnRemoveView(shared_from_this());
     }
     
     

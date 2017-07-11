@@ -72,15 +72,30 @@ namespace oliview {
         text_layouter_->Draw(ctx, text_, text_draw_info_);
     }
     
-    Ptr<View> TextBox::HitTest(const Vector2 & point) {
-        auto ret = View::HitTest(point);
+    Ptr<View> TextBox::HitTest(const MouseEvent & event) {
+        auto ret = View::HitTest(event);
         if (ret) {
             return ret;
         }
-        if (IsPointInside(point)) {
-            Print(Format("%f, %f", point.x(), point.y()));
+        if (IsPointInside(event.pos())) {
             return shared_from_this();
         }
         return nullptr;
+    }
+    
+    void TextBox::OnMouseDownEvent(const MouseEvent & event) {
+        Print(Format("down %f, %f", event.pos().x(), event.pos().y()));
+    }
+    
+    void TextBox::OnMouseMoveEvent(const MouseEvent & event) {
+        Print(Format("move %f, %f", event.pos().x(), event.pos().y()));
+    }
+    
+    void TextBox::OnMouseUpEvent(const MouseEvent & event) {
+        Print(Format("up %f, %f", event.pos().x(), event.pos().y()));
+    }
+    
+    void TextBox::OnMouseCancelEvent() {
+        
     }
 }

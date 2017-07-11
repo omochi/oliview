@@ -6,6 +6,7 @@
 #include "./layouter.h"
 #include "./matrix3x3.h"
 #include "./measure_query.h"
+#include "./mouse_event.h"
 #include "./nanovg_util.h"
 #include "./rect.h"
 #include "./size.h"
@@ -80,7 +81,12 @@ namespace oliview {
         Vector2 ConvertPointFromView(const Vector2 & point, const Ptr<View> & view) const;
 
         virtual bool IsPointInside(const Vector2 & point) const;
-        virtual Ptr<View> HitTest(const Vector2 & point);
+        virtual Ptr<View> HitTest(const MouseEvent & event);
+        
+        virtual void OnMouseDownEvent(const MouseEvent & event);
+        virtual void OnMouseMoveEvent(const MouseEvent & event);
+        virtual void OnMouseUpEvent(const MouseEvent & event);
+        virtual void OnMouseCancelEvent();
 
         bool _InvokeLayout(NVGcontext * ctx);
         void _PrepareToDraw(const DrawInfo & info);
@@ -88,10 +94,14 @@ namespace oliview {
         void _InvokeDraw(NVGcontext * ctx, bool shadow);
         void _SetParent(const Ptr<View> & parent);
         void _SetWindow(const Ptr<Window> & window);
+        MouseEvent _ConvertMouseEventFromWindow(const MouseEvent & event) const;
     private:
         void Layout(NVGcontext * ctx);
         void DrawBackground(NVGcontext * ctx);
         void DrawShadow(NVGcontext * ctx);
+        
+        void InvokeWindowOnAddView(const Ptr<Window> & window);
+        void InvokeWindowOnRemoveView(const Ptr<Window> & window);
         
         WeakPtr<Application> application_;
         WeakPtr<View> parent_;

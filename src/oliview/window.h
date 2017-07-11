@@ -4,7 +4,7 @@
 
 #include "./init_macro.h"
 #include "./gl_assert.h"
-#include "./mouse_button_event.h"
+#include "./mouse_event.h"
 #include "./size.h"
 #include "./view.h"
 #include "./vector2.h"
@@ -32,13 +32,14 @@ namespace oliview {
         void MakeContextCurrent();
         
         virtual bool ShouldClose() const;
-        
-        Ptr<View> HitTest(const Vector2 & pos);
-        
-        void HandleMouseButtonEvent(const MouseButtonEvent & event);
+                
+        void HandleMouseEvent(const MouseEvent & event);
 
         void _Update();
         void _MayClose();
+        
+        void _OnAddView(const Ptr<View> & view);
+        void _OnRemoveView(const Ptr<View> & view);
     private:        
         NVGcontext * BeginNVG();
         void EndNVG(NVGcontext * ctx);
@@ -60,12 +61,15 @@ namespace oliview {
         Size last_valid_window_size_;
         Size last_valid_framebuffer_size_;
         
-        Ptr<View> root_view_;
+        Ptr<View> root_view_;        
+        Ptr<View> mouse_target_;
+        Optional<int> mouse_source_button_;
 
         static void RefreshHandler(GLFWwindow * window);
         static void WindowSizeHandler(GLFWwindow * window, int w, int h);
         static void FramebufferSizeHandler(GLFWwindow * window, int w, int h);
         static void MouseButtonHandler(GLFWwindow * window, int button, int action, int modifier);
+        static void CursorPosHandler(GLFWwindow * window, double x, double y);
         static void CharHandler(GLFWwindow * window, unsigned int code);
     };
 }

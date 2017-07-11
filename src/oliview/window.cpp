@@ -40,6 +40,7 @@ namespace oliview {
         glfwSetWindowSizeCallback(gw, &Window::WindowSizeHandler);
         glfwSetFramebufferSizeCallback(gw, &Window::FramebufferSizeHandler);
         glfwSetMouseButtonCallback(gw, &Window::MouseButtonHandler);
+        glfwSetCursorPosCallback(gw, &Window::CursorPosHandler);
         glfwSetCharCallback(gw, &Window::CharHandler);
         
         MakeContextCurrent();
@@ -88,16 +89,40 @@ namespace oliview {
         return true;
     }
     
-    Ptr<View> Window::HitTest(const Vector2 & pos) {
-        return root_view_->HitTest(pos);
-    }
-    
-    void Window::HandleMouseButtonEvent(const MouseButtonEvent & event) {
-        RHETORIC_UNUSED(event);
+    void Window::HandleMouseEvent(const MouseEvent & event_) {
+        MouseEvent event = event_;
         
-        HitTest(event.pos());
+        if (mouse_target_) {
+            event = mouse_target_->_ConvertMouseEventFromWindow(event);
+            
+            if (event.type() == MouseEventType::Up) {
+                RHETORIC_ASSERT(event.button().presented());
+                
+                if (mouse_source_button_ == event.button()) {
+                    mouse_target_->OnMouseUpEvent(event);
+                    
+                    mouse_target_ = nullptr;
+                    mouse_source_button_ = None();
+                }
+            } else if (event.type() == MouseEventType::Move) {
+                mouse_target_->OnMouseMoveEvent(event);
+            }
+        } else {
+            if (event.type() == MouseEventType::Down) {
+                RHETORIC_ASSERT(event.button().presented());
+                
+                Ptr<View> hit_target = root_view_->HitTest(event);
+                if (hit_target) {
+                    event = hit_target->_ConvertMouseEventFromWindow(event);
+                    
+                    mouse_target_ = hit_target;
+                    mouse_source_button_ = event.button();
+                    
+                    hit_target->OnMouseDownEvent(event);
+                }
+            }
+        }
     }
-
     
     void Window::_Update() {
         NVGcontext * ctx = BeginNVG();
@@ -121,6 +146,19 @@ namespace oliview {
         }
         
         Close();
+    }
+    
+    void Window::_OnAddView(const Ptr<View> & view) {
+        RHETORIC_UNUSED(view);
+    }
+    
+    void Window::_OnRemoveView(const Ptr<View> & view) {
+        if (view == mouse_target_) {
+            mouse_target_->OnMouseCancelEvent();
+            
+            mouse_target_ = nullptr;
+            mouse_source_button_ = None();
+        }
     }
     
     NVGcontext * Window::BeginNVG() {
@@ -166,7 +204,7 @@ namespace oliview {
         View::DrawInfo draw_info;
         draw_info.parent_clip_frame = Rect(Vector2(0, 0), window_size_);
         root_view_->_PrepareToDraw(draw_info);
-        
+
         std::vector<View::DrawCommand> draws;
         {
             View::DrawCommand command;
@@ -224,20 +262,39 @@ namespace oliview {
     }
     
     void Window::MouseButtonHandler(GLFWwindow * window, int button, int action, int modifier) {
+        auto thiz = (Window *)glfwGetWindowUserPointer(window);
+        
         double x, y;
         glfwGetCursorPos(window, &x, &y);
-        auto thiz = (Window *)glfwGetWindowUserPointer(window);
-        MouseButtonEvent event;
-        event.set_button(button);
-        event.set_action(action);
-        event.set_modifier(modifier);
+        
+        MouseEvent event;
+        if (action == GLFW_PRESS) {
+            event.set_type(MouseEventType::Down);
+        } else if (action == GLFW_RELEASE) {
+            event.set_type(MouseEventType::Up);
+        } else {
+            return;
+        }
         event.set_pos(Vector2((float)x, (float)y));
-        thiz->HandleMouseButtonEvent(event);
+        event.set_button(Some(button));
+        event.set_modifier(Some(modifier));
+
+        thiz->HandleMouseEvent(event);
+    }
+    
+    void Window::CursorPosHandler(GLFWwindow * window, double x, double y) {
+        auto thiz = (Window *)glfwGetWindowUserPointer(window);
+        
+        MouseEvent event;
+        event.set_type(MouseEventType::Move);
+        event.set_pos(Vector2((float)x, (float)y));
+
+        thiz->HandleMouseEvent(event);
     }
     
     void Window::CharHandler(GLFWwindow * window, unsigned int code) {
         RHETORIC_UNUSED(window);
-        // test
+        // TODO; test
         Print(Format("0x%04x", code));
     }
 }
