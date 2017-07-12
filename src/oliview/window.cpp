@@ -136,7 +136,7 @@ namespace oliview {
         
         RefreshLayout();
     }
-    
+
     void Window::_Update() {
         NVGcontext * ctx = BeginNVG();
         Layout(ctx);
@@ -145,6 +145,10 @@ namespace oliview {
         glfwSwapBuffers(glfw_window_);
         
         RefreshLayout();
+    }
+    
+    void Window::_UpdateAnimation(float delta_time) {
+        root_view_->_UpdateAnimation(delta_time);
     }
     
     void Window::_MayClose() {

@@ -1,7 +1,11 @@
 #pragma once
 
-//  rhetoric
+//  std
+#include <cmath>
+#include <list>
+#include <chrono>
 
+//  rhetoric
 #include <rhetoric/rhetoric.h>
 
 namespace oliview {
@@ -9,7 +13,6 @@ namespace oliview {
 }
 
 //  GLFW
-
 #define GLFW_INCLUDE_GLCOREARB
 #define GLFW_INCLUDE_GLEXT
 #pragma clang diagnostic push
@@ -18,7 +21,6 @@ namespace oliview {
 #pragma clang diagnostic pop
 
 //  nanovg
-
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wunused-parameter"
 #pragma clang diagnostic ignored "-Wshadow"
@@ -34,7 +36,3 @@ namespace oliview {
 
 #pragma clang diagnostic pop
 
-//  std
-
-#include <cmath>
-#include <list>

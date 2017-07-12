@@ -75,6 +75,7 @@ namespace oliview {
         
         Text::Index GetTextIndexFor(const CharPositionIndex & position_index,
                                     const Ptr<Text> & text) const;
+        Vector2 GetDrawPointFor(const CharPositionIndex & position_index) const;
         
         RHETORIC_ACCESSOR(Size, size)
 

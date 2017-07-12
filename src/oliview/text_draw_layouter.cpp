@@ -67,6 +67,25 @@ namespace oliview {
         }
     }
     
+    void TextDrawLayouter::DrawCursor(NVGcontext * ctx,
+                                      const Ptr<Text> & text,
+                                      const Text::Index & cursor_index,
+                                      const Ptr<TextDrawInfo> & draw_info)
+    {
+        auto position_index = draw_info->GetIndexFor(cursor_index);
+        auto pos = draw_info->GetDrawPointFor(position_index);
+        
+        NVGSetFont(ctx, font());
+        nvgFontSize(ctx, font_size());
+        
+        float height;
+        nvgTextMetrics(ctx, nullptr, nullptr, &height);
+        
+        nvgBeginPath(ctx);
+        NVGAddRectPath(ctx, Rect(pos, Size(1.0f, height)));
+        nvgFill(ctx);
+    }
+    
     Ptr<TextDrawInfo>
     TextDrawLayouter::LayoutLine(NVGcontext * ctx,
                                  const Ptr<Text> & text,

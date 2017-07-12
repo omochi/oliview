@@ -36,8 +36,9 @@ namespace oliview {
         void RefreshLayout();
         
         void HandleMouseEvent(const MouseEvent & event);
-
+        
         void _Update();
+        void _UpdateAnimation(float delta_time);
         void _MayClose();
         
         void _OnAddView(const Ptr<View> & view);
@@ -68,7 +69,7 @@ namespace oliview {
         Ptr<View> root_view_;        
         Ptr<View> mouse_target_;
         Optional<int> mouse_source_button_;
-
+        
         static void RefreshHandler(GLFWwindow * window);
         static void WindowSizeHandler(GLFWwindow * window, int w, int h);
         static void FramebufferSizeHandler(GLFWwindow * window, int w, int h);

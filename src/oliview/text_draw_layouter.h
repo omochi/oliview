@@ -22,7 +22,10 @@ namespace oliview {
                   const Ptr<Text> & text,
                   const Ptr<TextDrawInfo> & draw_info);
 
-        
+        void DrawCursor(NVGcontext * ctx,
+                        const Ptr<Text> & text,
+                        const Text::Index & cursor_index,
+                        const Ptr<TextDrawInfo> & draw_info);
     private:
         Ptr<TextDrawInfo> LayoutLine(NVGcontext * ctx,
                                      const Ptr<Text> & text,

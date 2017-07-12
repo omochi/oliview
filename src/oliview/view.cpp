@@ -203,6 +203,10 @@ namespace oliview {
     void View::OnMouseCancelEvent() {
     }
     
+    void View::OnUpdateAnimation(float delta_time) {
+        RHETORIC_UNUSED(delta_time);
+    }
+    
     bool View::_InvokeLayout(NVGcontext * ctx) {
         bool updated = false;
         
@@ -324,6 +328,14 @@ namespace oliview {
         MouseEvent ret = event;
         ret.set_pos(ConvertPointFromWindow(event.pos()));
         return ret;
+    }
+    
+    void View::_UpdateAnimation(float delta_time) {
+        OnUpdateAnimation(delta_time);
+        
+        for (auto & child : children_) {
+            child->_UpdateAnimation(delta_time);
+        }
     }
     
     void View::Layout(NVGcontext * ctx) {

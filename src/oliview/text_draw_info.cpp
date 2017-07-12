@@ -82,18 +82,26 @@ namespace oliview {
     {
         for (size_t line_index = 0; line_index < lines_.size(); line_index++) {
             auto line = lines_[line_index];
-            if (line->text_index().line() < index.line()) {
+            if (line->text_index().line() != index.line()) {
                 continue;
             }
-            auto line_chars = line->char_positions();
-            for (size_t char_index = 0; char_index < line_chars.size(); char_index++) {
-                auto from_char = line_chars[char_index];
-                if (from_char->text_index() < index) {
+            
+            auto chars = line->char_positions();
+            for (size_t char_index = 0; char_index < chars.size(); char_index++) {
+                auto from_char = chars[char_index];
+                if (from_char->text_index().byte() < index.byte()) {
                     continue;
                 }
                 
                 return CharPositionIndex(line_index, char_index);
             }
+            
+            if ((line_index + 1 < lines_.size()) &&
+                lines_[line_index]->wrapped_line()) {
+                continue;
+            }
+            
+            return CharPositionIndex(line_index, chars.size());
         }
         return end_index();
     }
@@ -157,16 +165,37 @@ namespace oliview {
         
         auto line_entry = GetLineAt(position_index.line_index);
         
+        if (line_entry->char_position_num() == 0) {
+            return line_entry->text_index();
+        }
+        
         if (position_index.char_index < line_entry->char_position_num()) {
             auto char_entry = line_entry->GetCharPositionAt(position_index.char_index);
             return char_entry->text_index();
         }
         
-        if (line_entry->char_position_num() == 0) {
-            return line_entry->text_index();
-        }
-        
         auto last_char = line_entry->GetCharPositionAt(line_entry->char_position_num() - 1);
         return text->AdvanceIndex(last_char->text_index());
     }
+    
+    Vector2 TextDrawInfo::GetDrawPointFor(const CharPositionIndex & position_index) const {
+        if (position_index == end_index()) {
+            return Vector2(0.0f, size().height());
+        }
+        
+        auto line_entry = GetLineAt(position_index.line_index);
+        
+        if (line_entry->char_position_num() == 0) {
+            return Vector2(0, line_entry->draw_y());
+        }
+        
+        if (position_index.char_index < line_entry->char_position_num()) {
+            auto char_entry = line_entry->GetCharPositionAt(position_index.char_index);
+            return Vector2(char_entry->draw_left(), line_entry->draw_y());
+        }
+        
+        auto last_char = line_entry->GetCharPositionAt(line_entry->char_position_num() - 1);
+        return Vector2(last_char->draw_right(), line_entry->draw_y());
+    }
+        
 }

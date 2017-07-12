@@ -21,7 +21,6 @@ namespace oliview {
         void _AddWindow(const Ptr<Window> & window);
         void _RemoveWindow(const Ptr<Window> & window);
         Ptr<Window> _shared_context_window() const;
-        
     private:
         void Init();
         void Finish();
@@ -34,6 +33,8 @@ namespace oliview {
         NVGcontext * nvg_context_;
         
         Ptr<FontManager> font_manager_;
+        
+        Optional<std::chrono::steady_clock::time_point> prev_update_time_;
     };
 }
 

@@ -35,6 +35,8 @@ namespace oliview {
         virtual void OnMouseMoveEvent(const MouseEvent & event) override;
         virtual void OnMouseUpEvent(const MouseEvent & event) override;
         virtual void OnMouseCancelEvent() override;
+        
+        virtual void OnUpdateAnimation(float delta_time) override;
     private:
         Ptr<Text> text_;
         Color font_color_;
@@ -43,5 +45,6 @@ namespace oliview {
         Ptr<TextDrawInfo> text_draw_info_;
         
         Text::Index cursor_index_;
+        float cursor_blink_time_;
     };
 }

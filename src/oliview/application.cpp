@@ -15,6 +15,13 @@ namespace oliview {
         Init();
 
         while (true) {
+            std::chrono::duration<float> delta_time(0.0f);
+            auto now = std::chrono::steady_clock::now();
+            if (prev_update_time_) {
+                delta_time = now - *prev_update_time_;
+            }
+            prev_update_time_ = Some(now);
+            
             auto windows = windows_;
 
             if (windows.size() == 0) {
@@ -31,6 +38,7 @@ namespace oliview {
                     continue;
                 }
 
+                window->_UpdateAnimation(delta_time.count());
                 window->_Update();
             }
         }

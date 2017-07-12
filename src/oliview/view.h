@@ -87,6 +87,8 @@ namespace oliview {
         virtual void OnMouseMoveEvent(const MouseEvent & event);
         virtual void OnMouseUpEvent(const MouseEvent & event);
         virtual void OnMouseCancelEvent();
+        
+        virtual void OnUpdateAnimation(float delta_time);
 
         bool _InvokeLayout(NVGcontext * ctx);
         void _PrepareToDraw(const DrawInfo & info);
@@ -95,6 +97,7 @@ namespace oliview {
         void _SetParent(const Ptr<View> & parent);
         void _SetWindow(const Ptr<Window> & window);
         MouseEvent _ConvertMouseEventFromWindow(const MouseEvent & event) const;
+        void _UpdateAnimation(float delta_time);
     private:
         void Layout(NVGcontext * ctx);
         void DrawBackground(NVGcontext * ctx);

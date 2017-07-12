@@ -9,6 +9,7 @@ namespace oliview {
         text_layouter_ = New<TextDrawLayouter>();
         text_ = New<Text>();
         cursor_index_ = text_->begin_index();
+        cursor_blink_time_ = 0.0f;
         
         auto fm = application->font_manager();
         
@@ -72,6 +73,10 @@ namespace oliview {
         NVGSetFillColor(ctx, font_color());
         
         text_layouter_->Draw(ctx, text_, text_draw_info_);
+        
+        if (cursor_blink_time_ <= 0.5f) {
+            text_layouter_->DrawCursor(ctx, text_, cursor_index(), text_draw_info_);
+        }
     }
     
     Ptr<View> TextBox::HitTest(const MouseEvent & event) {
@@ -107,6 +112,12 @@ namespace oliview {
     }
     
     void TextBox::OnMouseCancelEvent() {
-        
+    }
+    
+    void TextBox::OnUpdateAnimation(float delta_time) {
+        cursor_blink_time_ += delta_time;
+        if (cursor_blink_time_ > 1.0f) {
+            cursor_blink_time_ = 0.0f;
+        }
     }
 }
