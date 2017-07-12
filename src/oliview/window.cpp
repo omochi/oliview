@@ -100,6 +100,48 @@ namespace oliview {
         }
     }
     
+    void Window::FocusNext() {
+        Ptr<View> focus = focused_view();
+        if (focus) {
+            focus = focus->GetNextFocusView();
+        } else {
+            focus = root_view();
+        }
+        
+        while (focus) {
+            if (focus->focusable()) {
+                break;
+            }
+            focus = focus->GetNextFocusView();
+        }
+        
+        _Focus(focus);
+    }
+    
+    void Window::FocusPrev() {
+        Ptr<View> focus = focused_view();
+        if (focus) {
+            focus = focus->GetPrevFocusView();
+        } else {
+            focus = root_view();
+            while (true) {
+                if (focus->child_num() == 0) {
+                    break;
+                }
+                focus = focus->GetChildAt(focus->child_num() - 1);
+            }
+        }
+
+        while (focus) {
+            if (focus->focusable()) {
+                break;
+            }
+            focus = focus->GetPrevFocusView();
+        }
+        
+        _Focus(focus);
+    }
+    
     void Window::HandleMouseEvent(const MouseEvent & event_) {
         MouseEvent event = event_;
         
@@ -173,6 +215,23 @@ namespace oliview {
             
             mouse_target_ = nullptr;
             mouse_source_button_ = None();
+        }
+        
+        if (view == focused_view_) {
+            view->Unfocus();            
+        }
+    }
+    
+    void Window::_Focus(const Ptr<View> & view) {
+        auto old = focused_view();
+        if (old) {
+            focused_view_ = nullptr;
+            old->OnUnfocus();
+        }
+        
+        if (view) {
+            focused_view_ = view;
+            view->OnFocus();
         }
     }
     

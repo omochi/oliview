@@ -16,7 +16,8 @@ namespace oliview {
     background_color_(1, 1, 1, 0),
     needs_layout_(true),
     self_layouting_(false),
-    clipping_children_(false)
+    clipping_children_(false),
+    focusable_(false)
     {}
     
     View::~View() {}
@@ -25,10 +26,22 @@ namespace oliview {
         application_ = application;
     }
     
+    Ptr<View> View::GetChildAt(size_t index) const {
+        return children_[index];
+    }
+    
+    size_t View::child_num() const {
+        return children_.size();
+    }
+    
     void View::AddChild(const Ptr<View> & child) {
+        InsertChildAt(child_num(), child);
+    }
+    
+    void View::InsertChildAt(size_t index, const Ptr<View> & child) {
         RHETORIC_ASSERT(child->parent() == nullptr);
         
-        children_.push_back(child);
+        children_.insert(children_.begin() + ToSigned(index), child);
         child->_SetParent(shared_from_this());
         
         SetNeedsLayout();
@@ -75,6 +88,78 @@ namespace oliview {
     
     void View::set_clipping_children(bool value) {
         clipping_children_ = value;
+    }
+    
+    bool View::focused() const {
+        auto w = window();
+        if (!w) { return false; }
+        return w->focused_view() == shared_from_this();
+    }
+    
+    void View::set_focusable(bool value) {
+        focusable_ = value;
+        
+        if (!focusable()) {
+            Unfocus();
+        }
+    }
+    
+    void View::Focus() {
+        if (!focusable()) { return; }
+        
+        auto w = window();
+        if (w) {
+            w->_Focus(shared_from_this());
+        }
+    }
+    
+    void View::Unfocus() {
+        if (!focused()) { return; }
+        
+        auto w = window();
+        if (w) {
+            w->_Focus(nullptr);
+        }
+    }
+    
+    Ptr<View> View::GetNextFocusView() {
+        if (child_num() > 0) {
+            return GetChildAt(0);
+        }
+        
+        auto view = shared_from_this();
+        while (true) {
+            if (!view) { return nullptr; }
+            
+            auto parent = view->parent();
+            if (!parent) { return nullptr; }
+            
+            auto index = ArrayFindIndexEq(parent->children(), view).value();
+            if (index + 1 < parent->child_num()) {
+                return parent->GetChildAt(index + 1);
+            }
+            
+            view = parent;
+        }
+    }
+    
+    Ptr<View> View::GetPrevFocusView() {
+        auto parent = this->parent();
+        if (!parent) { return nullptr; }
+        
+        auto index = ArrayFindIndexEq(parent->children(), shared_from_this()).value();
+        if (index == 0) {
+            return parent;
+        }
+
+        auto view = parent->GetChildAt(index - 1);
+        while (true) {
+            if (!view) { return nullptr; }
+            if (view->child_num() == 0) {
+                return view;
+            }
+            view = view->GetChildAt(view->child_num() - 1);
+        }
     }
     
     void View::SetNeedsLayout() {
@@ -205,6 +290,12 @@ namespace oliview {
     
     void View::OnUpdateAnimation(float delta_time) {
         RHETORIC_UNUSED(delta_time);
+    }
+    
+    void View::OnFocus() {
+    }
+    
+    void View::OnUnfocus() {
     }
     
     bool View::_InvokeLayout(NVGcontext * ctx) {

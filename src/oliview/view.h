@@ -41,8 +41,11 @@ namespace oliview {
         RHETORIC_GETTER_WEAK(Ptr<Application>, application)
         RHETORIC_GETTER_WEAK(Ptr<View>, parent)
         RHETORIC_GETTER(std::vector<Ptr<View>>, children)
+        Ptr<View> GetChildAt(size_t index) const;
+        size_t child_num() const;
         
         void AddChild(const Ptr<View> & child);
+        void InsertChildAt(size_t index, const Ptr<View> & child);
         void RemoveChild(const Ptr<View> & child);
         void RemoveChildAt(size_t index);
         void RemoveFromParent();
@@ -59,6 +62,17 @@ namespace oliview {
         
         RHETORIC_GETTER(bool, clipping_children)
         void set_clipping_children(bool value);
+        
+        bool focused() const;
+        
+        RHETORIC_GETTER(bool, focusable)
+        void set_focusable(bool value);
+        
+        void Focus();
+        void Unfocus();
+        
+        virtual Ptr<View> GetNextFocusView();
+        virtual Ptr<View> GetPrevFocusView();
         
         void SetNeedsLayout();
         
@@ -89,6 +103,9 @@ namespace oliview {
         virtual void OnMouseCancelEvent();
         
         virtual void OnUpdateAnimation(float delta_time);
+        
+        virtual void OnFocus();
+        virtual void OnUnfocus();
 
         bool _InvokeLayout(NVGcontext * ctx);
         void _PrepareToDraw(const DrawInfo & info);
@@ -120,6 +137,7 @@ namespace oliview {
         
         bool self_layouting_;
         bool clipping_children_;
+        bool focusable_;
 
         DrawInfo draw_info_;
     };

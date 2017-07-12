@@ -35,6 +35,11 @@ namespace oliview {
         
         void RefreshLayout();
         
+        RHETORIC_GETTER(Ptr<View>, focused_view)
+        
+        void FocusNext();
+        void FocusPrev();
+        
         void HandleMouseEvent(const MouseEvent & event);
         
         void _Update();
@@ -43,6 +48,8 @@ namespace oliview {
         
         void _OnAddView(const Ptr<View> & view);
         void _OnRemoveView(const Ptr<View> & view);
+        
+        void _Focus(const Ptr<View> & view);
     private:        
         NVGcontext * BeginNVG();
         void EndNVG(NVGcontext * ctx);
@@ -66,9 +73,12 @@ namespace oliview {
         Size last_valid_window_size_;
         Size last_valid_framebuffer_size_;
         
-        Ptr<View> root_view_;        
+        Ptr<View> root_view_;
+        
         Ptr<View> mouse_target_;
         Optional<int> mouse_source_button_;
+        
+        Ptr<View> focused_view_;
         
         static void RefreshHandler(GLFWwindow * window);
         static void WindowSizeHandler(GLFWwindow * window, int w, int h);
