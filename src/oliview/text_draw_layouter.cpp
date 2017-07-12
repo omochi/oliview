@@ -54,7 +54,7 @@ namespace oliview {
         nvgTextMetrics(ctx, &ascender, nullptr, nullptr);
         
         for (auto & line : draw_info->lines()) {
-            if (line->chars_num() == 0) {
+            if (line->char_position_num() == 0) {
                 continue;
             }
             
@@ -85,7 +85,7 @@ namespace oliview {
             
             Ptr<TextDrawInfo::LineEntry> line_entry = LayoutSingleLine(ctx, text, index);
 
-            auto chars = line_entry->chars();
+            auto chars = line_entry->char_positions();
             RHETORIC_ASSERT(chars.size() > 0);
             for (size_t i = 0; i < chars.size(); i++) {
                 auto & ch = chars[i];
@@ -96,10 +96,14 @@ namespace oliview {
                     }
                 }
             }
-            line_entry->set_chars(chars);
+            line_entry->set_char_positions(chars);
             
-            //  TODO: skip newline char
             index = text->AdvanceIndex(chars.back()->text_index());
+            if (line_entry->newline()) {
+                for (size_t i = 0; i < line_entry->newline()->size(); i++) {
+                    index = text->AdvanceIndex(index);
+                }
+            }
             
             if (result_lines.size() > 0) {
                 line_entry->set_wrapped_line(true);
@@ -115,13 +119,14 @@ namespace oliview {
         return result;
     }
 
-    //  TODO: return newline status
     Ptr<TextDrawInfo::LineEntry>
     TextDrawLayouter::LayoutSingleLine(NVGcontext * ctx,
                                        const Ptr<Text> & text,
                                        const Text::Index & index_)
     {
         Text::Index index = index_;
+        
+        auto ret = New<TextDrawInfo::LineEntry>(index, false);
         
         NVGSetFont(ctx, font());
         nvgFontSize(ctx, font_size());
@@ -136,7 +141,9 @@ namespace oliview {
         auto newline_chars = rhetoric::newline_chars();
         auto check_newline_ret = CheckEndWith(*line, line_size, newline_chars);
         if (check_newline_ret) {
-            line_size -= newline_chars[check_newline_ret->target_index].size();
+            auto newline = newline_chars[check_newline_ret->target_index];
+            line_size -= newline.size();
+            ret->set_newline(Some(newline));
         }
     
         const char * end = line->c_str() + line_size;
@@ -151,8 +158,7 @@ namespace oliview {
                                                    (int)glyphs.size());
         glyphs.resize((size_t)num);
         
-        auto entry = New<TextDrawInfo::LineEntry>(index, false);
-        auto chars = entry->chars();
+        auto chars = ret->char_positions();
         
         for (size_t i = 0; i < num; i++) {
             auto & glyph = glyphs[i];
@@ -172,9 +178,10 @@ namespace oliview {
                                                             glyph.minx,
                                                             glyph.maxx));
         }
-        entry->set_chars(chars);
         
-        return entry;
+        ret->set_char_positions(chars);
+        
+        return ret;
     }
     
     

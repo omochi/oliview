@@ -20,22 +20,22 @@ namespace oliview {
     draw_y_(0)
     {}
     
-    size_t TextDrawInfo::LineEntry::chars_num() const {
-        return chars_.size();
+    size_t TextDrawInfo::LineEntry::char_position_num() const {
+        return char_positions_.size();
     }
     
     Ptr<TextDrawInfo::CharPosition>
     TextDrawInfo::LineEntry::GetCharPositionAt(size_t index) const {
-        return chars_[index];
+        return char_positions_[index];
     }
     
     StringSlice TextDrawInfo::LineEntry::GetLine(const Ptr<Text> & text) const {
-        if (chars_.size() == 0) {
+        if (char_positions_.size() == 0) {
             return StringSlice();
         }
         
-        auto first_char = chars_.front()->GetChar(text);
-        auto last_char = chars_.back()->GetChar(text);
+        auto first_char = char_positions_.front()->GetChar(text);
+        auto last_char = char_positions_.back()->GetChar(text);
         RHETORIC_ASSERT(first_char.base() == last_char.base());
         
         size_t len = ToUnsigned(last_char.c_str() + last_char.length() - first_char.c_str());
@@ -43,10 +43,10 @@ namespace oliview {
     }
     
     float TextDrawInfo::LineEntry::draw_width() const {
-        if (chars_.size() == 0) {
+        if (char_positions_.size() == 0) {
             return 0;
         }
-        return chars_.back()->draw_right();
+        return char_positions_.back()->draw_right();
     }
     
     TextDrawInfo::CharPositionIndex::CharPositionIndex(size_t line_index, size_t char_index):
@@ -75,7 +75,7 @@ namespace oliview {
             if (line->text_index().line() < index.line()) {
                 continue;
             }
-            auto line_chars = line->chars();
+            auto line_chars = line->char_positions();
             for (size_t char_index = 0; char_index < line_chars.size(); char_index++) {
                 auto from_char = line_chars[char_index];
                 if (from_char->text_index() < index) {
@@ -107,7 +107,7 @@ namespace oliview {
                 {
                     ret.line_index = line_index;
                     auto line = lines_[line_index];
-                    ret.char_index = line->chars_num() - 1;;
+                    ret.char_index = line->char_position_num();
                     return ret;
                 }
             }
@@ -120,7 +120,7 @@ namespace oliview {
         }
         
         auto line = lines_[ret.line_index];
-        for (size_t char_index = 0; char_index < line->chars_num(); char_index++) {
+        for (size_t char_index = 0; char_index < line->char_position_num(); char_index++) {
 
             auto char_position = line->GetCharPositionAt(char_index);
             float char_center_x = (char_position->draw_left() + char_position->draw_right()) / 2.0f;
@@ -129,7 +129,7 @@ namespace oliview {
                 break;
             }
             
-            if (char_index == line->chars_num() - 1) {
+            if (char_index == line->char_position_num() - 1) {
                 ret.char_index = char_index + 1;
                 break;
             }

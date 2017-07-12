@@ -12,12 +12,7 @@ namespace oliview {
     public:
         virtual void Init(const Ptr<Application> & application) override;
         
-        Ptr<const TextBox> shared_from_this() const {
-            return std::static_pointer_cast<const TextBox>(View::shared_from_this());
-        }
-        Ptr<TextBox> shared_from_this() {
-            return std::static_pointer_cast<TextBox>(View::shared_from_this());
-        }
+        RHETORIC_SUBCLASS_SHARED_FROM_THIS(TextBox, View)
         
         std::string text() const;
         void set_text(const std::string & value);
