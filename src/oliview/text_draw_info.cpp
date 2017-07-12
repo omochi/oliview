@@ -2,9 +2,11 @@
 
 namespace oliview {
     TextDrawInfo::CharPosition::CharPosition(const Text::Index & text_index,
+                                             float draw_x,
                                              float draw_left,
                                              float draw_right):
     text_index_(text_index),
+    draw_x_(draw_x),
     draw_left_(draw_left),
     draw_right_(draw_right)
     {}
@@ -107,8 +109,10 @@ namespace oliview {
     }
     
     TextDrawInfo::CharPositionIndex
-    TextDrawInfo::GetIndexFor(const Vector2 & position) const
+    TextDrawInfo::GetIndexFor(const Vector2 & position_) const
     {
+        auto position = position_ - draw_offset();
+        
         if (lines_.size() == 0) {
             return end_index();
         }
@@ -117,7 +121,7 @@ namespace oliview {
         
         for (size_t line_index = 0; line_index < lines_.size(); line_index++) {
             if (line_index + 1 == lines_.size()) {
-                if (position.y() < size_.height()) {
+                if (position.y() < frame().end().y()) {
                     ret.line_index = line_index;
                     break;
                 }
@@ -130,7 +134,7 @@ namespace oliview {
                 }
             }
             
-            if (position.y() < lines_[line_index + 1]->draw_y())
+            if (position.y() < GetLineTop(lines_[line_index + 1]->draw_y()))
             {
                 ret.line_index = line_index;
                 break;
@@ -180,7 +184,7 @@ namespace oliview {
     
     Vector2 TextDrawInfo::GetDrawPointFor(const CharPositionIndex & position_index) const {
         if (position_index == end_index()) {
-            return Vector2(0.0f, size().height());
+            return Vector2(0.0f, frame().end().y());
         }
         
         auto line_entry = GetLineAt(position_index.line_index);
@@ -191,11 +195,18 @@ namespace oliview {
         
         if (position_index.char_index < line_entry->char_position_num()) {
             auto char_entry = line_entry->GetCharPositionAt(position_index.char_index);
-            return Vector2(char_entry->draw_left(), line_entry->draw_y());
+            return Vector2(char_entry->draw_x(), line_entry->draw_y());
         }
         
         auto last_char = line_entry->GetCharPositionAt(line_entry->char_position_num() - 1);
         return Vector2(last_char->draw_right(), line_entry->draw_y());
     }
-        
+    
+    float TextDrawInfo::GetLineTop(float y) const {
+//        return y - font_ascent() - line_gap() / 2.0f;
+        return y - font_ascent();
+    }
+    float TextDrawInfo::GetLineBottom(float y) const {
+        return y - font_descent() + line_gap();
+    }
 }

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "./math.h"
+#include "./rect.h"
 #include "./size.h"
 #include "./string_slice.h"
 #include "./text.h"
@@ -16,16 +17,19 @@ namespace oliview {
         class CharPosition {
         public:
             CharPosition(const Text::Index & text_index,
+                         float draw_x,
                          float draw_left,
                          float draw_right);
             
             RHETORIC_ACCESSOR(Text::Index, text_index)
+            RHETORIC_ACCESSOR(float, draw_x)
             RHETORIC_ACCESSOR(float, draw_left)
             RHETORIC_ACCESSOR(float, draw_right)
             
             StringSlice GetChar(const Ptr<Text> & text) const;
         private:
             Text::Index text_index_;
+            float draw_x_;
             float draw_left_;
             float draw_right_;
         };
@@ -77,12 +81,27 @@ namespace oliview {
                                     const Ptr<Text> & text) const;
         Vector2 GetDrawPointFor(const CharPositionIndex & position_index) const;
         
-        RHETORIC_ACCESSOR(Size, size)
-
+        RHETORIC_ACCESSOR(Rect, frame)
+        RHETORIC_ACCESSOR_TRIVIAL(float, font_ascent)
+        RHETORIC_ACCESSOR_TRIVIAL(float, font_descent)
+        RHETORIC_ACCESSOR_TRIVIAL(float, line_height)
+        RHETORIC_ACCESSOR_TRIVIAL(float, line_gap)
         
+        float GetLineTop(float y) const;
+        float GetLineBottom(float y) const;
+        
+        RHETORIC_ACCESSOR(Vector2, draw_offset)
     private:
         std::vector<Ptr<LineEntry>> lines_;
-        Size size_;
+        Rect frame_;
+        
+        float font_ascent_;
+        float font_descent_;
+        float line_height_;
+        float line_gap_;
+        
+        Vector2 draw_offset_;
+
     };
     
 }

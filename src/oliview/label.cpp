@@ -59,7 +59,7 @@ namespace oliview {
         auto layout = text_layouter_->Layout(ctx,
                                              text_,
                                              query.max_width());
-        return layout->size();
+        return layout->frame().size();
     }
     
     void Label::LayoutContent(NVGcontext * ctx) {

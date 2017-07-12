@@ -54,19 +54,22 @@ namespace oliview {
         Print(Format("cursor index: %s", value.ToString().c_str()));
         RHETORIC_ASSERT(text_->CheckIndex(value));
         cursor_index_ = value;
+        cursor_blink_time_ = 0.0f;
     }
 
     Size TextBox::MeasureContent(NVGcontext * ctx, const MeasureQuery & query) const {
         auto layout = text_layouter_->Layout(ctx,
                                              text_,
                                              query.max_width());
-        return layout->size();
+        return layout->frame().size();
     }
     
     void TextBox::LayoutContent(NVGcontext * ctx) {
         text_draw_info_ = text_layouter_->Layout(ctx,
                                                  text_,
                                                  Some(frame().size().width()));
+        float top = text_draw_info_->frame().origin().y();
+        text_draw_info_->set_draw_offset(Vector2(0, -top));
     }
     
     void TextBox::DrawContent(NVGcontext * ctx) {
@@ -75,7 +78,7 @@ namespace oliview {
         text_layouter_->Draw(ctx, text_, text_draw_info_);
         
         if (cursor_blink_time_ <= 0.5f) {
-            text_layouter_->DrawCursor(ctx, text_, cursor_index(), text_draw_info_);
+            text_layouter_->DrawCursor(ctx, cursor_index(), text_draw_info_);
         }
     }
     

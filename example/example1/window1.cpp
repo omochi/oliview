@@ -33,5 +33,5 @@ void Window1::Init(const Ptr<Application> & app) {
     root_view()->AddChild(view5);
     view5->set_frame(Rect(Vector2(200, 50),
                           Size(300, 200)));
-    view5->set_text("初期テキスト\nお肉\n\n↑空行");
+    view5->set_text("初期テキスト\nお肉gg\n\n↑空行");
 }

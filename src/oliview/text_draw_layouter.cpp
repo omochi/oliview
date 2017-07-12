@@ -7,7 +7,13 @@ namespace oliview {
                              const Ptr<Text> & text,
                              const Optional<float> & max_width)
     {
-       
+        float ascent, descent, line_height;
+        nvgTextMetrics(ctx, &ascent, &descent, &line_height);
+        float font_height = ascent - descent;
+        float line_gap = line_height - font_height;
+        line_gap *= 0.5f;
+        line_height = font_height + line_gap;
+        
         std::vector<Ptr<TextDrawInfo::LineEntry>> result_lines;
         
         for (size_t line_index = 0; line_index < text->line_num(); line_index++) {
@@ -22,24 +28,35 @@ namespace oliview {
                 result_lines.push_back(entry);
             }
         }
-    
-        float line_height;
-        nvgTextMetrics(ctx, nullptr, nullptr, &line_height);
 
-        float draw_width = 0;
+        Ptr<TextDrawInfo> result = New<TextDrawInfo>();
+        result->set_font_ascent(ascent);
+        result->set_font_descent(descent);
+        result->set_line_height(line_height);
+        result->set_line_gap(line_gap);
+        
+        float top = 0;
+        float bottom = 0;
+        float right = 0;
         float draw_y = 0;
+        
+        top = result->GetLineTop(draw_y);
+        
         for (size_t i = 0; i < result_lines.size(); i++) {
             auto line = result_lines[i];
             line->set_draw_y(draw_y);
             
-            draw_width = std::max(draw_width, line->draw_width());
+            right = std::max(right, line->draw_width());
             
-            draw_y += line_height;
+            top = std::min(top, result->GetLineTop(draw_y));
+            bottom = std::max(bottom, result->GetLineBottom(draw_y));
+            
+            draw_y += result->line_height();
         }
         
-        Ptr<TextDrawInfo> result = New<TextDrawInfo>();
         result->set_lines(result_lines);
-        result->set_size(Size(draw_width, draw_y));
+        result->set_frame(Rect(Vector2(0, top), Size(right, bottom - top)));
+
         return result;
     }
         
@@ -50,9 +67,6 @@ namespace oliview {
         NVGSetFont(ctx, font());
         nvgFontSize(ctx, font_size());
         
-        float ascender;
-        nvgTextMetrics(ctx, &ascender, nullptr, nullptr);
-        
         for (auto & line : draw_info->lines()) {
             if (line->char_position_num() == 0) {
                 continue;
@@ -61,14 +75,13 @@ namespace oliview {
             auto str = line->GetLine(text);
             
             NVGDrawText(ctx,
-                        0,
-                        line->draw_y() + ascender,
+                        draw_info->draw_offset().x(),
+                        line->draw_y() + draw_info->draw_offset().y(),
                         str);
         }
     }
     
     void TextDrawLayouter::DrawCursor(NVGcontext * ctx,
-                                      const Ptr<Text> & text,
                                       const Text::Index & cursor_index,
                                       const Ptr<TextDrawInfo> & draw_info)
     {
@@ -78,11 +91,13 @@ namespace oliview {
         NVGSetFont(ctx, font());
         nvgFontSize(ctx, font_size());
         
-        float height;
-        nvgTextMetrics(ctx, nullptr, nullptr, &height);
+        float top = draw_info->GetLineTop(pos.y());
+        float bottom = draw_info->GetLineBottom(pos.y());
         
         nvgBeginPath(ctx);
-        NVGAddRectPath(ctx, Rect(pos, Size(1.0f, height)));
+        NVGAddRectPath(ctx, Rect(draw_info->draw_offset() +
+                                 Vector2(pos.x(), top),
+                                 Size(1.0f, bottom - top)));
         nvgFill(ctx);
     }
     
@@ -198,6 +213,7 @@ namespace oliview {
             }
             
             char_positions.push_back(New<TextDrawInfo::CharPosition>(index,
+                                                                     glyph.x,
                                                                      glyph.minx,
                                                                      glyph.maxx));
         }
