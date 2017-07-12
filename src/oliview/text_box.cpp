@@ -8,6 +8,7 @@ namespace oliview {
         
         text_layouter_ = New<TextDrawLayouter>();
         text_ = New<Text>();
+        cursor_index_ = text_->begin_index();
         
         auto fm = application->font_manager();
         
@@ -21,9 +22,9 @@ namespace oliview {
     }
     
     void TextBox::set_text(const std::string & value) {
-        text_ = New<Text>();
-        text_->set_string(value);
+        text_ = New<Text>(value);
         text_draw_info_ = nullptr;
+        cursor_index_ = text_->begin_index();
         
         SetNeedsLayout();
     }
@@ -49,6 +50,7 @@ namespace oliview {
     }
     
     void TextBox::set_cursor_index(const Text::Index & value) {
+        Print(Format("cursor index: %s", value.ToString().c_str()));
         RHETORIC_ASSERT(text_->CheckIndex(value));
         cursor_index_ = value;
     }
@@ -88,8 +90,12 @@ namespace oliview {
         
         RHETORIC_ASSERT(text_draw_info_ != nullptr);
         
-        auto ret = text_draw_info_->GetIndexFor(event.pos());
-        Print(Format("text index: %d, %d", (int)ret.line_index, (int)ret.char_index));
+        auto position_index = text_draw_info_->GetIndexFor(event.pos());
+        Print(Format("text index: %d, %d", (int)position_index.line_index, (int)position_index.char_index));
+        
+        auto text_index = text_draw_info_->GetTextIndexFor(position_index, text_);
+        
+        set_cursor_index(text_index);
     }
     
     void TextBox::OnMouseMoveEvent(const MouseEvent & event) {

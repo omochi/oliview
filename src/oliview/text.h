@@ -16,6 +16,9 @@ namespace oliview {
      "a\nb" => ["a\n", "b"]
      
      バイナリフリーで不正なバイトは1バイトずつ読まれる
+     
+     Indexは行については 0 ..< line_num
+     バイトについては 0 ..<= line.size()
      */
     class Text {
     public:
@@ -85,6 +88,7 @@ namespace oliview {
         void FixLastLine();
         
         StringAccess AccessCharAt(const Index & position) const;
+        Index MayLineWrapIndex(const Index & index) const;
         
         std::vector<Ptr<std::string>> lines_;
     };

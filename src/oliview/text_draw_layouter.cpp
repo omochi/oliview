@@ -85,32 +85,32 @@ namespace oliview {
             
             Ptr<TextDrawInfo::LineEntry> line_entry = LayoutSingleLine(ctx, text, index);
 
-            auto chars = line_entry->char_positions();
-            RHETORIC_ASSERT(chars.size() > 0);
-            for (size_t i = 0; i < chars.size(); i++) {
-                auto & ch = chars[i];
+            auto char_positions = line_entry->char_positions();
+
+            bool wrapped = false;
+            
+            for (size_t i = 0; i < char_positions.size(); i++) {
+                auto & ch = char_positions[i];
                 if (max_width) {
                     if (i > 0 && *max_width < ch->draw_right()) {
-                        ArrayRemoveRange(&chars, MakeIndexRange(i, chars.size()));
+                        ArrayRemoveRange(&char_positions, MakeIndexRange(i, char_positions.size()));
+                        
+                        auto back_char = char_positions[i - 1];
+                        index = text->AdvanceIndex(back_char->text_index());
+                        wrapped = true;
                         break;
                     }
                 }
             }
-            line_entry->set_char_positions(chars);
+            line_entry->set_char_positions(char_positions);
             
-            index = text->AdvanceIndex(chars.back()->text_index());
-            if (line_entry->newline()) {
-                for (size_t i = 0; i < line_entry->newline()->size(); i++) {
-                    index = text->AdvanceIndex(index);
-                }
+            if (wrapped) {
+                line_entry->set_wrapped_line(wrapped);
             }
             
-            if (result_lines.size() > 0) {
-                line_entry->set_wrapped_line(true);
-            }
             result_lines.push_back(line_entry);
             
-            if (line_index < index.line()) {
+            if (!wrapped) {
                 break;
             }
         }
@@ -158,7 +158,7 @@ namespace oliview {
                                                    (int)glyphs.size());
         glyphs.resize((size_t)num);
         
-        auto chars = ret->char_positions();
+        auto char_positions = ret->char_positions();
         
         for (size_t i = 0; i < num; i++) {
             auto & glyph = glyphs[i];
@@ -166,20 +166,24 @@ namespace oliview {
             auto kind = GetUtf8ByteKind((uint8_t)(glyph.str[0]));
             RHETORIC_ASSERT(kind.tag() == Utf8ByteKind::HeadTag);
             
-            Text::Index next_index = text->AdvanceIndex(index);
-            if (index.line() == next_index.line()) {
-                const char * next_index_char = text->GetCharAt(next_index).c_str();
-                if (next_index_char <= glyph.str) {
-                    index = next_index;
+            while (true) {
+                Text::Index next_index = text->AdvanceIndex(index);
+                if (index.line() < next_index.line()) {
+                    break;
                 }
+                const char * next_index_char = text->GetCharAt(next_index).c_str();
+                if (glyph.str < next_index_char) {
+                    break;
+                }
+                index = next_index;
             }
             
-            chars.push_back(New<TextDrawInfo::CharPosition>(index,
-                                                            glyph.minx,
-                                                            glyph.maxx));
+            char_positions.push_back(New<TextDrawInfo::CharPosition>(index,
+                                                                     glyph.minx,
+                                                                     glyph.maxx));
         }
         
-        ret->set_char_positions(chars);
+        ret->set_char_positions(char_positions);
         
         return ret;
     }

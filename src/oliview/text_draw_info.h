@@ -9,7 +9,6 @@ namespace oliview {
     /*
      行数はTextと一致。
      末尾改行は描画に不要だしカーソル処理が面倒なのでなし。
-     TODO
      */
     
     class TextDrawInfo {
@@ -62,6 +61,11 @@ namespace oliview {
             bool operator==(const CharPositionIndex & other) const;
             RHETORIC_EQUATABLE_DEFAULT(CharPositionIndex)
         };
+
+        RHETORIC_ACCESSOR(std::vector<Ptr<LineEntry>>, lines)
+        size_t line_num() const;
+        Ptr<LineEntry> GetLineAt(size_t index) const;
+        
         
         CharPositionIndex begin_index() const;
         CharPositionIndex end_index() const;
@@ -69,8 +73,9 @@ namespace oliview {
         CharPositionIndex GetIndexFor(const Text::Index & index) const;
         CharPositionIndex GetIndexFor(const Vector2 & position) const;
         
-        RHETORIC_ACCESSOR(std::vector<Ptr<LineEntry>>, lines)
-        size_t line_num() const;
+        Text::Index GetTextIndexFor(const CharPositionIndex & position_index,
+                                    const Ptr<Text> & text) const;
+        
         RHETORIC_ACCESSOR(Size, size)
 
         

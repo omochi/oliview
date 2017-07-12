@@ -30,6 +30,8 @@ namespace oliview {
     }
     
     StringSlice TextDrawInfo::LineEntry::GetLine(const Ptr<Text> & text) const {
+        RHETORIC_ASSERT(char_positions_.size() > 0);
+        
         if (char_positions_.size() == 0) {
             return StringSlice();
         }
@@ -59,6 +61,14 @@ namespace oliview {
         char_index == other.char_index;
     }
     
+    size_t TextDrawInfo::line_num() const {
+        return lines_.size();
+    }
+    
+    Ptr<TextDrawInfo::LineEntry> TextDrawInfo::GetLineAt(size_t index) const {
+        return lines_[index];
+    }
+
     TextDrawInfo::CharPositionIndex TextDrawInfo::begin_index() const {
         return CharPositionIndex(0, 0);
     }
@@ -98,7 +108,7 @@ namespace oliview {
         CharPositionIndex ret;
         
         for (size_t line_index = 0; line_index < lines_.size(); line_index++) {
-            if (line_index == lines_.size() - 1) {
+            if (line_index + 1 == lines_.size()) {
                 if (position.y() < size_.height()) {
                     ret.line_index = line_index;
                     break;
@@ -121,7 +131,7 @@ namespace oliview {
         
         auto line = lines_[ret.line_index];
         for (size_t char_index = 0; char_index < line->char_position_num(); char_index++) {
-
+            
             auto char_position = line->GetCharPositionAt(char_index);
             float char_center_x = (char_position->draw_left() + char_position->draw_right()) / 2.0f;
             if (position.x() < char_center_x) {
@@ -129,8 +139,8 @@ namespace oliview {
                 break;
             }
             
-            if (char_index == line->char_position_num() - 1) {
-                ret.char_index = char_index + 1;
+            if (char_index + 1 == line->char_position_num()) {
+                ret.char_index = line->char_position_num();
                 break;
             }
         }
@@ -138,8 +148,25 @@ namespace oliview {
         return ret;
     }
     
-    size_t TextDrawInfo::line_num() const {
-        return lines_.size();
+    Text::Index TextDrawInfo::GetTextIndexFor(const CharPositionIndex & position_index,
+                                              const Ptr<Text> & text) const
+    {
+        if (position_index == end_index()) {
+            return text->end_index();
+        }
+        
+        auto line_entry = GetLineAt(position_index.line_index);
+        
+        if (position_index.char_index < line_entry->char_position_num()) {
+            auto char_entry = line_entry->GetCharPositionAt(position_index.char_index);
+            return char_entry->text_index();
+        }
+        
+        if (line_entry->char_position_num() == 0) {
+            return line_entry->text_index();
+        }
+        
+        auto last_char = line_entry->GetCharPositionAt(line_entry->char_position_num() - 1);
+        return text->AdvanceIndex(last_char->text_index());
     }
-
 }

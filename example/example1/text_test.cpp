@@ -94,6 +94,16 @@ void TextInsertTest1() {
         auto t1 = New<Text>("apple\n");
         auto t2 = New<Text>("banana");
         Text::Index ep;
+        t1->Insert(Text::Index(0, 6), t2, &ep);
+        RHETORIC_ASSERT(t1->line_num() == 2);
+        RHETORIC_ASSERT(*t1->lines()[0] == "apple\n");
+        RHETORIC_ASSERT(*t1->lines()[1] == "banana");
+        RHETORIC_ASSERT(ep == Text::Index(1, 6));
+    }
+    {
+        auto t1 = New<Text>("apple\n");
+        auto t2 = New<Text>("banana");
+        Text::Index ep;
         t1->Insert(Text::Index(1, 0), t2, &ep);
         RHETORIC_ASSERT(t1->line_num() == 2);
         RHETORIC_ASSERT(*t1->lines()[0] == "apple\n");
@@ -110,6 +120,17 @@ void TextInsertTest1() {
         RHETORIC_ASSERT(*t1->lines()[1] == "\n");
         RHETORIC_ASSERT(*t1->lines()[2] == "");
         RHETORIC_ASSERT(ep == Text::Index(1, 0));
+    }
+    {
+        auto t1 = New<Text>("apple\n");
+        auto t2 = New<Text>("banana\n");
+        Text::Index ep;
+        t1->Insert(Text::Index(0, 6), t2, &ep);
+        RHETORIC_ASSERT(t1->line_num() == 3);
+        RHETORIC_ASSERT(*t1->lines()[0] == "apple\n");
+        RHETORIC_ASSERT(*t1->lines()[1] == "banana\n");
+        RHETORIC_ASSERT(*t1->lines()[2] == "");
+        RHETORIC_ASSERT(ep == Text::Index(2, 0));
     }
     {
         auto t1 = New<Text>("apple\n");
@@ -148,6 +169,17 @@ void TextInsertTest1() {
         auto t1 = New<Text>("apple\nbanana");
         auto t2 = New<Text>("cherry\ndonuts");
         Text::Index ep;
+        t1->Insert(Text::Index(0, 6), t2, &ep);
+        RHETORIC_ASSERT(t1->line_num() == 3);
+        RHETORIC_ASSERT(*t1->lines()[0] == "apple\n");
+        RHETORIC_ASSERT(*t1->lines()[1] == "cherry\n");
+        RHETORIC_ASSERT(*t1->lines()[2] == "donutsbanana");
+        RHETORIC_ASSERT(ep == Text::Index(2, 6));
+    }
+    {
+        auto t1 = New<Text>("apple\nbanana");
+        auto t2 = New<Text>("cherry\ndonuts");
+        Text::Index ep;
         t1->Insert(Text::Index(1, 0), t2, &ep);
         RHETORIC_ASSERT(t1->line_num() == 3);
         RHETORIC_ASSERT(*t1->lines()[0] == "apple\n");
@@ -172,15 +204,33 @@ void TextDeleteTest1() {
     }
     {
         auto t1 = New<Text>("apple\n");
+        t1->Delete(Text::Index(0, 5), Text::Index(0, 6));
+        RHETORIC_ASSERT(t1->line_num() == 1);
+        RHETORIC_ASSERT(*t1->GetLineAt(0) == "apple");
+    }
+    {
+        auto t1 = New<Text>("apple\n");
         t1->Delete(Text::Index(0, 5), Text::Index(1, 0));
         RHETORIC_ASSERT(t1->line_num() == 1);
         RHETORIC_ASSERT(*t1->GetLineAt(0) == "apple");
     }
     {
         auto t1 = New<Text>("apple\n");
+        t1->Delete(Text::Index(0, 3), Text::Index(0, 6));
+        RHETORIC_ASSERT(t1->line_num() == 1);
+        RHETORIC_ASSERT(*t1->GetLineAt(0) == "app");
+    }
+    {
+        auto t1 = New<Text>("apple\n");
         t1->Delete(Text::Index(0, 3), Text::Index(1, 0));
         RHETORIC_ASSERT(t1->line_num() == 1);
         RHETORIC_ASSERT(*t1->GetLineAt(0) == "app");
+    }
+    {
+        auto t1 = New<Text>("apple\nbanana");
+        t1->Delete(Text::Index(0, 5), Text::Index(0, 6));
+        RHETORIC_ASSERT(t1->line_num() == 1);
+        RHETORIC_ASSERT(*t1->GetLineAt(0) == "applebanana");
     }
     {
         auto t1 = New<Text>("apple\nbanana");
@@ -193,6 +243,27 @@ void TextDeleteTest1() {
         t1->Delete(Text::Index(0, 4), Text::Index(1, 2));
         RHETORIC_ASSERT(t1->line_num() == 1);
         RHETORIC_ASSERT(*t1->GetLineAt(0) == "applnana");
+    }
+    {
+        auto t1 = New<Text>("apple\nbanana\ncherry");
+        t1->Delete(Text::Index(0, 6), Text::Index(1, 7));
+        RHETORIC_ASSERT(t1->line_num() == 2);
+        RHETORIC_ASSERT(*t1->GetLineAt(0) == "apple\n");
+        RHETORIC_ASSERT(*t1->GetLineAt(1) == "cherry");
+    }
+    {
+        auto t1 = New<Text>("apple\nbanana\ncherry");
+        t1->Delete(Text::Index(0, 6), Text::Index(2, 0));
+        RHETORIC_ASSERT(t1->line_num() == 2);
+        RHETORIC_ASSERT(*t1->GetLineAt(0) == "apple\n");
+        RHETORIC_ASSERT(*t1->GetLineAt(1) == "cherry");
+    }
+    {
+        auto t1 = New<Text>("apple\nbanana\ncherry");
+        t1->Delete(Text::Index(1, 0), Text::Index(1, 7));
+        RHETORIC_ASSERT(t1->line_num() == 2);
+        RHETORIC_ASSERT(*t1->GetLineAt(0) == "apple\n");
+        RHETORIC_ASSERT(*t1->GetLineAt(1) == "cherry");
     }
     {
         auto t1 = New<Text>("apple\nbanana\ncherry");

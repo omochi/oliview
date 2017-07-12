@@ -135,51 +135,27 @@ namespace oliview {
     Text::Index Text::AdvanceIndex(const Index & index_) const {
         Index index = index_;
         
-        while (true) {
-            if (index == end_index()) {
-                return index;
-            }
-
-            auto acc = AccessCharAt(index);
-            RHETORIC_ASSERT(acc.length > 0);
-            RHETORIC_ASSERT(acc.kind.presented());
-            
-            switch (acc.kind->tag()) {
-                case Utf8ByteKind::HeadTag: {
-                    size_t len = acc.kind->AsHead().length;
-                    RHETORIC_ASSERT(acc.offset + len <= acc.string->size());
-                    index = Index(index.line(), acc.offset + len);
-                    
-                    break;
-                }
-                case Utf8ByteKind::BodyTag: {
-                    index = Index(index.line(), index.byte() + 1);
-                }
-            }
-            
-            if (index.line() + 1 < lines_.size() &&
-                index.byte() == lines_[index.line()]->size())
-            {
-                index = Index(index.line() + 1, 0);
-            }
-            
+        if (index == end_index()) {
             return index;
         }
+        
+        auto acc = AccessCharAt(index);
+        RHETORIC_ASSERT(acc.length > 0);
+        RHETORIC_ASSERT(acc.kind.presented());
+        
+        index = Index(index.line(), acc.offset + acc.length);
+        index = MayLineWrapIndex(index);
+        
+        return index;
     }
     
     bool Text::CheckIndex(const Index & index) const {
-        if (index.line() >= lines_.size()) {
+        if (!(index.line() < line_num())) {
             return false;
         }
         auto line = lines_[index.line()];
-        if (index.line() < lines_.size() - 1) {
-            if (index.byte() >= line->size()) {
-                return false;
-            }
-        } else {
-            if (index.byte() > line->size()) {
-                return false;
-            }
+        if (!(index.byte() <= line->size())) {
+            return false;
         }
         return true;
     }
@@ -191,49 +167,60 @@ namespace oliview {
         auto index = index_;
         
         RHETORIC_ASSERT(CheckIndex(index));
+        index = MayLineWrapIndex(index);
+        
+        Ptr<std::string> dest_line = lines_[index.line()];
+        std::string head_str = dest_line->substr(0, index.byte() - 0);
+        std::string tail_str = dest_line->substr(index.byte(), dest_line->size() - index.byte());
 
         for (size_t i = 0; i < text->line_num(); i++) {
-            auto insert_line = text->GetLineAt(i);
+            Ptr<std::string> insert_line = text->GetLineAt(i);
             
-            Ptr<std::string> dest_line = lines_[index.line()];
-            dest_line->insert(index.byte(), *insert_line);
+            if (i > 0) {
+                dest_line = New<std::string>();
+                lines_.insert(lines_.begin() + ToSigned(index.line()) + 1, dest_line);
+            }
             
-            index = Index(index.line(),
-                          index.byte() + insert_line->size());
+            if (i == 0) {
+                dest_line->erase(index.byte(), dest_line->size() - index.byte());
+                dest_line->insert(index.byte(), *insert_line);
+            } else {
+                *dest_line = *insert_line;
+            }
 
-            if (i + 1 < text->line_num()) {
-                Ptr<std::string> new_line = New<std::string>();
-                
-                if (index.byte() < dest_line->size()) {
-                    *new_line = dest_line->substr(index.byte(),
-                                                  dest_line->size() - index.byte());
-                    ArrayRemoveRange(dest_line.get(), MakeRange(index.byte(), dest_line->size()));
-                }
-                
-                lines_.insert(lines_.begin() + ToSigned(index.line()) + 1, new_line);
-                
-                index = Index(index.line() + 1, 0);
+            if (i + 1 == text->line_num()) {
+                dest_line->append(tail_str);
             }
         }
         
+        size_t last_line_index = index.line() + text->line_num() - 1;
+        Ptr<std::string> last_line = lines_[last_line_index];
+        
+        index = Index(last_line_index, last_line->size() - tail_str.size());
+        index = MayLineWrapIndex(index);
+
         if (end_index) {
             *end_index = index;
         }
     }
     
-    void Text::Delete(const Index & begin,
-                      const Index & end)
+    void Text::Delete(const Index & begin_,
+                      const Index & end_)
     {
+        auto begin = begin_;
+        auto end = end_;
+        
         RHETORIC_ASSERT(CheckIndex(begin));
         RHETORIC_ASSERT(CheckIndex(end));
         RHETORIC_ASSERT(begin <= end);
         
+        begin = MayLineWrapIndex(begin);
+        end = MayLineWrapIndex(end);
+        
         auto end_line = lines_[end.line()];
-        auto end_after_str = end_line->substr(end.byte(),
+        auto end_tail_str = end_line->substr(end.byte(),
                                               end_line->size() - end.byte());
         auto begin_line = lines_[begin.line()];
-        auto begin_before_str = begin_line->substr(0,
-                                                   begin.byte());
         
         if (begin.line() < end.line()) {
             ArrayRemoveRange(&lines_, MakeRange(begin.line() + 1,
@@ -242,7 +229,7 @@ namespace oliview {
         
         begin_line->replace(begin.byte(),
                             begin_line->size() - begin.byte(),
-                            end_after_str);
+                            end_tail_str);
     }
     
     Text::StringAccess::StringAccess(const Ptr<std::string> & string,
@@ -266,30 +253,37 @@ namespace oliview {
         }
     }
     
-    Text::StringAccess Text::AccessCharAt(const Index & index) const {
-        Ptr<std::string> str = lines_[index.line()];
+    Text::StringAccess Text::AccessCharAt(const Index & index_) const {
+        RHETORIC_ASSERT(CheckIndex(index_));
+        Index index = MayLineWrapIndex(index_);
         
-        if (index.line() < lines_.size() - 1) {
-            RHETORIC_ASSERT(index.byte() < str->size());
-        } else {
-            RHETORIC_ASSERT(index.byte() <= str->size());
-            if (index.byte() == str->size()) {
-                return StringAccess(str, index.byte(), 0, None());
-            }
+        Ptr<std::string> line = lines_[index.line()];
+
+        if (index.byte() == line->size()) {
+            return StringAccess(line, index.byte(), 0, None());
         }
         
-        char c = (*str)[index.byte()];
+        char c = (*line)[index.byte()];
         auto kind = GetUtf8ByteKind(c);
         switch (kind.tag()) {
             case Utf8ByteKind::HeadTag: {
-                size_t end = std::min(index.byte() + kind.AsHead().length, str->size());
-                return StringAccess(str, index.byte(), end - index.byte(), Some(kind));
+                size_t end = std::min(index.byte() + kind.AsHead().length, line->size());
+                return StringAccess(line, index.byte(), end - index.byte(), Some(kind));
             }
             case Utf8ByteKind::BodyTag: {
-                return StringAccess(str, index.byte(), 1, Some(kind));
+                return StringAccess(line, index.byte(), 1, Some(kind));
             }
         }
         RHETORIC_FATAL("never");
+    }
+    
+    Text::Index Text::MayLineWrapIndex(const Index & index) const {
+        if (index.line() + 1 < lines_.size()) {
+            if (index.byte() == lines_[index.line()]->size()) {
+                return Index(index.line() + 1, 0);
+            }
+        }
+        return index;
     }
     
 }
