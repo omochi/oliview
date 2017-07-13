@@ -299,6 +299,7 @@ namespace oliview {
     }
     
     bool View::OnKeyEvent(const KeyEvent & event) {
+        RHETORIC_UNUSED(event);
         return false;
     }
     
@@ -453,15 +454,6 @@ namespace oliview {
     }
     
     void View::DrawBackground(NVGcontext * ctx) {
-        if (focused()) {
-            nvgBeginPath(ctx);
-            NVGAddRectPath(ctx, Rect(Vector2(-10.0f, -10.0f), Size(frame().size().width() + 20.0f,
-                                                                   frame().size().height() + 20.0f)));
-            NVGSetFillColor(ctx, Color(1.0f, 0.0f, 0.0f, 1.0f));
-            nvgFill(ctx);
-            return;
-        }
-        
         nvgBeginPath(ctx);
         NVGAddRectPath(ctx, local_frame());
         NVGSetFillColor(ctx, background_color_);
@@ -469,13 +461,18 @@ namespace oliview {
     }
     
     void View::DrawShadow(NVGcontext * ctx) {
-//        if (focused()) {
-//            nvgBeginPath(ctx);
-//            NVGAddRectPath(ctx, Rect(Vector2(-10.0f, -10.0f), Size(frame().size().width() + 20.0f,
-//                                                                   frame().size().height() + 20.0f)));
-//            NVGSetFillColor(ctx, Color(1.0f, 0.0f, 0.0f, 1.0f));
-//            nvgFill(ctx);
-//        }
+        if (focused()) {
+            Vector2 shadow_origin = Vector2(-2.0f, -2.0f);
+            Vector2 shadow_size = frame().size().ToVector() + Vector2(4.0f, 4.0f);
+            
+            nvgBeginPath(ctx);
+            
+            nvgRoundedRect(ctx, shadow_origin.x(), shadow_origin.y(),
+                           shadow_size.x(), shadow_size.y(), 2.0f);
+            NVGSetFillColor(ctx, Color(0.0f, 0.4f, 0.8f, 0.3f));
+            
+            nvgFill(ctx);
+        }
     }
     
     void View::InvokeWindowOnAddView(const Ptr<Window> & window) {

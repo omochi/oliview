@@ -22,24 +22,24 @@ namespace oliview {
             }
             prev_update_time_ = Some(now);
             
-            auto windows = windows_;
-
-            if (windows.size() == 0) {
+            glfwPollEvents();
+            
+            if (windows_.size() == 0) {
                 break;
             }
-
-            glfwPollEvents();
-
-            for (auto & window : windows) {
-                window->MakeContextCurrent();
-
-                window->_MayClose();
-                if (window->closed()) {
-                    continue;
+            
+            std::vector<Ptr<Window>> update_windows = windows_;
+            while (true) {
+                if (update_windows.size() == 0) {
+                    break;
                 }
-
-                window->_UpdateAnimation(delta_time.count());
-                window->_Update();
+                
+                Ptr<Window> w = update_windows[0];
+                ArrayRemoveAt(&update_windows, 0);
+                
+                w->MakeContextCurrent();
+                w->_UpdateAnimation(delta_time.count());
+                w->_Update();
             }
         }
 
@@ -61,11 +61,35 @@ namespace oliview {
     }
     
     void Application::_RemoveWindow(const Ptr<Window> & window) {
-        ArrayRemoveEq(&windows_, window);
-        
+        auto indexo = ArrayFindIndexEq(windows_, window);
+        if (indexo) {
+            auto index = *indexo;
+            ArrayRemoveAt(&windows_, index);
+            
+            if (window->focused()) {
+                Ptr<Window> focus;
+                if (index < windows_.size()) {
+                    focus = windows_[index];
+                } else if (0 < index) {
+                    focus = windows_[index - 1];
+                }
+                if (focus) {
+                    focus->Focus();
+                }
+            }
+        }
+
         if (windows_.size() == 0) {
             DestroyNVGContext();
         }
+    }
+    
+    void Application::_OnWindowMoveToFront(const Ptr<Window> & window) {
+        RHETORIC_ASSERT(window->application() == shared_from_this());
+        
+        auto index = ArrayFindIndexEq(windows_, window).value();
+        ArrayRemoveAt(&windows_, index);
+        windows_.push_back(window);
     }
     
     Ptr<Window> Application::_shared_context_window() const {

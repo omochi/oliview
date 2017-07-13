@@ -30,12 +30,15 @@ namespace oliview {
         RHETORIC_GETTER(Size, framebuffer_size)
         Ptr<View> root_view() const;
         RHETORIC_GETTER(GLFWwindow *, glfw_window)
+        
+        bool focused() const;
+        
+        void Focus();
 
         void MakeContextCurrent();
         
         virtual bool ShouldClose() const;
         
-//        void RefreshLayout();
         
         RHETORIC_GETTER(Ptr<View>, focused_view)
         
@@ -92,6 +95,7 @@ namespace oliview {
         static void RefreshHandler(GLFWwindow * window);
         static void WindowSizeHandler(GLFWwindow * window, int w, int h);
         static void FramebufferSizeHandler(GLFWwindow * window, int w, int h);
+        static void FocusHandler(GLFWwindow * window, int focused);
         static void MouseButtonHandler(GLFWwindow * window, int button, int action, int modifier);
         static void CursorPosHandler(GLFWwindow * window, double x, double y);
         static void KeyHandler(GLFWwindow *, int key, int scancode, int action, int modifier);

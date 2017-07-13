@@ -6,6 +6,8 @@ namespace oliview {
     void TextBox::Init(const Ptr<Application> & application) {
         View::Init(application);
         
+        set_focusable(true);
+        
         text_layouter_ = New<TextDrawLayouter>();
         text_ = New<Text>();
         cursor_index_ = text_->begin_index();
@@ -115,6 +117,13 @@ namespace oliview {
     }
     
     void TextBox::OnMouseCancelEvent() {
+    }
+    
+    bool TextBox::OnKeyEvent(const KeyEvent & event) {
+        if (event.type() == KeyEventType::Down) {
+            Print(Format("TextBox %d", event.key()));
+        }
+        return false;
     }
     
     void TextBox::OnUpdateAnimation(float delta_time) {

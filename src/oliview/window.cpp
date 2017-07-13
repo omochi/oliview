@@ -40,6 +40,7 @@ namespace oliview {
         glfwSetWindowRefreshCallback(gw, &Window::RefreshHandler);
         glfwSetWindowSizeCallback(gw, &Window::WindowSizeHandler);
         glfwSetFramebufferSizeCallback(gw, &Window::FramebufferSizeHandler);
+        glfwSetWindowFocusCallback(gw, &Window::FocusHandler);
         glfwSetMouseButtonCallback(gw, &Window::MouseButtonHandler);
         glfwSetCursorPosCallback(gw, &Window::CursorPosHandler);
         glfwSetKeyCallback(gw, &Window::KeyHandler);
@@ -87,7 +88,16 @@ namespace oliview {
         return root_view_;
     }
     
+    bool Window::focused() const {
+        return glfwGetWindowAttrib(glfw_window_, GLFW_FOCUSED) != 0;
+    }
+    
+    void Window::Focus() {
+        glfwFocusWindow(glfw_window_);
+    }
+    
     void Window::MakeContextCurrent() {
+        if (closed()) { return; }
         glfwMakeContextCurrent(glfw_window_);
     }
     
@@ -184,6 +194,9 @@ namespace oliview {
     }
     
     void Window::_Update() {
+        _MayClose();
+        if (closed()) { return; }
+        
         NVGcontext * ctx = BeginNVG();
         Layout(ctx);
         Draw(ctx);
@@ -192,10 +205,14 @@ namespace oliview {
     }
     
     void Window::_UpdateAnimation(float delta_time) {
+        if (closed()) { return; }
+        
         root_view_->_UpdateAnimation(delta_time);
     }
     
     void Window::_MayClose() {
+        if (closed()) { return; }
+        
         if (!glfwWindowShouldClose(glfw_window_)) {
             return;
         }
@@ -402,6 +419,13 @@ namespace oliview {
     void Window::FramebufferSizeHandler(GLFWwindow * window, int w, int h) {
         auto thiz = (Window *)glfwGetWindowUserPointer(window);
         thiz->set_framebuffer_size(Size(w, h));
+    }
+    
+    void Window::FocusHandler(GLFWwindow * window, int focused) {
+        auto thiz = (Window *)glfwGetWindowUserPointer(window);
+        if (focused) {
+            thiz->application()->_OnWindowMoveToFront(thiz->shared_from_this());
+        }
     }
     
     void Window::MouseButtonHandler(GLFWwindow * window, int button, int action, int modifier) {

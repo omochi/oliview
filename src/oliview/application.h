@@ -20,6 +20,7 @@ namespace oliview {
         NVGcontext * _nvg_context() const;
         void _AddWindow(const Ptr<Window> & window);
         void _RemoveWindow(const Ptr<Window> & window);
+        void _OnWindowMoveToFront(const Ptr<Window> & window);
         Ptr<Window> _shared_context_window() const;
     private:
         void Init();

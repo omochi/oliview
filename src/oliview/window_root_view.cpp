@@ -20,6 +20,12 @@ namespace oliview {
                     w->FocusPrev();
                     return true;
                 }
+            } else if (event.key() == GLFW_KEY_W) {
+                bool cmd = (event.modifier() & GLFW_MOD_SUPER) != 0;
+                if (cmd) {
+                    w->Close();
+                    return true;
+                }
             }
         }
         
