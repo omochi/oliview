@@ -148,42 +148,28 @@ namespace oliview {
         }
     }
     
-    Ptr<View> View::GetNextFocusView() {
-        if (child_num() > 0) {
-            return GetChildAt(0);
+    Ptr<View> View::GetFirstFocusChild() const {
+        if (child_num() == 0) {
+            return nullptr;
         }
-        
-        auto view = shared_from_this();
-        while (true) {
-            if (!view) { return nullptr; }
-            
-            auto parent = view->parent();
-            if (!parent) { return nullptr; }
-            
-            auto sib = view->GetNextSibling();
-            if (sib) {
-                return sib;
-            }
-            view = parent;
-        }
+        return GetChildAt(0);
     }
     
-    Ptr<View> View::GetPrevFocusView() {
-        auto parent = this->parent();
-        if (!parent) { return nullptr; }
-        
-        auto sib = GetPrevSibling();
-        if (!sib) {
-            return parent;
+    Ptr<View> View::GetNextFocusChild(const Ptr<const View> & child) const {
+        RHETORIC_ASSERT(child->parent() == shared_from_this());
+        return child->GetNextSibling();
+    }
+    
+    Ptr<View> View::GetPrevFocusChild(const Ptr<const View> & child) const {
+        RHETORIC_ASSERT(child->parent() == shared_from_this());
+        return child->GetPrevSibling();
+    }
+    
+    Ptr<View> View::GetLastFocusChild() const {
+        if (child_num() == 0) {
+            return nullptr;
         }
-        auto view = sib;
-        while (true) {
-            if (!view) { return nullptr; }
-            if (view->child_num() == 0) {
-                return view;
-            }
-            view = view->GetChildAt(view->child_num() - 1);
-        }
+        return GetChildAt(child_num() - 1);
     }
     
     void View::SetNeedsLayout() {

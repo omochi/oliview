@@ -95,55 +95,33 @@ namespace oliview {
         return true;
     }
     
-//    void Window::RefreshLayout() {
-//        if (nvg_context_) {
-//            Layout(nvg_context_);
-//        } else {
-//            NVGcontext * ctx = BeginNVG();
-//            Layout(ctx);
-//            CancelNVG(ctx);
-//        }
-//    }
-    
     void Window::FocusNext() {
         Ptr<View> focus = focused_view();
-        if (focus) {
-            focus = focus->GetNextFocusView();
-        } else {
-            focus = root_view();
-        }
-        
-        while (focus) {
+        while (true) {
+            focus = GetNextFocusView(focus);
+            if (!focus) {
+                break;
+            }
             if (focus->focusable()) {
                 break;
             }
-            focus = focus->GetNextFocusView();
         }
-        
+
         _Focus(focus);
     }
     
     void Window::FocusPrev() {
         Ptr<View> focus = focused_view();
-        if (focus) {
-            focus = focus->GetPrevFocusView();
-        } else {
-            focus = root_view();
-            while (true) {
-                if (focus->child_num() == 0) {
-                    break;
-                }
-                focus = focus->GetChildAt(focus->child_num() - 1);
+        while (true) {
+            focus = GetPrevFocusView(focus);
+            if (!focus) {
+                break;
             }
-        }
-
-        while (focus) {
             if (focus->focusable()) {
                 break;
             }
-            focus = focus->GetPrevFocusView();
         }
-        
+
         _Focus(focus);
     }
     
@@ -362,6 +340,55 @@ namespace oliview {
         }
     }
 
+    Ptr<View> Window::GetNextFocusView(const Ptr<View> & view_) const {
+        Ptr<View> view = view_;
+        if (!view) {
+            return root_view();
+        }
+        
+        auto child = view->GetFirstFocusChild();
+        if (child) {
+            return child;
+        }
+        
+        while (true) {
+            auto parent = view->parent();
+            if (!parent) {
+                return nullptr;
+            }
+            auto sib = parent->GetNextFocusChild(view);
+            if (sib) {
+                return sib;
+            }
+            view = parent;
+        }
+    }
+    
+    Ptr<View> Window::GetPrevFocusView(const Ptr<View> & view_) const {
+        Ptr<View> view = view_;
+        
+        if (!view) {
+            view = root_view();
+        } else {
+            auto parent = view->parent();
+            if (!parent) {
+                return nullptr;
+            }
+            view = parent->GetPrevFocusChild(view);
+            if (!view) {
+                return parent;
+            }
+        }
+        
+        while (true) {
+            auto child = view->GetLastFocusChild();
+            if (!child) {
+                return view;
+            }
+            view = child;
+        }
+    }
+    
     void Window::RefreshHandler(GLFWwindow * window) {
         auto thiz = (Window *)glfwGetWindowUserPointer(window);
         thiz->_Update();

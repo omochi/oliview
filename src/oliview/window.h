@@ -67,6 +67,9 @@ namespace oliview {
         void set_window_size(const Size & value);
         void set_framebuffer_size(const Size & value);
 
+        Ptr<View> GetNextFocusView(const Ptr<View> & view) const;
+        Ptr<View> GetPrevFocusView(const Ptr<View> & view) const;
+        
         WeakPtr<Application> application_;
         GLFWwindow * glfw_window_;
         NVGcontext * nvg_context_;

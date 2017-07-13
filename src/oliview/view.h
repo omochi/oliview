@@ -76,8 +76,10 @@ namespace oliview {
         void Focus();
         void Unfocus();
         
-        virtual Ptr<View> GetNextFocusView();
-        virtual Ptr<View> GetPrevFocusView();
+        virtual Ptr<View> GetFirstFocusChild() const;
+        virtual Ptr<View> GetNextFocusChild(const Ptr<const View> & child) const;
+        virtual Ptr<View> GetPrevFocusChild(const Ptr<const View> & child) const;
+        virtual Ptr<View> GetLastFocusChild() const;
         
         void SetNeedsLayout();
         
