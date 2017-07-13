@@ -4,10 +4,12 @@
 
 #include "./init_macro.h"
 #include "./gl_assert.h"
+#include "./key_event.h"
 #include "./mouse_event.h"
 #include "./size.h"
 #include "./view.h"
 #include "./vector2.h"
+#include "./window_root_view.h"
 
 namespace oliview {
     class Window :
@@ -26,14 +28,14 @@ namespace oliview {
         
         RHETORIC_GETTER(Size, window_size)
         RHETORIC_GETTER(Size, framebuffer_size)
-        RHETORIC_GETTER(Ptr<View>, root_view)
+        Ptr<View> root_view() const;
         RHETORIC_GETTER(GLFWwindow *, glfw_window)
 
         void MakeContextCurrent();
         
         virtual bool ShouldClose() const;
         
-        void RefreshLayout();
+//        void RefreshLayout();
         
         RHETORIC_GETTER(Ptr<View>, focused_view)
         
@@ -41,6 +43,10 @@ namespace oliview {
         void FocusPrev();
         
         void HandleMouseEvent(const MouseEvent & event);
+        void HandleKeyEvent(const KeyEvent & event);
+        
+        virtual void OnBeginDraw(NVGcontext * ctx);
+        virtual void OnEndDraw(NVGcontext * ctx);
         
         void _Update();
         void _UpdateAnimation(float delta_time);
@@ -73,7 +79,7 @@ namespace oliview {
         Size last_valid_window_size_;
         Size last_valid_framebuffer_size_;
         
-        Ptr<View> root_view_;
+        Ptr<WindowRootView> root_view_;
         
         Ptr<View> mouse_target_;
         Optional<int> mouse_source_button_;
@@ -85,6 +91,7 @@ namespace oliview {
         static void FramebufferSizeHandler(GLFWwindow * window, int w, int h);
         static void MouseButtonHandler(GLFWwindow * window, int button, int action, int modifier);
         static void CursorPosHandler(GLFWwindow * window, double x, double y);
+        static void KeyHandler(GLFWwindow *, int key, int scancode, int action, int modifier);
         static void CharHandler(GLFWwindow * window, unsigned int code);
     };
 }

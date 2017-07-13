@@ -72,6 +72,32 @@ namespace oliview {
         }
     }
 
+    size_t View::GetIndexOfChild(const Ptr<const View> & child) const {
+        std::vector<Ptr<View>> children = this->children();
+        std::vector<Ptr<const View>> const_children(children.begin(), children.end());
+        return ArrayFindIndexEq(const_children, child).value();
+    }
+    
+    Ptr<View> View::GetNextSibling() const {
+        auto pr = parent();
+        if (!pr) { return nullptr; }
+        auto index = pr->GetIndexOfChild(shared_from_this());
+        if (index + 1 == pr->child_num()) {
+            return nullptr;
+        }
+        return pr->GetChildAt(index + 1);
+    }
+    
+    Ptr<View> View::GetPrevSibling() const {
+        auto pr = parent();
+        if (!pr) { return nullptr; }
+        auto index = pr->GetIndexOfChild(shared_from_this());
+        if (index == 0) {
+            return nullptr;
+        }
+        return pr->GetChildAt(index - 1);
+    }
+
     void View::set_frame(const Rect & value) {
         frame_ = value;
         
@@ -134,11 +160,10 @@ namespace oliview {
             auto parent = view->parent();
             if (!parent) { return nullptr; }
             
-            auto index = ArrayFindIndexEq(parent->children(), view).value();
-            if (index + 1 < parent->child_num()) {
-                return parent->GetChildAt(index + 1);
+            auto sib = view->GetNextSibling();
+            if (sib) {
+                return sib;
             }
-            
             view = parent;
         }
     }
@@ -147,12 +172,11 @@ namespace oliview {
         auto parent = this->parent();
         if (!parent) { return nullptr; }
         
-        auto index = ArrayFindIndexEq(parent->children(), shared_from_this()).value();
-        if (index == 0) {
+        auto sib = GetPrevSibling();
+        if (!sib) {
             return parent;
         }
-
-        auto view = parent->GetChildAt(index - 1);
+        auto view = sib;
         while (true) {
             if (!view) { return nullptr; }
             if (view->child_num() == 0) {
@@ -288,6 +312,10 @@ namespace oliview {
     void View::OnMouseCancelEvent() {
     }
     
+    bool View::OnKeyEvent(const KeyEvent & event) {
+        return false;
+    }
+    
     void View::OnUpdateAnimation(float delta_time) {
         RHETORIC_UNUSED(delta_time);
     }
@@ -342,16 +370,17 @@ namespace oliview {
     }
     
     void View::_InvokeDraw(NVGcontext * ctx, bool shadow) {
-        if (shadow) {
-            DrawShadow(ctx);
-            return;
-        }
-                
         nvgSave(ctx);
-        NVGSetScissor(ctx, draw_info_.content_clip_frame);
-        NVGTransform(ctx, draw_info_.window_transform);
-        DrawBackground(ctx);
-        DrawContent(ctx);
+        if (shadow) {
+            NVGSetScissor(ctx, draw_info_.parent_clip_frame);
+            NVGTransform(ctx, draw_info_.window_transform);
+            DrawShadow(ctx);
+        } else {
+            NVGSetScissor(ctx, draw_info_.content_clip_frame);
+            NVGTransform(ctx, draw_info_.window_transform);
+            DrawBackground(ctx);
+            DrawContent(ctx);
+        }
         nvgRestore(ctx);
     }
 
@@ -438,14 +467,29 @@ namespace oliview {
     }
     
     void View::DrawBackground(NVGcontext * ctx) {
+        if (focused()) {
+            nvgBeginPath(ctx);
+            NVGAddRectPath(ctx, Rect(Vector2(-10.0f, -10.0f), Size(frame().size().width() + 20.0f,
+                                                                   frame().size().height() + 20.0f)));
+            NVGSetFillColor(ctx, Color(1.0f, 0.0f, 0.0f, 1.0f));
+            nvgFill(ctx);
+            return;
+        }
+        
         nvgBeginPath(ctx);
-        NVGAddRectPath(ctx, Rect(Vector2(), frame_.size()));
+        NVGAddRectPath(ctx, local_frame());
         NVGSetFillColor(ctx, background_color_);
         nvgFill(ctx);
     }
     
     void View::DrawShadow(NVGcontext * ctx) {
-        RHETORIC_UNUSED(ctx);
+//        if (focused()) {
+//            nvgBeginPath(ctx);
+//            NVGAddRectPath(ctx, Rect(Vector2(-10.0f, -10.0f), Size(frame().size().width() + 20.0f,
+//                                                                   frame().size().height() + 20.0f)));
+//            NVGSetFillColor(ctx, Color(1.0f, 0.0f, 0.0f, 1.0f));
+//            nvgFill(ctx);
+//        }
     }
     
     void View::InvokeWindowOnAddView(const Ptr<Window> & window) {

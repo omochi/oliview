@@ -1,6 +1,12 @@
 #include "./color.h"
 
 namespace oliview {
+    Color::Color():Color(0.0f,
+                         0.0f,
+                         0.0f,
+                         1.0f)
+    {}
+    
     Color::Color(float red,
                  float green,
                  float blue,

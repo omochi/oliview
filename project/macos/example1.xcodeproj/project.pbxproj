@@ -20,6 +20,7 @@
 		D6C3F6F01E9A0D650020D65A /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D6C3F6EF1E9A0D650020D65A /* IOKit.framework */; };
 		D6C3F72C1E9D1C610020D65A /* libglfw3.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D6C3F72B1E9D1C610020D65A /* libglfw3.a */; };
 		D6C3F72E1E9D1C6A0020D65A /* libnanovg.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D6C3F72D1E9D1C6A0020D65A /* libnanovg.a */; };
+		D6E246E11F17067C0004F947 /* window3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D6E246DF1F17067C0004F947 /* window3.cpp */; };
 		D6F1F2D51F0F7DFB00A61981 /* temp_test.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D6F1F2D31F0F7DFB00A61981 /* temp_test.cpp */; };
 		D6F1F2D81F13568200A61981 /* text_test.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D6F1F2D61F13568200A61981 /* text_test.cpp */; };
 /* End PBXBuildFile section */
@@ -55,6 +56,8 @@
 		D6C3F6EF1E9A0D650020D65A /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
 		D6C3F72B1E9D1C610020D65A /* libglfw3.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libglfw3.a; path = ../../ext/glfw/lib/macos/libglfw3.a; sourceTree = "<group>"; };
 		D6C3F72D1E9D1C6A0020D65A /* libnanovg.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libnanovg.a; path = ../../ext/nanovg/lib/macos/libnanovg.a; sourceTree = "<group>"; };
+		D6E246DF1F17067C0004F947 /* window3.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = window3.cpp; sourceTree = "<group>"; };
+		D6E246E01F17067C0004F947 /* window3.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = window3.h; sourceTree = "<group>"; };
 		D6F1F2D31F0F7DFB00A61981 /* temp_test.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = temp_test.cpp; sourceTree = "<group>"; };
 		D6F1F2D41F0F7DFB00A61981 /* temp_test.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = temp_test.h; sourceTree = "<group>"; };
 		D6F1F2D61F13568200A61981 /* text_test.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = text_test.cpp; sourceTree = "<group>"; };
@@ -108,6 +111,8 @@
 				D639A05B1F0EA8A10059B6BA /* window1.h */,
 				D639A0501F0E7F8B0059B6BA /* window2.cpp */,
 				D639A0511F0E7F8B0059B6BA /* window2.h */,
+				D6E246DF1F17067C0004F947 /* window3.cpp */,
+				D6E246E01F17067C0004F947 /* window3.h */,
 				D6F1F2D31F0F7DFB00A61981 /* temp_test.cpp */,
 				D6F1F2D41F0F7DFB00A61981 /* temp_test.h */,
 				D6F1F2D61F13568200A61981 /* text_test.cpp */,
@@ -192,6 +197,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D639A0471F0D57BE0059B6BA /* example1_app.cpp in Sources */,
+				D6E246E11F17067C0004F947 /* window3.cpp in Sources */,
 				D639A05C1F0EA8A10059B6BA /* window1.cpp in Sources */,
 				D6F1F2D81F13568200A61981 /* text_test.cpp in Sources */,
 				D6F1F2D51F0F7DFB00A61981 /* temp_test.cpp in Sources */,

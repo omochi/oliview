@@ -42,11 +42,12 @@ namespace oliview {
         glfwSetFramebufferSizeCallback(gw, &Window::FramebufferSizeHandler);
         glfwSetMouseButtonCallback(gw, &Window::MouseButtonHandler);
         glfwSetCursorPosCallback(gw, &Window::CursorPosHandler);
+        glfwSetKeyCallback(gw, &Window::KeyHandler);
         glfwSetCharCallback(gw, &Window::CharHandler);
         
         MakeContextCurrent();
         
-        root_view_ = OLIVIEW_INIT(View, app);
+        root_view_ = OLIVIEW_INIT(WindowRootView, app);
         root_view_->_SetWindow(shared_from_this());
         root_view_->set_background_color(Color(1, 1, 1, 1));
         
@@ -82,6 +83,10 @@ namespace oliview {
         glfw_window_ = nullptr;
     }
     
+    Ptr<View> Window::root_view() const {
+        return root_view_;
+    }
+    
     void Window::MakeContextCurrent() {
         glfwMakeContextCurrent(glfw_window_);
     }
@@ -90,15 +95,15 @@ namespace oliview {
         return true;
     }
     
-    void Window::RefreshLayout() {
-        if (nvg_context_) {
-            Layout(nvg_context_);
-        } else {
-            NVGcontext * ctx = BeginNVG();
-            Layout(ctx);
-            CancelNVG(ctx);
-        }
-    }
+//    void Window::RefreshLayout() {
+//        if (nvg_context_) {
+//            Layout(nvg_context_);
+//        } else {
+//            NVGcontext * ctx = BeginNVG();
+//            Layout(ctx);
+//            CancelNVG(ctx);
+//        }
+//    }
     
     void Window::FocusNext() {
         Ptr<View> focus = focused_view();
@@ -175,18 +180,37 @@ namespace oliview {
                 }
             }
         }
-        
-        RefreshLayout();
+    }
+    
+    void Window::HandleKeyEvent(const KeyEvent & event) {
+        Ptr<View> target = focused_view();
+        if (!target) {
+            target = root_view_;
+        }
+        bool consumed = false;
+        while (target) {
+            consumed = target->OnKeyEvent(event);
+            if (consumed) {
+                return;
+            }
+            target = target->parent();
+        }
     }
 
+    void Window::OnBeginDraw(NVGcontext * ctx) {
+        RHETORIC_UNUSED(ctx);
+    }
+    
+    void Window::OnEndDraw(NVGcontext * ctx) {
+        RHETORIC_UNUSED(ctx);
+    }
+    
     void Window::_Update() {
         NVGcontext * ctx = BeginNVG();
         Layout(ctx);
         Draw(ctx);
         EndNVG(ctx);
         glfwSwapBuffers(glfw_window_);
-        
-        RefreshLayout();
     }
     
     void Window::_UpdateAnimation(float delta_time) {
@@ -289,6 +313,8 @@ namespace oliview {
             return;
         }
         
+        OnBeginDraw(ctx);
+        
         View::DrawInfo draw_info;
         draw_info.parent_clip_frame = Rect(Vector2(0, 0), window_size_);
         root_view_->_PrepareToDraw(draw_info);
@@ -314,6 +340,8 @@ namespace oliview {
             if (!view) { continue; }
             view->_InvokeDraw(ctx, draw.shadow);
         }
+        
+        OnEndDraw(ctx);
     }
     
     void Window::set_window_size(const Size & value) {
@@ -380,9 +408,27 @@ namespace oliview {
         thiz->HandleMouseEvent(event);
     }
     
+    void Window::KeyHandler(GLFWwindow * window, int key, int scancode, int action, int modifier) {
+        auto thiz = (Window *)glfwGetWindowUserPointer(window);
+        
+        KeyEvent event;
+        if (action == GLFW_PRESS) {
+            event.set_type(KeyEventType::Down);
+        } else if (action == GLFW_RELEASE) {
+            event.set_type(KeyEventType::Up);
+        } else if (action == GLFW_REPEAT) {
+            event.set_type(KeyEventType::Repeat);
+        }
+        event.set_key(key);
+        event.set_scancode(scancode);
+        event.set_modifier(modifier);
+        
+        thiz->HandleKeyEvent(event);
+    }
+    
     void Window::CharHandler(GLFWwindow * window, unsigned int code) {
         RHETORIC_UNUSED(window);
         // TODO; test
-        Print(Format("0x%04x", code));
+        Print(Format("char = 0x%04x", code));
     }
 }

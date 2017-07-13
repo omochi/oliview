@@ -3,6 +3,7 @@
 #include "./dependency.h"
 
 #include "./color.h"
+#include "./key_event.h"
 #include "./layouter.h"
 #include "./matrix3x3.h"
 #include "./measure_query.h"
@@ -49,6 +50,10 @@ namespace oliview {
         void RemoveChild(const Ptr<View> & child);
         void RemoveChildAt(size_t index);
         void RemoveFromParent();
+        
+        size_t GetIndexOfChild(const Ptr<const View> & child) const;
+        Ptr<View> GetNextSibling() const;
+        Ptr<View> GetPrevSibling() const;
 
         RHETORIC_GETTER_WEAK(Ptr<Window>, window)        
 
@@ -101,6 +106,8 @@ namespace oliview {
         virtual void OnMouseMoveEvent(const MouseEvent & event);
         virtual void OnMouseUpEvent(const MouseEvent & event);
         virtual void OnMouseCancelEvent();
+        
+        virtual bool OnKeyEvent(const KeyEvent & event);
         
         virtual void OnUpdateAnimation(float delta_time);
         

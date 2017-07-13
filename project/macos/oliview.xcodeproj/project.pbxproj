@@ -27,6 +27,10 @@
 		D6C3F74B1E9D29F70020D65A /* stb_truetype.h in Headers */ = {isa = PBXBuildFile; fileRef = D6C3F7421E9D29F70020D65A /* stb_truetype.h */; };
 		D6D33E621F13C20C00A12F92 /* text_line_reader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D6D33E601F13C20C00A12F92 /* text_line_reader.cpp */; };
 		D6D33E631F13C20C00A12F92 /* text_line_reader.h in Headers */ = {isa = PBXBuildFile; fileRef = D6D33E611F13C20C00A12F92 /* text_line_reader.h */; };
+		D6E246E41F1726990004F947 /* key_event.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D6E246E21F1726990004F947 /* key_event.cpp */; };
+		D6E246E51F1726990004F947 /* key_event.h in Headers */ = {isa = PBXBuildFile; fileRef = D6E246E31F1726990004F947 /* key_event.h */; };
+		D6E246E81F172F920004F947 /* window_root_view.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D6E246E61F172F920004F947 /* window_root_view.cpp */; };
+		D6E246E91F172F920004F947 /* window_root_view.h in Headers */ = {isa = PBXBuildFile; fileRef = D6E246E71F172F920004F947 /* window_root_view.h */; };
 		D6F1F2651F0F4D9400A61981 /* text.h in Headers */ = {isa = PBXBuildFile; fileRef = D6F1F2631F0F4D9400A61981 /* text.h */; };
 		D6F1F26A1F0F646D00A61981 /* utf8.h in Headers */ = {isa = PBXBuildFile; fileRef = D6F1F2681F0F646D00A61981 /* utf8.h */; };
 		D6F1F29F1F0F7D9E00A61981 /* application.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D6F1F26B1F0F7D9E00A61981 /* application.cpp */; };
@@ -104,6 +108,10 @@
 		D6C3F7421E9D29F70020D65A /* stb_truetype.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stb_truetype.h; sourceTree = "<group>"; };
 		D6D33E601F13C20C00A12F92 /* text_line_reader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = text_line_reader.cpp; sourceTree = "<group>"; };
 		D6D33E611F13C20C00A12F92 /* text_line_reader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = text_line_reader.h; sourceTree = "<group>"; };
+		D6E246E21F1726990004F947 /* key_event.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = key_event.cpp; sourceTree = "<group>"; };
+		D6E246E31F1726990004F947 /* key_event.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = key_event.h; sourceTree = "<group>"; };
+		D6E246E61F172F920004F947 /* window_root_view.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = window_root_view.cpp; sourceTree = "<group>"; };
+		D6E246E71F172F920004F947 /* window_root_view.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = window_root_view.h; sourceTree = "<group>"; };
 		D6F1F2631F0F4D9400A61981 /* text.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = text.h; sourceTree = "<group>"; };
 		D6F1F2681F0F646D00A61981 /* utf8.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = utf8.h; sourceTree = "<group>"; };
 		D6F1F26B1F0F7D9E00A61981 /* application.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = application.cpp; sourceTree = "<group>"; };
@@ -217,15 +225,17 @@
 				D6F1F26D1F0F7D9E00A61981 /* color.cpp */,
 				D6F1F26E1F0F7D9E00A61981 /* color.h */,
 				D6F1F26F1F0F7D9E00A61981 /* dependency.h */,
-				D6F1F2701F0F7D9E00A61981 /* font_manager.cpp */,
-				D6F1F2711F0F7D9E00A61981 /* font_manager.h */,
 				D6F1F2721F0F7D9E00A61981 /* font.cpp */,
 				D6F1F2731F0F7D9E00A61981 /* font.h */,
+				D6F1F2701F0F7D9E00A61981 /* font_manager.cpp */,
+				D6F1F2711F0F7D9E00A61981 /* font_manager.h */,
 				D6F1F2741F0F7D9E00A61981 /* gl_assert.cpp */,
 				D6F1F2751F0F7D9E00A61981 /* gl_assert.h */,
 				D6F1F2761F0F7D9E00A61981 /* grid_layouter.cpp */,
 				D6F1F2771F0F7D9E00A61981 /* grid_layouter.h */,
 				D6F1F2781F0F7D9E00A61981 /* init_macro.h */,
+				D6E246E21F1726990004F947 /* key_event.cpp */,
+				D6E246E31F1726990004F947 /* key_event.h */,
 				D6F1F2791F0F7D9E00A61981 /* label.cpp */,
 				D6F1F27A1F0F7D9E00A61981 /* label.h */,
 				D6F1F27B1F0F7D9E00A61981 /* layouter.cpp */,
@@ -271,6 +281,8 @@
 				D6F1F29C1F0F7D9E00A61981 /* view.h */,
 				D6F1F29D1F0F7D9E00A61981 /* window.cpp */,
 				D6F1F29E1F0F7D9E00A61981 /* window.h */,
+				D6E246E61F172F920004F947 /* window_root_view.cpp */,
+				D6E246E71F172F920004F947 /* window_root_view.h */,
 			);
 			path = oliview;
 			sourceTree = "<group>";
@@ -346,6 +358,7 @@
 				D6D33E631F13C20C00A12F92 /* text_line_reader.h in Headers */,
 				D6F1F2A91F0F7D9E00A61981 /* gl_assert.h in Headers */,
 				D6F1F2651F0F4D9400A61981 /* text.h in Headers */,
+				D6E246E51F1726990004F947 /* key_event.h in Headers */,
 				D6F1F26A1F0F646D00A61981 /* utf8.h in Headers */,
 				D6F1F2B91F0F7D9E00A61981 /* nanovg_util.h in Headers */,
 				D6F1F2A51F0F7D9E00A61981 /* font_manager.h in Headers */,
@@ -354,6 +367,7 @@
 				D639A0601F0FCEE30059B6BA /* string_slice.h in Headers */,
 				D6F1F2C41F0F7D9E00A61981 /* text_draw_layouter.h in Headers */,
 				D6F1F2BA1F0F7D9E00A61981 /* oliview.h in Headers */,
+				D6E246E91F172F920004F947 /* window_root_view.h in Headers */,
 				D6F1F2BC1F0F7D9E00A61981 /* rect.h in Headers */,
 				D6860C3A1F14C32E00ED2230 /* mouse_event.h in Headers */,
 				D6F1F2D01F0F7D9E00A61981 /* view.h in Headers */,
@@ -462,6 +476,7 @@
 				D6F1F2AA1F0F7D9E00A61981 /* grid_layouter.cpp in Sources */,
 				D6F1F29F1F0F7D9E00A61981 /* application.cpp in Sources */,
 				D639A05F1F0FCEE30059B6BA /* string_slice.cpp in Sources */,
+				D6E246E41F1726990004F947 /* key_event.cpp in Sources */,
 				D6860C391F14C32E00ED2230 /* mouse_event.cpp in Sources */,
 				D6F1F2B51F0F7D9E00A61981 /* measure_query.cpp in Sources */,
 				D6F1F2A61F0F7D9E00A61981 /* font.cpp in Sources */,
@@ -469,6 +484,7 @@
 				D6F1F2CB1F0F7D9E00A61981 /* vector2.cpp in Sources */,
 				D6F1F2C51F0F7D9E00A61981 /* text.cpp in Sources */,
 				D6F1F2BD1F0F7D9E00A61981 /* size.cpp in Sources */,
+				D6E246E81F172F920004F947 /* window_root_view.cpp in Sources */,
 				D6D33E621F13C20C00A12F92 /* text_line_reader.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

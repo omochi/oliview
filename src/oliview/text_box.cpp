@@ -73,6 +73,8 @@ namespace oliview {
     }
     
     void TextBox::DrawContent(NVGcontext * ctx) {
+        RHETORIC_ASSERT(text_draw_info_ != nullptr);
+        
         NVGSetFillColor(ctx, font_color());
         
         text_layouter_->Draw(ctx, text_, text_draw_info_);
@@ -94,24 +96,22 @@ namespace oliview {
     }
     
     void TextBox::OnMouseDownEvent(const MouseEvent & event) {
-        Print(Format("down %f, %f", event.pos().x(), event.pos().y()));
-        
-        RHETORIC_ASSERT(text_draw_info_ != nullptr);
+        if (!text_draw_info_) {
+            return;
+        }
         
         auto position_index = text_draw_info_->GetIndexFor(event.pos());
-        Print(Format("text index: %d, %d", (int)position_index.line_index, (int)position_index.char_index));
-        
         auto text_index = text_draw_info_->GetTextIndexFor(position_index, text_);
         
         set_cursor_index(text_index);
     }
     
     void TextBox::OnMouseMoveEvent(const MouseEvent & event) {
-        Print(Format("move %f, %f", event.pos().x(), event.pos().y()));
+        RHETORIC_UNUSED(event);
     }
     
     void TextBox::OnMouseUpEvent(const MouseEvent & event) {
-        Print(Format("up %f, %f", event.pos().x(), event.pos().y()));
+        RHETORIC_UNUSED(event);
     }
     
     void TextBox::OnMouseCancelEvent() {

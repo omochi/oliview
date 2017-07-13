@@ -5,10 +5,11 @@
 namespace oliview {
     class Color {
     public:
-        Color(float red = 0.0f,
-              float green = 0.0f,
-              float blue = 0.0f,
-              float alpha = 1.0f);
+        Color();
+        Color(float red,
+              float green,
+              float blue,
+              float alpha);
         
         RHETORIC_ACCESSOR_TRIVIAL(float, red)
         RHETORIC_ACCESSOR_TRIVIAL(float, green)
