@@ -60,7 +60,8 @@ namespace oliview {
             size_t line_index;
             size_t char_index;
             
-            CharPositionIndex(size_t line_index = 0, size_t char_index = 0);
+            CharPositionIndex();
+            CharPositionIndex(size_t line_index, size_t char_index);
             
             bool operator==(const CharPositionIndex & other) const;
             RHETORIC_EQUATABLE_DEFAULT(CharPositionIndex)
@@ -76,9 +77,16 @@ namespace oliview {
         
         CharPositionIndex GetIndexFor(const Text::Index & index) const;
         CharPositionIndex GetIndexFor(const Vector2 & position) const;
-
-        //  TODO: under/over
-        CharPositionIndex GetLineIndexFor(const Vector2 & position) const;
+        
+        struct GetLineIndexResult {
+            Optional<size_t> index;
+            bool under;
+            bool over;
+            GetLineIndexResult();
+        };
+        GetLineIndexResult GetLineIndexForY(float y) const;
+        
+        size_t GetCharIndexForX(size_t line_index, float x) const;
         
         Text::Index GetTextIndexFor(const CharPositionIndex & position_index,
                                     const Ptr<Text> & text) const;

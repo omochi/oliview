@@ -11,6 +11,7 @@ namespace oliview {
         text_layouter_ = New<TextDrawLayouter>();
         text_ = New<Text>();
         cursor_index_ = text_->begin_index();
+        cursor_x_ = 0;
         cursor_blink_time_ = 0.0f;
         
         auto fm = application->font_manager();
@@ -61,25 +62,21 @@ namespace oliview {
 
     bool TextBox::MoveCursorLeft() {
         auto index = text_->BackIndex(cursor_index_);
-        if (index.line() != cursor_index_.line()) {
-            return false;
-        }
         if (index == cursor_index_) {
             return false;
         }
         set_cursor_index(index);
+        cursor_x_ = GetCursorRect().origin().x();
         return true;
     }
     
     bool TextBox::MoveCursorRight() {
         auto index = text_->AdvanceIndex(cursor_index_);
-        if (index.line() != cursor_index_.line()) {
-            return false;
-        }
         if (index == cursor_index_) {
             return false;
         }
         set_cursor_index(index);
+        cursor_x_ = GetCursorRect().origin().x();
         return true;
     }
 
@@ -88,10 +85,32 @@ namespace oliview {
             return false;
         }
         
-        auto rect = text_layouter_->GetCursorRect(cursor_index_, text_draw_info_);
-        Print(Format("%f, %f, %f, %f", rect.origin().x(), rect.origin().y(),
-                     rect.size().width(), rect.size().height()));
+        auto char_position = text_draw_info_->GetIndexFor(cursor_index_);
+        if (char_position.line_index == 0) {
+            return false;
+        }
+        auto new_index = GetTextIndexForLineIndexX(char_position.line_index - 1, cursor_x_);
+        if (cursor_index_ == new_index) {
+            return false;
+        }
+        set_cursor_index(new_index);
+        return true;
+    }
+    
+    bool TextBox::MoveCursorDown() {
+        if (!text_draw_info_) {
+            return false;
+        }
         
+        auto char_position = text_draw_info_->GetIndexFor(cursor_index_);
+        if (char_position.line_index + 1 == text_draw_info_->line_num()) {
+            return false;
+        }
+        auto new_index = GetTextIndexForLineIndexX(char_position.line_index + 1, cursor_x_);
+        if (cursor_index_ == new_index) {
+            return false;
+        }
+        set_cursor_index(new_index);
         return true;
     }
     
@@ -144,6 +163,7 @@ namespace oliview {
         auto text_index = text_draw_info_->GetTextIndexFor(position_index, text_);
         
         set_cursor_index(text_index);
+        cursor_x_ = GetCursorRect().origin().x();
         
         Focus();
     }
@@ -169,6 +189,8 @@ namespace oliview {
                     return MoveCursorLeft();
                 } else if (event.key() == GLFW_KEY_UP) {
                     return MoveCursorUp();
+                } else if (event.key() == GLFW_KEY_DOWN) {
+                    return MoveCursorDown();
                 }
                 
                 break;
@@ -185,5 +207,18 @@ namespace oliview {
         if (cursor_blink_time_ > 1.0f) {
             cursor_blink_time_ = 0.0f;
         }
+    }
+    
+    Text::Index TextBox::GetTextIndexForLineIndexX(size_t line_index, float x) {
+        RHETORIC_ASSERT(text_draw_info_ != nullptr);
+        
+        size_t char_index = text_draw_info_->GetCharIndexForX(line_index, x);
+        TextDrawInfo::CharPositionIndex char_position_index(line_index, char_index);
+        return text_draw_info_->GetTextIndexFor(char_position_index, text_);
+    }
+    
+    Rect TextBox::GetCursorRect() const {
+        RHETORIC_ASSERT(text_draw_info_ != nullptr);
+        return text_layouter_->GetCursorRect(cursor_index(), text_draw_info_);
     }
 }

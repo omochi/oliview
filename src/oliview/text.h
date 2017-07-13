@@ -75,14 +75,10 @@ namespace oliview {
                     const Index & end);
     private:
         struct StringAccess {
-            Ptr<std::string> string;
-            size_t offset;
-            size_t length;
+            StringSlice string;
             Optional<Utf8ByteKind> kind;
             
-            StringAccess(const Ptr<std::string> & string,
-                         size_t offset,
-                         size_t length,
+            StringAccess(const StringSlice & string,
                          Optional<Utf8ByteKind> kind);
         };
         

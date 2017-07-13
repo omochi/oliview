@@ -29,6 +29,7 @@ namespace oliview {
         bool MoveCursorLeft();
         bool MoveCursorRight();
         bool MoveCursorUp();
+        bool MoveCursorDown();
         
         virtual Size MeasureContent(NVGcontext * ctx, const MeasureQuery & query) const override;
         virtual void LayoutContent(NVGcontext * ctx) override;
@@ -45,6 +46,9 @@ namespace oliview {
         
         virtual void OnUpdateAnimation(float delta_time) override;
     private:
+        Text::Index GetTextIndexForLineIndexX(size_t line_index, float x);
+        Rect GetCursorRect() const;
+        
         Ptr<Text> text_;
         Color font_color_;
         
@@ -52,6 +56,7 @@ namespace oliview {
         Ptr<TextDrawInfo> text_draw_info_;
         
         Text::Index cursor_index_;
+        float cursor_x_;
         float cursor_blink_time_;
     };
 }

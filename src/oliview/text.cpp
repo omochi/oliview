@@ -116,12 +116,13 @@ namespace oliview {
     
     StringSlice Text::GetCharAt(const Index & index) const {
         auto acc = AccessCharAt(index);
-        return StringSlice(acc.string, acc.offset, acc.length);
+        return acc.string;
     }
     
     void Text::SetCharAt(const Index & index, const std::string & chr) {
         auto acc = AccessCharAt(index);
-        acc.string->replace(acc.offset, acc.length, chr);
+        auto str = acc.string;
+        str.base()->replace(str.offset(), str.length(), chr);
     }
     
     Text::Index Text::begin_index() const {
@@ -140,11 +141,16 @@ namespace oliview {
         }
         
         auto acc = AccessCharAt(index);
-        RHETORIC_ASSERT(acc.length > 0);
+        RHETORIC_ASSERT(acc.string.length() > 0);
         RHETORIC_ASSERT(acc.kind.presented());
         
-        index = Index(index.line(), acc.offset + acc.length);
-        index = MayLineWrapIndex(index);
+        auto chr = acc.string.AsString();
+        if (ArrayFindIndexEq(newline_chars(), chr)) {
+            index = Index(index.line() + 1, 0);
+        } else {
+            index = Index(index.line(), acc.string.offset() + acc.string.length());
+            index = MayLineWrapIndex(index);
+        }
         
         return index;
     }
@@ -158,13 +164,29 @@ namespace oliview {
                 return index;
             }
             if (index.byte() == 0) {
-                index = Index(index.line() - 1, GetLineAt(index.line() - 1)->size() - 1);
+                size_t line_index = index.line() - 1;
+                auto line = GetLineAt(line_index);
+                RHETORIC_ASSERT(line->size() > 0);
+                size_t char_index = line->size() - 1;
+                index = Index(line_index, char_index);
+                while (true) {
+                    if (char_index == 0) {
+                        break;
+                    }
+                    Index back_index = Index(line_index, char_index - 1);
+                    auto acc = AccessCharAt(back_index);
+                    if (ArrayFindIndexEq(newline_chars(), acc.string.AsString())) {
+                        index = back_index;
+                        continue;
+                    }
+                    break;
+                }
             } else {
                 index = Index(index.line(), index.byte() - 1);
             }
             
             auto acc = AccessCharAt(index);
-            RHETORIC_ASSERT(acc.length > 0);
+            RHETORIC_ASSERT(acc.string.length() > 0);
             RHETORIC_ASSERT(acc.kind.presented());
             if (acc.kind->tag() == Utf8ByteKind::HeadTag) {
                 return index;
@@ -255,13 +277,9 @@ namespace oliview {
                             end_tail_str);
     }
     
-    Text::StringAccess::StringAccess(const Ptr<std::string> & string,
-                                     size_t offset,
-                                     size_t length,
+    Text::StringAccess::StringAccess(const StringSlice & string,
                                      Optional<Utf8ByteKind> kind):
     string(string),
-    offset(offset),
-    length(length),
     kind(kind)
     {}
     
@@ -283,7 +301,7 @@ namespace oliview {
         Ptr<std::string> line = lines_[index.line()];
 
         if (index.byte() == line->size()) {
-            return StringAccess(line, index.byte(), 0, None());
+            return StringAccess(StringSlice(line, index.byte(), 0), None());
         }
         
         char c = (*line)[index.byte()];
@@ -291,10 +309,10 @@ namespace oliview {
         switch (kind.tag()) {
             case Utf8ByteKind::HeadTag: {
                 size_t end = std::min(index.byte() + kind.AsHead().length, line->size());
-                return StringAccess(line, index.byte(), end - index.byte(), Some(kind));
+                return StringAccess(StringSlice(line, index.byte(), end - index.byte()), Some(kind));
             }
             case Utf8ByteKind::BodyTag: {
-                return StringAccess(line, index.byte(), 1, Some(kind));
+                return StringAccess(StringSlice(line, index.byte(), 1), Some(kind));
             }
         }
         RHETORIC_FATAL("never");

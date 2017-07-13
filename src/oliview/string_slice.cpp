@@ -4,11 +4,11 @@ namespace oliview {
     StringSlice::StringSlice(): StringSlice(nullptr, 0, 0)
     {}
     
-    StringSlice::StringSlice(const Ptr<const std::string> & base):
+    StringSlice::StringSlice(const Ptr<std::string> & base):
     StringSlice(base, 0, base->size())
     {}
     
-    StringSlice::StringSlice(const Ptr<const std::string> & base,
+    StringSlice::StringSlice(const Ptr<std::string> & base,
                              size_t offset,
                              size_t length):
     base_(base),

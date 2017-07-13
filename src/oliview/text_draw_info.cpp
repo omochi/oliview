@@ -53,6 +53,9 @@ namespace oliview {
         return char_positions_.back()->draw_right();
     }
     
+    TextDrawInfo::CharPositionIndex::CharPositionIndex():CharPositionIndex(0, 0)
+    {}
+    
     TextDrawInfo::CharPositionIndex::CharPositionIndex(size_t line_index, size_t char_index):
     line_index(line_index),
     char_index(char_index)
@@ -76,7 +79,12 @@ namespace oliview {
     }
     
     TextDrawInfo::CharPositionIndex TextDrawInfo::end_index() const {
-        return CharPositionIndex(lines_.size(), 0);
+        if (lines_.size() == 0) {
+            return CharPositionIndex(0, 0);
+        }
+        
+        auto line_index = line_num() - 1;
+        return CharPositionIndex(line_index, GetLineAt(line_index)->char_position_num());
     }
     
     TextDrawInfo::CharPositionIndex
@@ -109,59 +117,66 @@ namespace oliview {
     }
     
     TextDrawInfo::CharPositionIndex
-    TextDrawInfo::GetIndexFor(const Vector2 & position_) const
+    TextDrawInfo::GetIndexFor(const Vector2 & position) const
     {
-        auto position = position_ - draw_offset();
-        
-        if (lines_.size() == 0) {
+        auto line_ret = GetLineIndexForY(position.y());
+        if (line_ret.under) {
+            return begin_index();
+        }
+        if (line_ret.over) {
             return end_index();
         }
         
-        CharPositionIndex ret;
+        auto line_index = line_ret.index.value();
+        auto char_index = GetCharIndexForX(line_index, position.x());
         
+        return CharPositionIndex(line_index, char_index);
+    }
+    
+    TextDrawInfo::GetLineIndexResult::GetLineIndexResult():
+    under(false),
+    over(false)
+    {}
+    
+    TextDrawInfo::GetLineIndexResult TextDrawInfo::GetLineIndexForY(float y) const {
+        GetLineIndexResult ret;
+        
+        y = y - draw_offset().y();
+     
         for (size_t line_index = 0; line_index < lines_.size(); line_index++) {
-            if (line_index + 1 == lines_.size()) {
-                if (position.y() < frame().end().y()) {
-                    ret.line_index = line_index;
-                    break;
-                }
-                
-                {
-                    ret.line_index = line_index;
-                    auto line = lines_[line_index];
-                    ret.char_index = line->char_position_num();
+            if (line_index == 0) {
+                if (y < GetLineTop(lines_[line_index]->draw_y())) {
+                    ret.under = true;
                     return ret;
                 }
             }
             
-            if (position.y() < GetLineTop(lines_[line_index + 1]->draw_y()))
-            {
-                ret.line_index = line_index;
-                break;
+            if (y < GetLineBottom(lines_[line_index]->draw_y())) {
+                ret.index = Some(line_index);
+                return ret;
             }
         }
         
-        auto line = lines_[ret.line_index];
-        for (size_t char_index = 0; char_index < line->char_position_num(); char_index++) {
-            
-            auto char_position = line->GetCharPositionAt(char_index);
-            float char_center_x = (char_position->draw_left() + char_position->draw_right()) / 2.0f;
-            if (position.x() < char_center_x) {
-                ret.char_index = char_index;
-                break;
-            }
-            
-            if (char_index + 1 == line->char_position_num()) {
-                ret.char_index = line->char_position_num();
-                break;
-            }
-        }
-        
+        ret.over = true;
         return ret;
     }
     
-    size_t TextDrawInfo::GetLineIndexFor(const Vector2 & position) const {
+    size_t TextDrawInfo::GetCharIndexForX(size_t line_index, float x) const {
+        GetLineIndexResult ret;
         
+        x = x - draw_offset().x();
+        
+        auto line = lines_[line_index];
+        for (size_t char_index = 0; char_index < line->char_position_num(); char_index++) {
+            auto char_position = line->GetCharPositionAt(char_index);
+            
+            float char_center_x = (char_position->draw_left() + char_position->draw_right()) / 2.0f;
+            if (x < char_center_x) {
+                return char_index;
+            }
+        }
+        
+        return line->char_position_num();
     }
     
     Text::Index TextDrawInfo::GetTextIndexFor(const CharPositionIndex & position_index,
@@ -187,8 +202,8 @@ namespace oliview {
     }
     
     Vector2 TextDrawInfo::GetDrawPointFor(const CharPositionIndex & position_index) const {
-        if (position_index == end_index()) {
-            return Vector2(0.0f, frame().end().y());
+        if (line_num() == 0) {
+            return Vector2(0, 0);
         }
         
         auto line_entry = GetLineAt(position_index.line_index);
@@ -207,7 +222,6 @@ namespace oliview {
     }
     
     float TextDrawInfo::GetLineTop(float y) const {
-//        return y - font_ascent() - line_gap() / 2.0f;
         return y - font_ascent();
     }
     float TextDrawInfo::GetLineBottom(float y) const {
