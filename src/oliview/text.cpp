@@ -149,6 +149,29 @@ namespace oliview {
         return index;
     }
     
+    Text::Index Text::BackIndex(const Index & index_) const {
+        Index index = index_;
+        index = MayLineWrapIndex(index);
+        
+        while (true) {
+            if (index == begin_index()) {
+                return index;
+            }
+            if (index.byte() == 0) {
+                index = Index(index.line() - 1, GetLineAt(index.line() - 1)->size() - 1);
+            } else {
+                index = Index(index.line(), index.byte() - 1);
+            }
+            
+            auto acc = AccessCharAt(index);
+            RHETORIC_ASSERT(acc.length > 0);
+            RHETORIC_ASSERT(acc.kind.presented());
+            if (acc.kind->tag() == Utf8ByteKind::HeadTag) {
+                return index;
+            }
+        }
+    }
+    
     bool Text::CheckIndex(const Index & index) const {
         if (!(index.line() < line_num())) {
             return false;

@@ -85,20 +85,33 @@ namespace oliview {
                                       const Text::Index & cursor_index,
                                       const Ptr<TextDrawInfo> & draw_info)
     {
-        auto position_index = draw_info->GetIndexFor(cursor_index);
-        auto pos = draw_info->GetDrawPointFor(position_index);
+        auto rect = GetCursorRect(cursor_index, draw_info);
+        DrawCursor(ctx, rect, draw_info);
+    }
+    
+    void TextDrawLayouter::DrawCursor(NVGcontext * ctx,
+                                      const Rect & rect_,
+                                      const Ptr<TextDrawInfo> & draw_info)
+    {
+        auto rect = rect_;
         
-        NVGSetFont(ctx, font());
-        nvgFontSize(ctx, font_size());
+        rect.set_origin(rect.origin() + draw_info->draw_offset());
+        
+        nvgBeginPath(ctx);
+        NVGAddRectPath(ctx, rect);
+        nvgFill(ctx);
+    }
+    
+    Rect TextDrawLayouter::GetCursorRect(const Text::Index & index,
+                                         const Ptr<TextDrawInfo> & draw_info)
+    {
+        auto position_index = draw_info->GetIndexFor(index);
+        auto pos = draw_info->GetDrawPointFor(position_index);
         
         float top = draw_info->GetLineTop(pos.y());
         float bottom = draw_info->GetLineBottom(pos.y());
-        
-        nvgBeginPath(ctx);
-        NVGAddRectPath(ctx, Rect(draw_info->draw_offset() +
-                                 Vector2(pos.x(), top),
-                                 Size(1.0f, bottom - top)));
-        nvgFill(ctx);
+
+        return Rect(Vector2(pos.x(), top), Size(1.0f, bottom - top));
     }
     
     Ptr<TextDrawInfo>

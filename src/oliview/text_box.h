@@ -26,6 +26,10 @@ namespace oliview {
         RHETORIC_GETTER(Text::Index, cursor_index)
         void set_cursor_index(const Text::Index & value);
         
+        bool MoveCursorLeft();
+        bool MoveCursorRight();
+        bool MoveCursorUp();
+        
         virtual Size MeasureContent(NVGcontext * ctx, const MeasureQuery & query) const override;
         virtual void LayoutContent(NVGcontext * ctx) override;
         virtual void DrawContent(NVGcontext * ctx) override;

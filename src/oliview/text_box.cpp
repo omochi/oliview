@@ -59,6 +59,42 @@ namespace oliview {
         cursor_blink_time_ = 0.0f;
     }
 
+    bool TextBox::MoveCursorLeft() {
+        auto index = text_->BackIndex(cursor_index_);
+        if (index.line() != cursor_index_.line()) {
+            return false;
+        }
+        if (index == cursor_index_) {
+            return false;
+        }
+        set_cursor_index(index);
+        return true;
+    }
+    
+    bool TextBox::MoveCursorRight() {
+        auto index = text_->AdvanceIndex(cursor_index_);
+        if (index.line() != cursor_index_.line()) {
+            return false;
+        }
+        if (index == cursor_index_) {
+            return false;
+        }
+        set_cursor_index(index);
+        return true;
+    }
+
+    bool TextBox::MoveCursorUp() {
+        if (!text_draw_info_) {
+            return false;
+        }
+        
+        auto rect = text_layouter_->GetCursorRect(cursor_index_, text_draw_info_);
+        Print(Format("%f, %f, %f, %f", rect.origin().x(), rect.origin().y(),
+                     rect.size().width(), rect.size().height()));
+        
+        return true;
+    }
+    
     Size TextBox::MeasureContent(NVGcontext * ctx, const MeasureQuery & query) const {
         auto layout = text_layouter_->Layout(ctx,
                                              text_,
@@ -81,8 +117,10 @@ namespace oliview {
         
         text_layouter_->Draw(ctx, text_, text_draw_info_);
         
-        if (cursor_blink_time_ <= 0.5f) {
-            text_layouter_->DrawCursor(ctx, cursor_index(), text_draw_info_);
+        if (focused()) {
+            if (cursor_blink_time_ <= 0.5f) {
+                text_layouter_->DrawCursor(ctx, cursor_index(), text_draw_info_);
+            }
         }
     }
     
@@ -106,6 +144,8 @@ namespace oliview {
         auto text_index = text_draw_info_->GetTextIndexFor(position_index, text_);
         
         set_cursor_index(text_index);
+        
+        Focus();
     }
     
     void TextBox::OnMouseMoveEvent(const MouseEvent & event) {
@@ -120,9 +160,23 @@ namespace oliview {
     }
     
     bool TextBox::OnKeyEvent(const KeyEvent & event) {
-        if (event.type() == KeyEventType::Down) {
-            Print(Format("TextBox %d", event.key()));
+        switch (event.type()) {
+            case KeyEventType::Down:
+            case KeyEventType::Repeat: {
+                if (event.key() == GLFW_KEY_RIGHT) {
+                    return MoveCursorRight();
+                } else if (event.key() == GLFW_KEY_LEFT) {
+                    return MoveCursorLeft();
+                } else if (event.key() == GLFW_KEY_UP) {
+                    return MoveCursorUp();
+                }
+                
+                break;
+            }
+            default:
+                break;
         }
+
         return false;
     }
     

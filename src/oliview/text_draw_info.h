@@ -76,6 +76,9 @@ namespace oliview {
         
         CharPositionIndex GetIndexFor(const Text::Index & index) const;
         CharPositionIndex GetIndexFor(const Vector2 & position) const;
+
+        //  TODO: under/over
+        CharPositionIndex GetLineIndexFor(const Vector2 & position) const;
         
         Text::Index GetTextIndexFor(const CharPositionIndex & position_index,
                                     const Ptr<Text> & text) const;

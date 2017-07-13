@@ -160,6 +160,10 @@ namespace oliview {
         return ret;
     }
     
+    size_t TextDrawInfo::GetLineIndexFor(const Vector2 & position) const {
+        
+    }
+    
     Text::Index TextDrawInfo::GetTextIndexFor(const CharPositionIndex & position_index,
                                               const Ptr<Text> & text) const
     {

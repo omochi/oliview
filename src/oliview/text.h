@@ -63,9 +63,10 @@ namespace oliview {
         Index begin_index() const;
         Index end_index() const;
         
-        Index AdvanceIndex(const Index & pos) const;
+        Index AdvanceIndex(const Index & index) const;
+        Index BackIndex(const Index & index) const;
         
-        bool CheckIndex(const Index & pos) const;
+        bool CheckIndex(const Index & index) const;
         
         void Insert(const Index & index,
                     const Ptr<Text> & text,
@@ -87,7 +88,7 @@ namespace oliview {
         
         void FixLastLine();
         
-        StringAccess AccessCharAt(const Index & position) const;
+        StringAccess AccessCharAt(const Index & index) const;
         Index MayLineWrapIndex(const Index & index) const;
         
         std::vector<Ptr<std::string>> lines_;

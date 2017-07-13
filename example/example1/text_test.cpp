@@ -1,5 +1,86 @@
 #include "./text_test.h"
 
+void TextAdvanceTest1() {
+    auto text = New<Text>("迷ったら\n型付け");
+    
+    auto index = text->begin_index();
+    
+    RHETORIC_ASSERT(index == Text::Index(0, 0));
+    RHETORIC_ASSERT(text->GetCharAt(index).AsString() == "迷");
+    index = text->AdvanceIndex(index);
+    
+    RHETORIC_ASSERT(index == Text::Index(0, 3));
+    RHETORIC_ASSERT(text->GetCharAt(index).AsString() == "っ");
+    index = text->AdvanceIndex(index);
+    
+    RHETORIC_ASSERT(index == Text::Index(0, 6));
+    RHETORIC_ASSERT(text->GetCharAt(index).AsString() == "た");
+    index = text->AdvanceIndex(index);
+    
+    RHETORIC_ASSERT(index == Text::Index(0, 9));
+    RHETORIC_ASSERT(text->GetCharAt(index).AsString() == "ら");
+    index = text->AdvanceIndex(index);
+    
+    RHETORIC_ASSERT(index == Text::Index(0, 12));
+    RHETORIC_ASSERT(text->GetCharAt(index).AsString() == "\n");
+    index = text->AdvanceIndex(index);
+    
+    RHETORIC_ASSERT(index == Text::Index(1, 0));
+    RHETORIC_ASSERT(text->GetCharAt(index).AsString() == "型");
+    index = text->AdvanceIndex(index);
+    
+    RHETORIC_ASSERT(index == Text::Index(1, 3));
+    RHETORIC_ASSERT(text->GetCharAt(index).AsString() == "付");
+    index = text->AdvanceIndex(index);
+    
+    RHETORIC_ASSERT(index == Text::Index(1, 6));
+    RHETORIC_ASSERT(text->GetCharAt(index).AsString() == "け");
+    index = text->AdvanceIndex(index);
+    
+    RHETORIC_ASSERT(index == text->end_index());
+}
+
+void TextBackTest1() {
+    auto text = New<Text>("迷ったら\n型付け");
+    
+    auto index = text->end_index();
+    
+    index = text->BackIndex(index);
+    
+    RHETORIC_ASSERT(index == Text::Index(1, 6));
+    RHETORIC_ASSERT(text->GetCharAt(index).AsString() == "け");
+    index = text->BackIndex(index);
+    
+    RHETORIC_ASSERT(index == Text::Index(1, 3));
+    RHETORIC_ASSERT(text->GetCharAt(index).AsString() == "付");
+    index = text->BackIndex(index);
+    
+    RHETORIC_ASSERT(index == Text::Index(1, 0));
+    RHETORIC_ASSERT(text->GetCharAt(index).AsString() == "型");
+    index = text->BackIndex(index);
+    
+    RHETORIC_ASSERT(index == Text::Index(0, 12));
+    RHETORIC_ASSERT(text->GetCharAt(index).AsString() == "\n");
+    index = text->BackIndex(index);
+    
+    RHETORIC_ASSERT(index == Text::Index(0, 9));
+    RHETORIC_ASSERT(text->GetCharAt(index).AsString() == "ら");
+    index = text->BackIndex(index);
+    
+    RHETORIC_ASSERT(index == Text::Index(0, 6));
+    RHETORIC_ASSERT(text->GetCharAt(index).AsString() == "た");
+    index = text->BackIndex(index);
+    
+    RHETORIC_ASSERT(index == Text::Index(0, 3));
+    RHETORIC_ASSERT(text->GetCharAt(index).AsString() == "っ");
+    index = text->BackIndex(index);
+    
+    RHETORIC_ASSERT(index == Text::Index(0, 0));
+    RHETORIC_ASSERT(text->GetCharAt(index).AsString() == "迷");
+    
+    RHETORIC_ASSERT(index == text->begin_index());
+}
+
 void TextInsertTest1() {
     {
         auto t1 = New<Text>();

@@ -25,6 +25,12 @@ namespace oliview {
         void DrawCursor(NVGcontext * ctx,
                         const Text::Index & cursor_index,
                         const Ptr<TextDrawInfo> & draw_info);
+        void DrawCursor(NVGcontext * ctx,
+                        const Rect & rect,
+                        const Ptr<TextDrawInfo> & draw_info);
+        
+        Rect GetCursorRect(const Text::Index & index,
+                           const Ptr<TextDrawInfo> & draw_info);
         
     private:
         Ptr<TextDrawInfo> LayoutLine(NVGcontext * ctx,
@@ -38,9 +44,5 @@ namespace oliview {
         
         Ptr<Font> font_;
         float font_size_;
-//        
-//        float font_ascent_;
-//        float font_descent_;
-//        float line_height_;
     };
 }
