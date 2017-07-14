@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		D60300901EFAE98E006D0A9D /* unicode_util.h in Headers */ = {isa = PBXBuildFile; fileRef = D603008D1EFAE98E006D0A9D /* unicode_util.h */; };
+		D6079AC21F18C41F005316D3 /* application_object.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D6079AC01F18C41F005316D3 /* application_object.cpp */; };
+		D6079AC31F18C41F005316D3 /* application_object.h in Headers */ = {isa = PBXBuildFile; fileRef = D6079AC11F18C41F005316D3 /* application_object.h */; };
 		D639A04B1F0D5FAC0059B6BA /* table_dimension.h in Headers */ = {isa = PBXBuildFile; fileRef = D639A0491F0D5FAC0059B6BA /* table_dimension.h */; };
 		D639A04F1F0E70D20059B6BA /* text_box.h in Headers */ = {isa = PBXBuildFile; fileRef = D639A04D1F0E70D20059B6BA /* text_box.h */; };
 		D639A0601F0FCEE30059B6BA /* string_slice.h in Headers */ = {isa = PBXBuildFile; fileRef = D639A05E1F0FCEE30059B6BA /* string_slice.h */; };
@@ -86,6 +88,8 @@
 
 /* Begin PBXFileReference section */
 		D603008D1EFAE98E006D0A9D /* unicode_util.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = unicode_util.h; sourceTree = "<group>"; };
+		D6079AC01F18C41F005316D3 /* application_object.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = application_object.cpp; sourceTree = "<group>"; };
+		D6079AC11F18C41F005316D3 /* application_object.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = application_object.h; sourceTree = "<group>"; };
 		D639A0491F0D5FAC0059B6BA /* table_dimension.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = table_dimension.h; sourceTree = "<group>"; };
 		D639A04D1F0E70D20059B6BA /* text_box.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = text_box.h; sourceTree = "<group>"; };
 		D639A05E1F0FCEE30059B6BA /* string_slice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = string_slice.h; sourceTree = "<group>"; };
@@ -221,6 +225,8 @@
 			children = (
 				D6F1F26B1F0F7D9E00A61981 /* application.cpp */,
 				D6F1F26C1F0F7D9E00A61981 /* application.h */,
+				D6079AC01F18C41F005316D3 /* application_object.cpp */,
+				D6079AC11F18C41F005316D3 /* application_object.h */,
 				D6F1F26D1F0F7D9E00A61981 /* color.cpp */,
 				D6F1F26E1F0F7D9E00A61981 /* color.h */,
 				D6F1F26F1F0F7D9E00A61981 /* dependency.h */,
@@ -383,6 +389,7 @@
 				D639A04F1F0E70D20059B6BA /* text_box.h in Headers */,
 				D6F1F2C01F0F7D9E00A61981 /* table_dimension.h in Headers */,
 				D6C3F7471E9D29F70020D65A /* nanovg.h in Headers */,
+				D6079AC31F18C41F005316D3 /* application_object.h in Headers */,
 				D6C3F7481E9D29F70020D65A /* nanovg_gl.h in Headers */,
 				D6F1F2BE1F0F7D9E00A61981 /* size.h in Headers */,
 				D6C3F74B1E9D29F70020D65A /* stb_truetype.h in Headers */,
@@ -472,6 +479,7 @@
 				D6FBA9461F18A014004BA8BE /* nanovg_util.cpp in Sources */,
 				D6FBA9471F18A014004BA8BE /* rect.cpp in Sources */,
 				D6FBA9481F18A014004BA8BE /* size.cpp in Sources */,
+				D6079AC21F18C41F005316D3 /* application_object.cpp in Sources */,
 				D6FBA9491F18A014004BA8BE /* table_dimension.cpp in Sources */,
 				D6FBA94A1F18A014004BA8BE /* text.cpp in Sources */,
 				D6FBA94B1F18A014004BA8BE /* text_box.cpp in Sources */,

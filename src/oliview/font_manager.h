@@ -1,13 +1,16 @@
 #pragma once
 
+#include "./application_object.h"
 #include "./font.h"
 
 namespace oliview {
     class Application;
     
-    class FontManager : public std::enable_shared_from_this<FontManager> {
+    class FontManager : public ApplicationObject {
     public:
         virtual ~FontManager();
+        
+        Result<None> SetUp();
         
         Result<Ptr<Font>> Open(const FilePath & path);
         Result<Ptr<Font>> Find(const std::string & name);
@@ -17,10 +20,6 @@ namespace oliview {
         
         static Result<Ptr<FontManager>> Create(const Ptr<Application> & application);
     private:
-        FontManager();
-        Result<None> Init(const Ptr<Application> & application);
-        
-        WeakPtr<Application> application_;
         
         Ptr<Font> default_font_;
         std::vector<FilePath> search_paths_;

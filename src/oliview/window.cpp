@@ -13,7 +13,7 @@ namespace oliview {
     }
 
     void Window::Init(const Ptr<Application> & app) {
-        application_ = app;
+        ApplicationObject::Init(app);
         
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);

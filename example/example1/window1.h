@@ -9,3 +9,7 @@ private:
     
 };
 
+class Window1View : public oliview::View {
+public:
+    
+};

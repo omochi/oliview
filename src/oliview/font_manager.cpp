@@ -5,8 +5,28 @@
 namespace oliview {
     FontManager::~FontManager() {}
     
+    Result<None> FontManager::SetUp() {
+        std::vector<FilePath> paths;
+#if RHETORIC_MACOS
+        paths.push_back(FilePath::home() + FilePath("Library/Fonts"));
+        paths.push_back(FilePath("/Library/Fonts"));
+        paths.push_back(FilePath("/System/Library/Fonts"));
+#endif
+        set_search_paths(paths);
+        
+        std::string default_font_name = "ヒラギノ角ゴシック W3";
+        RHETORIC_TRY_ASSIGN(auto default_font, Find(default_font_name));
+        if (!default_font) {
+            return Failure(GenericError::Create("default font not found: %s",
+                                                default_font_name.c_str()));
+        }
+        set_default_font(default_font);
+        
+        return Success(None());
+    }
+    
     Result<Ptr<Font>> FontManager::Open(const FilePath & path) {
-        auto app = application_.lock();
+        auto app = this->application();
         RHETORIC_ASSERT(app != nullptr);
         
         auto ctx = app->_nvg_context();
@@ -58,35 +78,5 @@ namespace oliview {
         }
         return Success(nullptr);
     }
-    
-    Result<Ptr<FontManager>> FontManager::Create(const Ptr<Application> & application) {
-        auto ret = RHETORIC_NEW(FontManager);
-        RHETORIC_TRY_VOID(ret->Init(application));
-        return Success(ret);
-    }
-    
-    FontManager::FontManager() {}
-    
-    Result<None> FontManager::Init(const Ptr<Application> & application) {
-        application_ = application;
-        
-        std::vector<FilePath> paths;
-#if RHETORIC_MACOS
-        paths.push_back(FilePath::home() + FilePath("Library/Fonts"));
-        paths.push_back(FilePath("/Library/Fonts"));
-        paths.push_back(FilePath("/System/Library/Fonts"));
-#endif
-        set_search_paths(paths);
-        
-        std::string default_font_name = "ヒラギノ角ゴシック W3";
-        RHETORIC_TRY_ASSIGN(auto default_font, Find(default_font_name));
-        if (!default_font) {
-            return Failure(GenericError::Create("default font not found: %s",
-                                                default_font_name.c_str()));
-        }
-        set_default_font(default_font);
-        
-        return Success(None());        
-    }
-
 }
+

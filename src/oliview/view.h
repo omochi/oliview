@@ -2,6 +2,7 @@
 
 #include "./dependency.h"
 
+#include "./application_object.h"
 #include "./color.h"
 #include "./key_event.h"
 #include "./layouter.h"
@@ -16,8 +17,7 @@ namespace oliview {
     class Application;
     class Window;
 
-    class View :
-    public std::enable_shared_from_this<View> {
+    class View : public ApplicationObject {
     public:
         struct DrawInfo {
             Matrix3x3 window_transform;
@@ -37,9 +37,9 @@ namespace oliview {
 
         View();
         virtual ~View();
-        virtual void Init(const Ptr<Application> & application);
         
-        RHETORIC_GETTER_WEAK(Ptr<Application>, application)
+        RHETORIC_SUBCLASS_SHARED_FROM_THIS(View, ApplicationObject)
+        
         RHETORIC_GETTER_WEAK(Ptr<View>, parent)
         RHETORIC_GETTER(std::vector<Ptr<View>>, children)
         Ptr<View> GetChildAt(size_t index) const;
@@ -132,7 +132,6 @@ namespace oliview {
         void InvokeWindowOnAddView(const Ptr<Window> & window);
         void InvokeWindowOnRemoveView(const Ptr<Window> & window);
         
-        WeakPtr<Application> application_;
         WeakPtr<View> parent_;
         std::vector<Ptr<View>> children_;
 

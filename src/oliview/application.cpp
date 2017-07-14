@@ -48,6 +48,9 @@ namespace oliview {
         return EXIT_SUCCESS;
     }
     
+    void Application::OnInit() {}
+    void Application::OnFinish() {}
+    
     NVGcontext * Application::_nvg_context() const {
         return nvg_context_;
     }
@@ -128,7 +131,8 @@ namespace oliview {
         NVGcontext * nvg_context = nvgCreateGL3(NVG_ANTIALIAS | NVG_STENCIL_STROKES | NVG_DEBUG);
         nvg_context_ = nvg_context;
         
-        RHETORIC_TRY_ASSIGN(font_manager_, FontManager::Create(thiz));
+        font_manager_ = OLIVIEW_INIT(FontManager, thiz);
+        RHETORIC_TRY_VOID(font_manager_->SetUp());
         
         return Success(None());
     }

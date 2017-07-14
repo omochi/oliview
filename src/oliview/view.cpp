@@ -22,10 +22,6 @@ namespace oliview {
     
     View::~View() {}
     
-    void View::Init(const Ptr<Application> & application) {
-        application_ = application;
-    }
-    
     Ptr<View> View::GetChildAt(size_t index) const {
         return children_[index];
     }

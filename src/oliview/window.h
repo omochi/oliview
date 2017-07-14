@@ -2,6 +2,7 @@
 
 #include "./dependency.h"
 
+#include "./application_object.h"
 #include "./init_macro.h"
 #include "./gl_assert.h"
 #include "./key_event.h"
@@ -12,15 +13,14 @@
 #include "./window_root_view.h"
 
 namespace oliview {
-    class Window :
-    public std::enable_shared_from_this<Window> {
+    class Window : public ApplicationObject {
     public:
         Window();
         virtual ~Window();
         
         virtual void Init(const Ptr<Application> & application);
-
-        RHETORIC_GETTER_WEAK(Ptr<Application>, application)
+        
+        RHETORIC_SUBCLASS_SHARED_FROM_THIS(Window, ApplicationObject)
         
         bool closed() const;
 
@@ -72,7 +72,6 @@ namespace oliview {
         Ptr<View> GetNextFocusView(const Ptr<View> & view) const;
         Ptr<View> GetPrevFocusView(const Ptr<View> & view) const;
         
-        WeakPtr<Application> application_;
         GLFWwindow * glfw_window_;
         NVGcontext * nvg_context_;
 

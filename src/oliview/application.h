@@ -1,6 +1,7 @@
 #pragma once
 
 #include "./dependency.h"
+
 #include "./font_manager.h"
 #include "./window.h"
 
@@ -12,8 +13,8 @@ namespace oliview {
 
         int Main(int argc, char * argv[]);
 
-        virtual void OnInit() {}
-        virtual void OnFinish() {}
+        virtual void OnInit();
+        virtual void OnFinish();
         
         RHETORIC_GETTER(Ptr<FontManager>, font_manager)
         
