@@ -39,7 +39,6 @@ namespace oliview {
         
         virtual bool ShouldClose() const;
         
-        
         RHETORIC_GETTER(Ptr<View>, focused_view)
         
         void FocusNext();

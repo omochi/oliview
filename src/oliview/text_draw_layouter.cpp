@@ -178,12 +178,7 @@ namespace oliview {
         NVGSetFont(ctx, font());
         nvgFontSize(ctx, font_size());
         
-        StringSlice start_char = text->GetCharAt(index);
-        RHETORIC_ASSERT(start_char.base() != nullptr);
-        
-        const char * start = start_char.c_str();
-        
-        Ptr<std::string> line = text->GetLineAt(index.line());
+        Ptr<const std::string> line = text->GetLineAt(index.line());
         size_t line_size = line->size();
         auto newline_chars = rhetoric::newline_chars();
         auto check_newline_ret = CheckEndWith(*line, line_size, newline_chars);
@@ -192,9 +187,9 @@ namespace oliview {
             line_size -= newline.size();
             ret->set_newline(Some(newline));
         }
-    
+        
+        const char * start = line->c_str() + index.byte();
         const char * end = line->c_str() + line_size;
-        RHETORIC_ASSERT(line == start_char.base());
         
         std::vector<NVGglyphPosition> glyphs(ToUnsigned(end - start));
         size_t num = (size_t)nvgTextGlyphPositions(ctx,
@@ -218,7 +213,7 @@ namespace oliview {
                 if (index.line() < next_index.line()) {
                     break;
                 }
-                const char * next_index_char = text->GetCharAt(next_index).c_str();
+                const char * next_index_char = line->c_str() + next_index.byte();
                 if (glyph.str < next_index_char) {
                     break;
                 }

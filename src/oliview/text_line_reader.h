@@ -5,11 +5,11 @@
 namespace oliview {
     class TextLineReader {
     public:
-        TextLineReader(const Ptr<std::string> & string);
+        TextLineReader(const Ptr<const std::string> & string);
         
-        Optional<StringSlice> Read();
+        Optional<std::string> Read();
     private:        
-        Ptr<std::string> string_;
+        Ptr<const std::string> string_;
         
         size_t index_;
     };

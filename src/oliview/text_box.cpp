@@ -21,11 +21,11 @@ namespace oliview {
         set_font_color(Color(0, 0, 0, 1));
     }
     
-    std::string TextBox::text() const {
+    std::string TextBox::string() const {
         return text_->string();
     }
     
-    void TextBox::set_text(const std::string & value) {
+    void TextBox::set_string(const std::string & value) {
         text_ = New<Text>(value);
         text_draw_info_ = nullptr;
         cursor_index_ = text_->begin_index();
@@ -51,6 +51,39 @@ namespace oliview {
         text_layouter_->set_font_size(value);
         
         SetNeedsLayout();
+    }
+    
+    Ptr<const Text> TextBox::text() const {
+        return text_;
+    }
+    
+    void TextBox::InsertStringAt(const Text::Index & index,
+                                 const std::string & string,
+                                 Text::Index * end_index_)
+    {
+        auto old_cursor_index = cursor_index_;
+        
+        Text::Index end_index;
+        text_->Insert(index, New<Text>(string), &end_index);
+        if (end_index_) {
+            *end_index_ = end_index;
+        }
+        
+        if (index <= old_cursor_index) {
+            Text::Index cursor_index;
+            
+            if (index.line() == old_cursor_index.line()) {
+                size_t byte_offset = old_cursor_index.byte() - index.byte();
+                cursor_index = Text::Index(end_index.line(),
+                                           end_index.byte() + byte_offset);
+            } else {
+                size_t line_offset = old_cursor_index.line() - index.line();
+                cursor_index = Text::Index(end_index.line() + line_offset,
+                                           old_cursor_index.byte());                
+            }
+            
+            set_cursor_index(cursor_index);
+        }
     }
     
     void TextBox::set_cursor_index(const Text::Index & value) {

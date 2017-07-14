@@ -26,7 +26,7 @@ namespace oliview {
             RHETORIC_ACCESSOR(float, draw_left)
             RHETORIC_ACCESSOR(float, draw_right)
             
-            StringSlice GetChar(const Ptr<Text> & text) const;
+            std::string GetChar(const Ptr<Text> & text) const;
         private:
             Text::Index text_index_;
             float draw_x_;
@@ -45,7 +45,7 @@ namespace oliview {
             size_t char_position_num() const;
             Ptr<CharPosition> GetCharPositionAt(size_t index) const;
             RHETORIC_ACCESSOR(Optional<std::string>, newline)
-            StringSlice GetLine(const Ptr<Text> & text) const;
+            std::string GetLine(const Ptr<Text> & text) const;
             float draw_width() const;
             RHETORIC_ACCESSOR_TRIVIAL(float, draw_y)
         private:

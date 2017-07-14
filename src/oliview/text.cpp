@@ -44,25 +44,24 @@ namespace oliview {
     
     void Text::set_string(const std::string & value) {
         std::vector<Ptr<std::string>> lines;
-        
-        auto reader = TextLineReader(New<std::string>(value));
+        TextLineReader reader(New<std::string>(value));
         while (true) {
             auto line = reader.Read();
             if (!line) {
                 break;
             }
-            lines.push_back(New<std::string>(line->AsString()));
+            lines.push_back(New<std::string>(line.value()));
         }
         
         lines_ = lines;
         FixLastLine();
     }
     
-    std::vector<Ptr<std::string>> Text::lines() const {
-        return lines_;
+    std::vector<Ptr<const std::string>> Text::lines() const {
+        return std::vector<Ptr<const std::string>>(lines_.begin(), lines_.end());
     }
     
-    void Text::set_lines(const std::vector<Ptr<std::string>> & value) {
+    void Text::set_lines(const std::vector<Ptr<const std::string>> & value) {
         std::vector<Ptr<std::string>> lines;
         
         size_t index = 0;
@@ -71,7 +70,7 @@ namespace oliview {
             if (index == value.size()) {
                 break;
             }
-            auto target_line = value[index];
+            Ptr<const std::string> target_line = value[index];
             index += 1;
             auto reader = TextLineReader(target_line);
             while (true) {
@@ -83,7 +82,7 @@ namespace oliview {
                 if (!line) {
                     line = New<std::string>();
                 }
-                line->append(new_line->AsString());
+                line->append(new_line.value());
                 
                 if (CheckEndWith(*line, line->size(), newline_chars())) {
                     lines.push_back(line);
@@ -106,17 +105,17 @@ namespace oliview {
         return lines_.size();
     }
     
-    Ptr<std::string> Text::GetLineAt(size_t index) const {
+    Ptr<const std::string> Text::GetLineAt(size_t index) const {
         return lines_[index];
     }
     
-    void Text::SetLineAt(size_t index, const Ptr<std::string> & value) {
-        lines_[index] = value;
+    void Text::SetLineAt(size_t index, const Ptr<const std::string> & value) {
+        lines_[index] = New<std::string>(*value);
     }
     
-    StringSlice Text::GetCharAt(const Index & index) const {
+    std::string Text::GetCharAt(const Index & index) const {
         auto acc = AccessCharAt(index);
-        return acc.string;
+        return acc.string.AsString();
     }
     
     void Text::SetCharAt(const Index & index, const std::string & chr) {
@@ -206,7 +205,7 @@ namespace oliview {
     }
     
     void Text::Insert(const Text::Index & index_,
-                      const Ptr<Text> & text,
+                      const Ptr<const Text> & text,
                       Text::Index * end_index)
     {
         auto index = index_;
@@ -219,7 +218,7 @@ namespace oliview {
         std::string tail_str = dest_line->substr(index.byte(), dest_line->size() - index.byte());
 
         for (size_t i = 0; i < text->line_num(); i++) {
-            Ptr<std::string> insert_line = text->GetLineAt(i);
+            Ptr<const std::string> insert_line = text->GetLineAt(i);
             
             if (i > 0) {
                 dest_line = New<std::string>();
@@ -277,12 +276,6 @@ namespace oliview {
                             end_tail_str);
     }
     
-    Text::StringAccess::StringAccess(const StringSlice & string,
-                                     Optional<Utf8ByteKind> kind):
-    string(string),
-    kind(kind)
-    {}
-    
     void Text::FixLastLine() {
         if (lines_.size() == 0) {
             lines_.push_back(New<std::string>());
@@ -294,14 +287,15 @@ namespace oliview {
         }
     }
     
-    Text::StringAccess Text::AccessCharAt(const Index & index_) const {
+    Text::StringAccess<const std::string>
+    Text::AccessCharAt(const Index & index_) const {
         RHETORIC_ASSERT(CheckIndex(index_));
         Index index = MayLineWrapIndex(index_);
         
         Ptr<std::string> line = lines_[index.line()];
 
         if (index.byte() == line->size()) {
-            return StringAccess(StringSlice(line, index.byte(), 0), None());
+            return StringAccess<const std::string>(ConstStringSlice(line, index.byte(), 0), None());
         }
         
         char c = (*line)[index.byte()];
@@ -309,13 +303,19 @@ namespace oliview {
         switch (kind.tag()) {
             case Utf8ByteKind::HeadTag: {
                 size_t end = std::min(index.byte() + kind.AsHead().length, line->size());
-                return StringAccess(StringSlice(line, index.byte(), end - index.byte()), Some(kind));
+                return StringAccess<const std::string>(ConstStringSlice(line, index.byte(), end - index.byte()), Some(kind));
             }
             case Utf8ByteKind::BodyTag: {
-                return StringAccess(StringSlice(line, index.byte(), 1), Some(kind));
+                return StringAccess<const std::string>(ConstStringSlice(line, index.byte(), 1), Some(kind));
             }
         }
         RHETORIC_FATAL("never");
+    }
+    
+    Text::StringAccess<std::string>
+    Text::AccessCharAt(const Index & index) {
+        auto cret = const_cast<const Text *>(this)->AccessCharAt(index);
+        return StringAccess<std::string>(StringSlice(), cret.kind);
     }
     
     Text::Index Text::MayLineWrapIndex(const Index & index) const {

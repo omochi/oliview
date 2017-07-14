@@ -11,7 +11,7 @@ namespace oliview {
     draw_right_(draw_right)
     {}
     
-    StringSlice TextDrawInfo::CharPosition::GetChar(const Ptr<Text> & text) const {
+    std::string TextDrawInfo::CharPosition::GetChar(const Ptr<Text> & text) const {
         return text->GetCharAt(text_index_);
     }
     
@@ -31,19 +31,20 @@ namespace oliview {
         return char_positions_[index];
     }
     
-    StringSlice TextDrawInfo::LineEntry::GetLine(const Ptr<Text> & text) const {
+    std::string TextDrawInfo::LineEntry::GetLine(const Ptr<Text> & text) const {
         RHETORIC_ASSERT(char_positions_.size() > 0);
         
         if (char_positions_.size() == 0) {
-            return StringSlice();
+            return "";
         }
         
-        auto first_char = char_positions_.front()->GetChar(text);
-        auto last_char = char_positions_.back()->GetChar(text);
-        RHETORIC_ASSERT(first_char.base() == last_char.base());
+        auto begin_index = char_positions_.front()->text_index();
+        auto end_index = char_positions_.back()->text_index();
+        RHETORIC_ASSERT(begin_index.line() == end_index.line());
+        auto end_char = text->GetCharAt(end_index);
         
-        size_t len = ToUnsigned(last_char.c_str() + last_char.length() - first_char.c_str());
-        return StringSlice(first_char.base(), first_char.offset(), len);
+        size_t len = end_index.byte() + end_char.length() - begin_index.byte();
+        return text->GetLineAt(begin_index.line())->substr(begin_index.byte(), len);
     }
     
     float TextDrawInfo::LineEntry::draw_width() const {

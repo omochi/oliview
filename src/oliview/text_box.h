@@ -15,13 +15,19 @@ namespace oliview {
         
         RHETORIC_SUBCLASS_SHARED_FROM_THIS(TextBox, View)
         
-        std::string text() const;
-        void set_text(const std::string & value);
+        std::string string() const;
+        void set_string(const std::string & value);
         Ptr<Font> font() const;
         void set_font(const Ptr<Font> & value);
         float font_size() const;
         void set_font_size(float value);
         RHETORIC_ACCESSOR(Color, font_color)
+        
+        Ptr<const Text> text() const;
+        
+        void InsertStringAt(const Text::Index & index,
+                            const std::string & string,
+                            Text::Index * end_index);
         
         RHETORIC_GETTER(Text::Index, cursor_index)
         void set_cursor_index(const Text::Index & value);

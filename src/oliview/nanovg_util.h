@@ -22,6 +22,6 @@ namespace oliview {
     void NVGDrawText(NVGcontext * ctx,
                      float x,
                      float y,
-                     const StringSlice & string);
+                     const std::string & string);
 }
 

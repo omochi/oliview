@@ -48,16 +48,16 @@ namespace oliview {
         std::string string() const;
         void set_string(const std::string & value);
         
-        std::vector<Ptr<std::string>> lines() const;
-        void set_lines(const std::vector<Ptr<std::string>> & value);
+        std::vector<Ptr<const std::string>> lines() const;
+        void set_lines(const std::vector<Ptr<const std::string>> & value);
         
         size_t line_num() const;
         
-        Ptr<std::string> GetLineAt(size_t line_index) const;
-        void SetLineAt(size_t line_index, const Ptr<std::string> & value);
+        Ptr<const std::string> GetLineAt(size_t line_index) const;
+        void SetLineAt(size_t line_index, const Ptr<const std::string> & value);
         
         // utf-8
-        StringSlice GetCharAt(const Index & index) const;
+        std::string GetCharAt(const Index & index) const;
         void SetCharAt(const Index & index, const std::string & chr);
         
         Index begin_index() const;
@@ -69,22 +69,27 @@ namespace oliview {
         bool CheckIndex(const Index & index) const;
         
         void Insert(const Index & index,
-                    const Ptr<Text> & text,
-                    Index * end);
+                    const Ptr<const Text> & text,
+                    Index * end_index);
         void Delete(const Index & begin,
                     const Index & end);
     private:
+        template <typename STR>
         struct StringAccess {
-            StringSlice string;
+            StringSliceBase<STR> string;
             Optional<Utf8ByteKind> kind;
             
-            StringAccess(const StringSlice & string,
-                         Optional<Utf8ByteKind> kind);
+            StringAccess(const StringSliceBase<STR> & string,
+                         Optional<Utf8ByteKind> kind):
+            string(string),
+            kind(kind)
+            {}
         };
         
         void FixLastLine();
         
-        StringAccess AccessCharAt(const Index & index) const;
+        StringAccess<const std::string> AccessCharAt(const Index & index) const;
+        StringAccess<std::string> AccessCharAt(const Index & index);
         Index MayLineWrapIndex(const Index & index) const;
         
         std::vector<Ptr<std::string>> lines_;

@@ -1,12 +1,12 @@
 #include "./text_line_reader.h"
 
 namespace oliview {
-    TextLineReader::TextLineReader(const Ptr<std::string> & string):
+    TextLineReader::TextLineReader(const Ptr<const std::string> & string):
     string_(string),
     index_(0)
     {}
     
-    Optional<StringSlice> TextLineReader::Read() {
+    Optional<std::string> TextLineReader::Read() {
         std::vector<std::string> newline_chars = rhetoric::newline_chars();
         size_t begin = index_;
         while (true) {
@@ -25,7 +25,7 @@ namespace oliview {
             
             index_ += 1;
         }
-        return Some(StringSlice(string_, begin, index_ - begin));
+        return Some(string_->substr(begin, index_ - begin));
     }
 
 }
