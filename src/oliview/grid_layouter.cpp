@@ -19,18 +19,33 @@ namespace oliview {
         RHETORIC_FATAL("never");
     }
     
-    void GridLayouter::set_row_size_defs(const std::vector<TrackSizeDef> & value) {
-        row_size_defs_ = value;
+    void GridLayouter::set_row_defs(const std::vector<TrackDef> & value) {
+        row_defs_ = value;
         SetNeedsLayout();
     }
     
-    void GridLayouter::set_column_size_defs(const std::vector<TrackSizeDef> & value) {
-        column_size_defs_ = value;
+    void GridLayouter::AddRowDef(const TrackDef & value) {
+        row_defs_.push_back(value);
+        SetNeedsLayout();
+    }
+    
+    void GridLayouter::set_column_defs(const std::vector<TrackDef> & value) {
+        column_defs_ = value;
+        SetNeedsLayout();
+    }
+    
+    void GridLayouter::AddColumnDef(const TrackDef & value) {
+        column_defs_.push_back(value);
         SetNeedsLayout();
     }
     
     void GridLayouter::set_item_area_defs(const std::vector<ItemAreaDef> & value) {
         item_area_defs_ = value;
+        SetNeedsLayout();
+    }
+    
+    void GridLayouter::AddItemAreaDef(const ItemAreaDef & value) {
+        item_area_defs_.push_back(value);
         SetNeedsLayout();
     }
     
@@ -75,13 +90,13 @@ namespace oliview {
         return ret;
     }
     
-    std::vector<GridLayouter::TrackSizeDef>
-    GridLayouter::GetSizeDefsFor(TableDimension dimension) const {
+    std::vector<GridLayouter::TrackDef>
+    GridLayouter::GetTrackDefsFor(TableDimension dimension) const {
         switch (dimension) {
             case TableDimension::Row:
-                return row_size_defs_;
+                return row_defs_;
             case TableDimension::Column:
-                return column_size_defs_;
+                return column_defs_;
         }
         RHETORIC_FATAL("never");
     }
@@ -94,7 +109,7 @@ namespace oliview {
             TableDimension::Row, TableDimension::Column };
         
         for (auto dimension : dimensions) {
-            std::vector<TrackSizeDef> size_defs = GetSizeDefsFor(dimension);
+            std::vector<TrackDef> size_defs = GetTrackDefsFor(dimension);
             std::vector<float> ret_sizes;
             
             float weight_sum = 0.0f;

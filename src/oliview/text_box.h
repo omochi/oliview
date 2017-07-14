@@ -41,14 +41,14 @@ namespace oliview {
         virtual void LayoutContent(NVGcontext * ctx) override;
         virtual void DrawContent(NVGcontext * ctx) override;
         
-        virtual Ptr<View> HitTest(const MouseEvent & event) override;
+//        virtual Ptr<View> MouseHitTest(const MouseEvent & event) const override;
         
-        virtual void OnMouseDownEvent(const MouseEvent & event) override;
+        virtual bool OnMouseDownEvent(const MouseEvent & event) override;
         virtual void OnMouseMoveEvent(const MouseEvent & event) override;
         virtual void OnMouseUpEvent(const MouseEvent & event) override;
         virtual void OnMouseCancelEvent() override;
         
-        virtual bool OnKeyEvent(const KeyEvent & event) override;
+        virtual bool OnKeyDownEvent(const KeyEvent & event) override;
         
         virtual void OnUpdateAnimation(float delta_time) override;
     private:

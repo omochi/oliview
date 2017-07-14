@@ -7,7 +7,13 @@ namespace oliview {
         View::Init(application);
     }
     
-    bool WindowRootView::OnKeyEvent(const KeyEvent & event) {
+    bool WindowRootView::OnMouseDownEvent(const MouseEvent & event) {
+        RHETORIC_UNUSED(event);
+        window()->UnfocusView();
+        return true;
+    }
+    
+    bool WindowRootView::OnKeyDownEvent(const KeyEvent & event) {
         auto w = window();
         
         if (event.type() == KeyEventType::Down) {

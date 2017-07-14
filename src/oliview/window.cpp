@@ -135,6 +135,10 @@ namespace oliview {
         _Focus(focus);
     }
     
+    void Window::UnfocusView() {
+        _Focus(nullptr);
+    }
+    
     void Window::HandleMouseEvent(const MouseEvent & event_) {
         MouseEvent event = event_;
         
@@ -157,14 +161,9 @@ namespace oliview {
             if (event.type() == MouseEventType::Down) {
                 RHETORIC_ASSERT(event.button().presented());
                 
-                Ptr<View> hit_target = root_view_->HitTest(event);
+                Ptr<View> hit_target = root_view_->MouseHitTest(event);
                 if (hit_target) {
-                    event = hit_target->_ConvertMouseEventFromWindow(event);
-                    
-                    mouse_target_ = hit_target;
-                    mouse_source_button_ = event.button();
-                    
-                    hit_target->OnMouseDownEvent(event);
+                    PostMouseDownEventTo(event, hit_target);
                 }
             }
             //TODO hover
@@ -178,11 +177,32 @@ namespace oliview {
         }
         bool consumed = false;
         while (target) {
-            consumed = target->OnKeyEvent(event);
+            switch (event.type()) {
+                case KeyEventType::Down:
+                    consumed = target->OnKeyDownEvent(event);
+                    break;
+                case KeyEventType::Up:
+                    consumed = target->OnKeyUpEvent(event);
+                    break;
+                case KeyEventType::Repeat:
+                    consumed = target->OnKeyRepeatEvent(event);
+                    break;
+            }
             if (consumed) {
                 return;
             }
             target = target->parent();
+        }
+        switch (event.type()) {
+            case KeyEventType::Down:
+                OnKeyDownEvent(event);
+                break;
+            case KeyEventType::Up:
+                OnKeyUpEvent(event);
+                break;
+            case KeyEventType::Repeat:
+                OnKeyRepeatEvent(event);
+                break;
         }
     }
 
@@ -192,6 +212,16 @@ namespace oliview {
     
     void Window::OnEndDraw(NVGcontext * ctx) {
         RHETORIC_UNUSED(ctx);
+    }
+    
+    void Window::OnKeyDownEvent(const KeyEvent & event) {
+        RHETORIC_UNUSED(event);
+    }
+    void Window::OnKeyUpEvent(const KeyEvent & event) {
+        RHETORIC_UNUSED(event);
+    }
+    void Window::OnKeyRepeatEvent(const KeyEvent & event) {
+        RHETORIC_UNUSED(event);
     }
     
     void Window::_Update() {
@@ -404,6 +434,26 @@ namespace oliview {
                 return view;
             }
             view = child;
+        }
+    }
+    
+    void Window::PostMouseDownEventTo(const MouseEvent & event, const Ptr<View> & view_) {
+        Ptr<View> view = view_;
+        
+        bool consumed;
+        while (true) {
+            if (!view) {
+                break;
+            }
+            
+            MouseEvent view_event = view->_ConvertMouseEventFromWindow(event);
+            consumed = view->OnMouseDownEvent(view_event);
+            if (consumed) {
+                mouse_target_ = view;
+                mouse_source_button_ = event.button();
+                return;
+            }
+            view = view->parent();
         }
     }
     

@@ -84,6 +84,8 @@ namespace oliview {
             
             set_cursor_index(cursor_index);
         }
+        
+        SetNeedsLayout();
     }
     
     void TextBox::set_cursor_index(const Text::Index & value) {
@@ -176,20 +178,20 @@ namespace oliview {
         }
     }
     
-    Ptr<View> TextBox::HitTest(const MouseEvent & event) {
-        auto ret = View::HitTest(event);
-        if (ret) {
-            return ret;
-        }
-        if (IsPointInside(event.pos())) {
-            return shared_from_this();
-        }
-        return nullptr;
-    }
+//    Ptr<View> TextBox::MouseHitTest(const MouseEvent & event) {
+//        auto ret = View::HitTest(event);
+//        if (ret) {
+//            return ret;
+//        }
+//        if (IsPointInside(event.pos())) {
+//            return shared_from_this();
+//        }
+//        return nullptr;
+//    }
     
-    void TextBox::OnMouseDownEvent(const MouseEvent & event) {
+    bool TextBox::OnMouseDownEvent(const MouseEvent & event) {
         if (!text_draw_info_) {
-            return;
+            return false;
         }
         
         auto position_index = text_draw_info_->GetIndexFor(event.pos());
@@ -199,6 +201,8 @@ namespace oliview {
         cursor_x_ = GetCursorRect().origin().x();
         
         Focus();
+        
+        return true;
     }
     
     void TextBox::OnMouseMoveEvent(const MouseEvent & event) {
@@ -212,7 +216,7 @@ namespace oliview {
     void TextBox::OnMouseCancelEvent() {
     }
     
-    bool TextBox::OnKeyEvent(const KeyEvent & event) {
+    bool TextBox::OnKeyDownEvent(const KeyEvent & event) {
         switch (event.type()) {
             case KeyEventType::Down:
             case KeyEventType::Repeat: {

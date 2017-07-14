@@ -7,7 +7,7 @@
 namespace oliview {
     class GridLayouter : public Layouter {
     public:
-        class TrackSizeDef {
+        class TrackDef {
         public:
             RHETORIC_ACCESSOR(Optional<float>, fixed_value)
             RHETORIC_ACCESSOR(Optional<float>, weight)
@@ -34,14 +34,17 @@ namespace oliview {
             Range<size_t> column_position_;
         };
         
-        RHETORIC_GETTER(std::vector<TrackSizeDef>, row_size_defs);
-        void set_row_size_defs(const std::vector<TrackSizeDef> & value);
+        RHETORIC_GETTER(std::vector<TrackDef>, row_defs);
+        void set_row_defs(const std::vector<TrackDef> & value);
+        void AddRowDef(const TrackDef & value);
         
-        RHETORIC_GETTER(std::vector<TrackSizeDef>, column_size_defs);
-        void set_column_size_defs(const std::vector<TrackSizeDef> & value);
+        RHETORIC_GETTER(std::vector<TrackDef>, column_defs);
+        void set_column_defs(const std::vector<TrackDef> & value);
+        void AddColumnDef(const TrackDef & value);
         
         RHETORIC_GETTER(std::vector<ItemAreaDef>, item_area_defs);
         void set_item_area_defs(const std::vector<ItemAreaDef> & value);
+        void AddItemAreaDef(const ItemAreaDef & value);
         
         virtual void Layout(NVGcontext * ctx) const override;
         virtual Size Measure(NVGcontext * ctx, const MeasureQuery & query) const override;
@@ -49,13 +52,11 @@ namespace oliview {
         struct LayoutResult {
             std::vector<float> row_sizes;
             std::vector<float> column_sizes;
-            
-            //
             std::vector<float> top_list;
             std::vector<float> left_list;
         };
         
-        std::vector<TrackSizeDef> GetSizeDefsFor(TableDimension dimension) const;
+        std::vector<TrackDef> GetTrackDefsFor(TableDimension dimension) const;
         
         LayoutResult ResolveLayout(NVGcontext * ctx,
                                    const MeasureQuery & query) const;
@@ -64,8 +65,8 @@ namespace oliview {
         std::vector<ItemAreaDef> GetSingleAreas(TableDimension dimension,
                                                 size_t index) const;
         
-        std::vector<TrackSizeDef> row_size_defs_;
-        std::vector<TrackSizeDef> column_size_defs_;
+        std::vector<TrackDef> row_defs_;
+        std::vector<TrackDef> column_defs_;
         
         mutable std::vector<ItemAreaDef> item_area_defs_;
     };

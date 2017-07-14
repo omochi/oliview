@@ -222,7 +222,7 @@ namespace oliview {
             
             if (i > 0) {
                 dest_line = New<std::string>();
-                lines_.insert(lines_.begin() + ToSigned(index.line()) + 1, dest_line);
+                lines_.insert(lines_.begin() + ToSigned(index.line() + i), dest_line);
             }
             
             if (i == 0) {

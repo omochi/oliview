@@ -140,7 +140,7 @@ namespace oliview {
         
         auto w = window();
         if (w) {
-            w->_Focus(nullptr);
+            w->UnfocusView();
         }
     }
     
@@ -255,32 +255,37 @@ namespace oliview {
         return local_frame().IsPointInside(point);
     }
     
-    Ptr<View> View::HitTest(const MouseEvent & event) {
-        bool skip_children = false;
+    Ptr<View> View::MouseHitTest(const MouseEvent & event) const {
+        bool test_children = true;
         if (clipping_children()) {
             if (!IsPointInside(event.pos())) {
-                skip_children = true;
+                test_children = false;
             }
         }
         
-        if (!skip_children) {
+        if (test_children) {
             auto children = ArrayReversed(this->children());
             for (auto & child : children) {
                 Vector2 pos_in_child = ConvertPointToView(event.pos(), child);
                 MouseEvent child_event = event;
                 child_event.set_pos(pos_in_child);
-                auto ret = child->HitTest(child_event);
+                auto ret = child->MouseHitTest(child_event);
                 if (ret) {
                     return ret;
                 }
             }
         }
         
+        if (IsPointInside(event.pos())) {
+            return const_cast<View *>(this)->shared_from_this();
+        }
+        
         return nullptr;
     }
     
-    void View::OnMouseDownEvent(const MouseEvent & event) {
+    bool View::OnMouseDownEvent(const MouseEvent & event) {
         RHETORIC_UNUSED(event);
+        return false;
     }
     
     void View::OnMouseMoveEvent(const MouseEvent & event) {
@@ -294,7 +299,16 @@ namespace oliview {
     void View::OnMouseCancelEvent() {
     }
     
-    bool View::OnKeyEvent(const KeyEvent & event) {
+    bool View::OnKeyDownEvent(const KeyEvent & event) {
+        RHETORIC_UNUSED(event);
+        return false;
+    }
+    
+    bool View::OnKeyUpEvent(const KeyEvent & event) {
+        RHETORIC_UNUSED(event);
+        return false;
+    }
+    bool View::OnKeyRepeatEvent(const KeyEvent & event) {
         RHETORIC_UNUSED(event);
         return false;
     }

@@ -102,14 +102,16 @@ namespace oliview {
         Vector2 ConvertPointFromView(const Vector2 & point, const Ptr<View> & view) const;
 
         virtual bool IsPointInside(const Vector2 & point) const;
-        virtual Ptr<View> HitTest(const MouseEvent & event);
+        virtual Ptr<View> MouseHitTest(const MouseEvent & event) const;
         
-        virtual void OnMouseDownEvent(const MouseEvent & event);
+        virtual bool OnMouseDownEvent(const MouseEvent & event);
         virtual void OnMouseMoveEvent(const MouseEvent & event);
         virtual void OnMouseUpEvent(const MouseEvent & event);
         virtual void OnMouseCancelEvent();
         
-        virtual bool OnKeyEvent(const KeyEvent & event);
+        virtual bool OnKeyDownEvent(const KeyEvent & event);
+        virtual bool OnKeyUpEvent(const KeyEvent & event);
+        virtual bool OnKeyRepeatEvent(const KeyEvent & event);
         
         virtual void OnUpdateAnimation(float delta_time);
         

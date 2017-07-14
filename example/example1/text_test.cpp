@@ -268,6 +268,18 @@ void TextInsertTest1() {
         RHETORIC_ASSERT(*t1->lines()[2] == "donutsbanana");
         RHETORIC_ASSERT(ep == Text::Index(2, 6));
     }
+    {
+        auto t1 = New<Text>("apple\nbanana");
+        auto t2 = New<Text>("１行\n２行\n３行");
+        Text::Index ep;
+        t1->Insert(Text::Index(0, 3), t2, &ep);
+        RHETORIC_ASSERT(t1->line_num() == 4);
+        RHETORIC_ASSERT(*t1->lines()[0] == "app１行\n");
+        RHETORIC_ASSERT(*t1->lines()[1] == "２行\n");
+        RHETORIC_ASSERT(*t1->lines()[2] == "３行le\n");
+        RHETORIC_ASSERT(*t1->lines()[3] == "banana");
+        RHETORIC_ASSERT(ep == Text::Index(2, 6));
+    }
 }
 
 void TextDeleteTest1() {
