@@ -66,7 +66,7 @@ void Window1::Init(const Ptr<Application> & app) {
     content_view->AddChild(view5);
     view5->set_frame(Rect(Vector2(200, 50),
                           Size(300, 200)));
-    view5->set_string("初期テキスト\nお肉gg\n\n↑空行");
+    view5->set_text(New<Text>("初期テキスト\nお肉gg\n\n↑空行"));
 }
 
 void Window1::OnKeyDownEvent(const KeyEvent & event) {
@@ -76,17 +76,15 @@ void Window1::OnKeyDownEvent(const KeyEvent & event) {
         } else if (event.key() == GLFW_KEY_T) {
             switch (test_stage_) {
                 case 0: {
-                    text_box_->InsertStringAt(Text::Index(0, 9),
-                                              "砂漠", nullptr);
+                    text_box_->InsertTextAt(Text::Index(0, 9), "砂漠", nullptr);
                     break;
                 }
                 case 1: {
-                    text_box_->InsertStringAt(Text::Index(0, 9),
-                                              "１行\n２行\n３行", nullptr);
+                    text_box_->InsertTextAt(Text::Index(0, 9), "１行\n２行\n３行", nullptr);
                     break;
                 }
                 case 2: {
-                    
+                    text_box_->DeleteTextAt(Text::Index(2, 0), Text::Index(4, 0));
                     break;
                 }
                 case 3: {

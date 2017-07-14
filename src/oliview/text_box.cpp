@@ -21,14 +21,14 @@ namespace oliview {
         set_font_color(Color(0, 0, 0, 1));
     }
     
-    std::string TextBox::string() const {
-        return text_->string();
+    Ptr<const Text> TextBox::text() const {
+        return text_;
     }
     
-    void TextBox::set_string(const std::string & value) {
-        text_ = New<Text>(value);
+    void TextBox::set_text(const Ptr<const Text> & value) {
+        text_ = New<Text>(*value);
         text_draw_info_ = nullptr;
-        cursor_index_ = text_->begin_index();
+        set_cursor_index(text_->begin_index());
         
         SetNeedsLayout();
     }
@@ -52,26 +52,22 @@ namespace oliview {
         
         SetNeedsLayout();
     }
-    
-    Ptr<const Text> TextBox::text() const {
-        return text_;
-    }
-    
-    void TextBox::InsertStringAt(const Text::Index & index,
-                                 const std::string & string,
-                                 Text::Index * end_index_)
+
+    void TextBox::InsertTextAt(const Text::Index & index,
+                               const std::string & string,
+                               Text::Index * end_index_)
     {
         auto old_cursor_index = cursor_index_;
         
         Text::Index end_index;
-        text_->Insert(index, New<Text>(string), &end_index);
+        text_->InsertAt(index, New<Text>(string), &end_index);
         if (end_index_) {
             *end_index_ = end_index;
         }
         
+        Text::Index cursor_index(old_cursor_index);
+        
         if (index <= old_cursor_index) {
-            Text::Index cursor_index;
-            
             if (index.line() == old_cursor_index.line()) {
                 size_t byte_offset = old_cursor_index.byte() - index.byte();
                 cursor_index = Text::Index(end_index.line(),
@@ -81,7 +77,39 @@ namespace oliview {
                 cursor_index = Text::Index(end_index.line() + line_offset,
                                            old_cursor_index.byte());                
             }
-            
+        }
+        
+        if (old_cursor_index != cursor_index) {
+            set_cursor_index(cursor_index);
+        }
+        
+        SetNeedsLayout();
+    }
+    
+    void TextBox::DeleteTextAt(const Text::Index & begin,
+                               const Text::Index & end)
+    {
+        auto old_cursor_index = cursor_index_;
+
+        text_->DeleteAt(begin, end);
+        
+        Text::Index cursor_index(old_cursor_index);
+
+        if (begin <= old_cursor_index) {
+            if (old_cursor_index <= end) {
+                cursor_index = begin;
+            } else {
+                if (end.line() == old_cursor_index.line()) {
+                    size_t byte_offset = old_cursor_index.byte() - end.byte();
+                    cursor_index = Text::Index(begin.line(), begin.byte() + byte_offset);
+                } else {
+                    size_t line_offset = old_cursor_index.line() - end.line();
+                    cursor_index = Text::Index(begin.line() + line_offset, old_cursor_index.byte());
+                }
+            }
+        }
+        
+        if (old_cursor_index != cursor_index) {
             set_cursor_index(cursor_index);
         }
         

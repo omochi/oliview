@@ -15,19 +15,21 @@ namespace oliview {
         
         RHETORIC_SUBCLASS_SHARED_FROM_THIS(TextBox, View)
         
-        std::string string() const;
-        void set_string(const std::string & value);
+        Ptr<const Text> text() const;
+        void set_text(const Ptr<const Text> & value);
+        
         Ptr<Font> font() const;
         void set_font(const Ptr<Font> & value);
         float font_size() const;
         void set_font_size(float value);
         RHETORIC_ACCESSOR(Color, font_color)
         
-        Ptr<const Text> text() const;
         
-        void InsertStringAt(const Text::Index & index,
-                            const std::string & string,
-                            Text::Index * end_index);
+        void InsertTextAt(const Text::Index & index,
+                          const std::string & string,
+                          Text::Index * end_index);
+        void DeleteTextAt(const Text::Index & begin,
+                          const Text::Index & end);
         
         RHETORIC_GETTER(Text::Index, cursor_index)
         void set_cursor_index(const Text::Index & value);
@@ -40,9 +42,7 @@ namespace oliview {
         virtual Size MeasureContent(NVGcontext * ctx, const MeasureQuery & query) const override;
         virtual void LayoutContent(NVGcontext * ctx) override;
         virtual void DrawContent(NVGcontext * ctx) override;
-        
-//        virtual Ptr<View> MouseHitTest(const MouseEvent & event) const override;
-        
+                
         virtual bool OnMouseDownEvent(const MouseEvent & event) override;
         virtual void OnMouseMoveEvent(const MouseEvent & event) override;
         virtual void OnMouseUpEvent(const MouseEvent & event) override;

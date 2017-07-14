@@ -44,6 +44,8 @@ namespace oliview {
         
         Text();
         Text(const std::string & value);
+        Text(const Text & other);
+        Text & operator=(const Text & other);
         
         std::string string() const;
         void set_string(const std::string & value);
@@ -68,11 +70,11 @@ namespace oliview {
         
         bool CheckIndex(const Index & index) const;
         
-        void Insert(const Index & index,
-                    const Ptr<const Text> & text,
-                    Index * end_index);
-        void Delete(const Index & begin,
-                    const Index & end);
+        void InsertAt(const Index & index,
+                      const Ptr<const Text> & text,
+                      Index * end_index);
+        void DeleteAt(const Index & begin,
+                      const Index & end);
     private:
         template <typename STR>
         struct StringAccess {

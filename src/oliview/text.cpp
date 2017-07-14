@@ -37,6 +37,21 @@ namespace oliview {
         set_string(value);
     }
     
+    Text::Text(const Text & other) {
+        *this = other;
+    }
+    
+    Text & Text::operator=(const Text & other) {
+        lines_.clear();
+        
+        for (auto & other_line : other.lines()) {
+            Ptr<std::string> line = New<std::string>(*other_line);
+            lines_.push_back(line);
+        }
+
+        return *this;
+    }
+    
     std::string Text::string() const {
         std::vector<std::string> ls = ArrayMap(lines_, [](auto x) { return *x; });
         return Join(ls, "");
@@ -204,9 +219,9 @@ namespace oliview {
         return true;
     }
     
-    void Text::Insert(const Text::Index & index_,
-                      const Ptr<const Text> & text,
-                      Text::Index * end_index)
+    void Text::InsertAt(const Text::Index & index_,
+                        const Ptr<const Text> & text,
+                        Text::Index * end_index)
     {
         auto index = index_;
         
@@ -248,8 +263,8 @@ namespace oliview {
         }
     }
     
-    void Text::Delete(const Index & begin_,
-                      const Index & end_)
+    void Text::DeleteAt(const Index & begin_,
+                        const Index & end_)
     {
         auto begin = begin_;
         auto end = end_;
