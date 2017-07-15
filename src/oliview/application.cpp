@@ -134,7 +134,7 @@ namespace oliview {
         font_manager_ = OLIVIEW_INIT(FontManager, thiz);
         RHETORIC_TRY_VOID(font_manager_->SetUp());
         
-        return Success(None());
+        return Ok(None());
     }
 
     void Application::DestroyNVGContext() {

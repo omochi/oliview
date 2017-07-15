@@ -11,6 +11,6 @@ namespace oliview {
     
     float GetSizeValueFor(const Size & size, TableDimension dimension);
     
-    Optional<float> GetMeasureQueryMaxValueFor(const MeasureQuery & query,
-                                               TableDimension dimension);
+    Option<float> GetMeasureQueryMaxValueFor(const MeasureQuery & query,
+                                             TableDimension dimension);
 }

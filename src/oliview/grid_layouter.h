@@ -9,15 +9,15 @@ namespace oliview {
     public:
         class TrackDef {
         public:
-            RHETORIC_ACCESSOR(Optional<float>, fixed_value)
-            RHETORIC_ACCESSOR(Optional<float>, weight)
+            RHETORIC_ACCESSOR(Option<float>, fixed_value)
+            RHETORIC_ACCESSOR(Option<float>, weight)
             RHETORIC_ACCESSOR_TRIVIAL(bool, wrap_content)
-            RHETORIC_ACCESSOR(Optional<float>, max_value)
+            RHETORIC_ACCESSOR(Option<float>, max_value)
         private:
-            Optional<float> fixed_value_;
-            Optional<float> weight_;
+            Option<float> fixed_value_;
+            Option<float> weight_;
             bool wrap_content_;
-            Optional<float> max_value_;
+            Option<float> max_value_;
         };
         
         class ItemAreaDef {

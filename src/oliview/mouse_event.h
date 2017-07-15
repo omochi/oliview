@@ -16,12 +16,12 @@ namespace oliview {
     public:
         RHETORIC_ACCESSOR_TRIVIAL(MouseEventType, type)
         RHETORIC_ACCESSOR(Vector2, pos)
-        RHETORIC_ACCESSOR_TRIVIAL(Optional<int>, button)
-        RHETORIC_ACCESSOR_TRIVIAL(Optional<int>, modifier)
+        RHETORIC_ACCESSOR_TRIVIAL(Option<int>, button)
+        RHETORIC_ACCESSOR_TRIVIAL(Option<int>, modifier)
     private:
         MouseEventType type_;
         Vector2 pos_;
-        Optional<int> button_;
-        Optional<int> modifier_;
+        Option<int> button_;
+        Option<int> modifier_;
     };
 }

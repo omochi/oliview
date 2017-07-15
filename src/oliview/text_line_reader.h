@@ -7,7 +7,7 @@ namespace oliview {
     public:
         TextLineReader(const Ptr<const std::string> & string);
         
-        Optional<std::string> Read();
+        Option<std::string> Read();
     private:        
         Ptr<const std::string> string_;
         

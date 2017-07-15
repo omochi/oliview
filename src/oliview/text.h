@@ -79,10 +79,10 @@ namespace oliview {
         template <typename STR>
         struct StringAccess {
             StringSliceBase<STR> string;
-            Optional<Utf8ByteKind> kind;
+            Option<Utf8ByteKind> kind;
             
             StringAccess(const StringSliceBase<STR> & string,
-                         Optional<Utf8ByteKind> kind):
+                         Option<Utf8ByteKind> kind):
             string(string),
             kind(kind)
             {}

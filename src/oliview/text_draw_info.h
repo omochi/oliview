@@ -44,7 +44,7 @@ namespace oliview {
             RHETORIC_ACCESSOR(std::vector<Ptr<CharPosition>>, char_positions)
             size_t char_position_num() const;
             Ptr<CharPosition> GetCharPositionAt(size_t index) const;
-            RHETORIC_ACCESSOR(Optional<std::string>, newline)
+            RHETORIC_ACCESSOR(Option<std::string>, newline)
             std::string GetLine(const Ptr<Text> & text) const;
             float draw_width() const;
             RHETORIC_ACCESSOR_TRIVIAL(float, draw_y)
@@ -52,7 +52,7 @@ namespace oliview {
             Text::Index text_index_;
             bool wrapped_line_;
             std::vector<Ptr<CharPosition>> char_positions_;
-            Optional<std::string> newline_;
+            Option<std::string> newline_;
             float draw_y_;
         };
         
@@ -79,7 +79,7 @@ namespace oliview {
         CharPositionIndex GetIndexFor(const Vector2 & position) const;
         
         struct GetLineIndexResult {
-            Optional<size_t> index;
+            Option<size_t> index;
             bool under;
             bool over;
             GetLineIndexResult();

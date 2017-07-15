@@ -6,7 +6,7 @@ namespace oliview {
     index_(0)
     {}
     
-    Optional<std::string> TextLineReader::Read() {
+    Option<std::string> TextLineReader::Read() {
         std::vector<std::string> newline_chars = rhetoric::newline_chars();
         size_t begin = index_;
         while (true) {

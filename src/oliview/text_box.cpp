@@ -268,7 +268,7 @@ namespace oliview {
     }
     
     void TextBox::OnCharEvent(const CharEvent & event) {
-        
+        //TODO
     }
     
     void TextBox::OnUpdateAnimation(float delta_time) {

@@ -94,7 +94,7 @@ namespace oliview {
         Ptr<WindowRootView> root_view_;
         
         Ptr<View> mouse_target_;
-        Optional<int> mouse_source_button_;
+        Option<int> mouse_source_button_;
         
         Ptr<View> focused_view_;
         

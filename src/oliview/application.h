@@ -36,7 +36,7 @@ namespace oliview {
         
         Ptr<FontManager> font_manager_;
         
-        Optional<std::chrono::steady_clock::time_point> prev_update_time_;
+        Option<std::chrono::steady_clock::time_point> prev_update_time_;
     };
 }
 

@@ -17,12 +17,12 @@ namespace oliview {
         std::string default_font_name = "ヒラギノ角ゴシック W3";
         RHETORIC_TRY_ASSIGN(auto default_font, Find(default_font_name));
         if (!default_font) {
-            return Failure(GenericError::Create("default font not found: %s",
-                                                default_font_name.c_str()));
+            return GenericError::Create("default font not found: %s",
+                                        default_font_name.c_str());
         }
         set_default_font(default_font);
         
-        return Success(None());
+        return Ok(None());
     }
     
     Result<Ptr<Font>> FontManager::Open(const FilePath & path) {
@@ -43,14 +43,14 @@ namespace oliview {
                                       (int)data->size(),
                                       false);
         if (handle < 0) {
-            return Failure(GenericError::Create("nvgCreateFontMem(%s)",
-                                                path.ToString().c_str()));
+            return GenericError::Create("nvgCreateFontMem(%s)",
+                                        path.ToString().c_str());
         }
         
-        return Success(New<Font>(ctx,
-                                 handle,
-                                 name,
-                                 data));
+        return Ok(New<Font>(ctx,
+                            handle,
+                            name,
+                            data));
     }
     
     Result<Ptr<Font>> FontManager::Find(const std::string & name) {
@@ -76,7 +76,7 @@ namespace oliview {
                 return Open(file);
             }
         }
-        return Success(nullptr);
+        return Ok(nullptr);
     }
 }
 

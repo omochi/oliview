@@ -12,8 +12,8 @@ namespace oliview {
         RHETORIC_FATAL("never");
     }
     
-    Optional<float> GetMeasureQueryMaxValueFor(const MeasureQuery & query,
-                                               TableDimension dimension)
+    Option<float> GetMeasureQueryMaxValueFor(const MeasureQuery & query,
+                                             TableDimension dimension)
     {
         switch (dimension) {
             case TableDimension::Row:

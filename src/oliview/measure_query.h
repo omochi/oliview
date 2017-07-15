@@ -5,10 +5,10 @@
 namespace oliview {
     class MeasureQuery {
     public:
-        RHETORIC_ACCESSOR(Optional<float>, max_width)
-        RHETORIC_ACCESSOR(Optional<float>, max_height)
+        RHETORIC_ACCESSOR(Option<float>, max_width)
+        RHETORIC_ACCESSOR(Option<float>, max_height)
     private:
-        Optional<float> max_width_;
-        Optional<float> max_height_;
+        Option<float> max_width_;
+        Option<float> max_height_;
     };
 }

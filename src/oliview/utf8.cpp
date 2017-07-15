@@ -66,8 +66,8 @@ namespace oliview {
             b[4] = 0x80 | ((unicode >> 6) & 0x3F);
             b[5] = 0x80 | (unicode & 0x3F);
         } else {
-            return Failure(GenericError::Create("invalid unicode for utf8: %08x", unicode));
+            return GenericError::Create("invalid unicode for utf8: %08x", unicode);
         }
-        return Success(std::string((const char *)b, len));
+        return Ok(std::string((const char *)b, len));
     }
 }

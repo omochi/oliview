@@ -16,7 +16,7 @@ namespace oliview {
         
         Ptr<TextDrawInfo> Layout(NVGcontext * ctx,
                                  const Ptr<Text> & text,
-                                 const Optional<float> & max_width);
+                                 const Option<float> & max_width);
                 
         void Draw(NVGcontext * ctx,
                   const Ptr<Text> & text,
@@ -36,7 +36,7 @@ namespace oliview {
         Ptr<TextDrawInfo> LayoutLine(NVGcontext * ctx,
                                      const Ptr<Text> & text,
                                      size_t line_index,
-                                     const Optional<float> & max_width);
+                                     const Option<float> & max_width);
         
         Ptr<TextDrawInfo::LineEntry> LayoutSingleLine(NVGcontext * ctx,
                                                       const Ptr<Text> & text,

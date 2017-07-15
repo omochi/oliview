@@ -5,7 +5,7 @@ namespace oliview {
     Ptr<TextDrawInfo>
     TextDrawLayouter::Layout(NVGcontext * ctx,
                              const Ptr<Text> & text,
-                             const Optional<float> & max_width)
+                             const Option<float> & max_width)
     {
         float ascent, descent, line_height;
         nvgTextMetrics(ctx, &ascent, &descent, &line_height);
@@ -118,7 +118,7 @@ namespace oliview {
     TextDrawLayouter::LayoutLine(NVGcontext * ctx,
                                  const Ptr<Text> & text,
                                  size_t line_index,
-                                 const Optional<float> & max_width)
+                                 const Option<float> & max_width)
     {
         Ptr<TextDrawInfo> result = New<TextDrawInfo>();
         auto result_lines = result->lines();
