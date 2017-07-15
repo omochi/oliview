@@ -7,7 +7,7 @@ namespace oliview {
     {}
     
     Option<std::string> TextLineReader::Read() {
-        std::vector<std::string> newline_chars = rhetoric::newline_chars();
+        std::vector<std::string> newline_chars = rhetoric::newline_strs();
         size_t begin = index_;
         while (true) {
             if (index_ == string_->size()) {

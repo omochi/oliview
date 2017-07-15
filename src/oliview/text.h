@@ -68,6 +68,7 @@ namespace oliview {
         Index AdvanceIndex(const Index & index) const;
         Index AdvanceIndexNoSkip(const Index & index) const;
         Index BackIndex(const Index & index) const;
+        Index BackIndexNoSkip(const Index & index) const;
         
         bool CheckIndex(const Index & index) const;
         

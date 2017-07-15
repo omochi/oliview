@@ -176,7 +176,7 @@ namespace oliview {
         
         Ptr<const std::string> line = text->GetLineAt(index.line());
         size_t line_size = line->size();
-        auto newline_chars = rhetoric::newline_chars();
+        auto newline_chars = rhetoric::newline_strs();
         auto check_newline_ret = CheckEndWith(*line, line_size, newline_chars);
         if (check_newline_ret) {
             auto newline = newline_chars[check_newline_ret->target_index];

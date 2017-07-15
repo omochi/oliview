@@ -99,7 +99,7 @@ namespace oliview {
                 }
                 line->append(new_line.value());
                 
-                if (CheckEndWith(*line, line->size(), newline_chars())) {
+                if (CheckEndWith(*line, line->size(), newline_strs())) {
                     lines.push_back(line);
                     line = nullptr;
                 }
@@ -160,7 +160,7 @@ namespace oliview {
             
             auto chr = GetCharAt(next_index);
             if (chr.length() == 0 ||
-                (chr == "\n" || chr == "\r"))
+                ArrayFindIndexEq(newline_chars(), chr[0]))
             {
                 next_index = AdvanceIndexNoSkip(next_index);
                 continue;
@@ -188,41 +188,53 @@ namespace oliview {
     
     Text::Index Text::BackIndex(const Index & index_) const {
         Index index = index_;
-        index = MayLineWrapIndex(index);
         
+        if (index == begin_index()) {
+            return index;
+        }
+        
+        index = BackIndexNoSkip(index);
         while (true) {
-            if (index == begin_index()) {
-                return index;
-            }
             if (index.byte() == 0) {
-                {
-                    size_t line_index = index.line() - 1;
-                    auto line = GetLineAt(line_index);
-                    RHETORIC_ASSERT(line->size() > 0);
-                    index = Index(line_index, line->size() - 1);
-                }
-                while (true) {
-                    if (index.byte() == 0) {
-                        break;
-                    }
-                    Index back_index = Index(index.line(), index.byte() - 1);
-                    auto acc = AccessCharAt(back_index);
-                    if (ArrayFindIndexEq(newline_chars(), acc.string.AsString())) {
-                        index = back_index;
-                        continue;
-                    }
-                    break;
-                }
-            } else {
-                index = Index(index.line(), index.byte() - 1);
+                break;
             }
             
+            Index back_index = BackIndexNoSkip(index);
+            
+            auto chr = GetCharAt(back_index);
+            if (chr.length() == 0 ||
+                ArrayFindIndexEq(newline_chars(), chr[0]))
+            {
+                index = back_index;
+                continue;
+            }
+            
+            break;
+        }
+        
+        return index;
+    }
+    
+    Text::Index Text::BackIndexNoSkip(const Index & index_) const {
+        Index index = index_;
+        if (index == begin_index()) {
+            return index;
+        }
+        if (index.byte() == 0) {
+            size_t line_index = index.line() - 1;
+            auto line = GetLineAt(line_index);
+            return Index(line_index, line->size());
+        }
+        index = Index(index.line(), index.byte() - 1);
+        while (true) {
+            if (index.byte() == 0) {
+                return index;
+            }
             auto acc = AccessCharAt(index);
-            RHETORIC_ASSERT(acc.string.length() > 0);
-            RHETORIC_ASSERT(acc.kind.presented());
             if (acc.kind->tag() == Utf8ByteKind::HeadTag) {
                 return index;
             }
+            index = Index(index.line(), index.byte() - 1);
         }
     }
     
@@ -253,15 +265,12 @@ namespace oliview {
         for (size_t i = 0; i < text->line_num(); i++) {
             Ptr<const std::string> insert_line = text->GetLineAt(i);
             
-            if (i > 0) {
-                dest_line = New<std::string>();
-                lines_.insert(lines_.begin() + ToSigned(index.line() + i), dest_line);
-            }
-            
             if (i == 0) {
                 dest_line->erase(index.byte(), dest_line->size() - index.byte());
                 dest_line->insert(index.byte(), *insert_line);
             } else {
+                dest_line = New<std::string>();
+                lines_.insert(lines_.begin() + ToSigned(index.line() + i), dest_line);
                 *dest_line = *insert_line;
             }
 
@@ -314,7 +323,7 @@ namespace oliview {
             lines_.push_back(New<std::string>());
         } else {
             auto last_line = lines_.back();
-            if (CheckEndWith(*last_line, last_line->size(), newline_chars())) {
+            if (CheckEndWith(*last_line, last_line->size(), newline_strs())) {
                 lines_.push_back(New<std::string>());
             }
         }
