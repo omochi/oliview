@@ -3,6 +3,7 @@
 #include "./dependency.h"
 
 #include "./application_object.h"
+#include "./char_event.h"
 #include "./init_macro.h"
 #include "./gl_assert.h"
 #include "./key_event.h"

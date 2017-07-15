@@ -313,6 +313,10 @@ namespace oliview {
         return false;
     }
     
+    void View::OnCharEvent(const CharEvent & event) {
+        RHETORIC_UNUSED(event);
+    }
+    
     void View::OnUpdateAnimation(float delta_time) {
         RHETORIC_UNUSED(delta_time);
     }

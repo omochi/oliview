@@ -33,34 +33,5 @@ namespace oliview {
     Utf8ByteKind GetUtf8ByteKind(uint8_t chr);
     Utf8ByteKind GetUtf8ByteKind(char chr);
     
-    class Utf8Reader {
-    public:
-        Utf8Reader(const uint8_t * ptr, size_t length);
-        Utf8Reader(const char * ptr, size_t length);
-        
-        RHETORIC_ACCESSOR_TRIVIAL(size_t, position)
-        
-        Optional<std::string> Read();
-    private:
-        const uint8_t * ptr_;
-        size_t length_;
-        size_t position_;
-    };
-    
-    class Utf8LineReader {
-    public:
-        struct Line {
-            std::string string;
-            size_t element_num;
-            
-            Line();
-        };
-        
-        Utf8LineReader(const uint8_t * ptr, size_t length);
-        Utf8LineReader(const char * ptr, size_t length);
-        
-        Optional<Line> Read();
-    private:
-        Utf8Reader char_reader_;
-    };
+    Result<std::string> EncodeUnicodeToUtf8(uint32_t unicode);
 }

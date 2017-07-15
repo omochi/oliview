@@ -23,95 +23,51 @@ namespace oliview {
         return GetUtf8ByteKind((uint8_t)chr);
     }
     
-    Utf8Reader::Utf8Reader(const uint8_t * ptr, size_t length):
-    ptr_(ptr),
-    length_(length),
-    position_(0)
-    {}
-    
-    Utf8Reader::Utf8Reader(const char * ptr, size_t length):
-    Utf8Reader((const uint8_t *)(ptr), length)
-    {}
-    
-    Optional<std::string> Utf8Reader::Read() {
-        while (true) {
-            if (position_ == length_) {
-                return None();
-            }
-            
-            auto kind = GetUtf8ByteKind(ptr_[position_]);
-            if (kind.tag() == Utf8ByteKind::BodyTag) {
-                position_ += 1;
-                continue;
-            }
-            
-            RHETORIC_ASSERT(kind.tag() == Utf8ByteKind::HeadTag);
-            
-            size_t chr_len = kind.AsHead().length;
-            if (length_ < position_ + chr_len) {
-                position_ = length_;
-                continue;
-            }
-            
-            std::string chr = std::string((const char *)(ptr_ + position_), chr_len);
-            position_ += chr_len;
-            return Some(chr);
+    Result<std::string> EncodeUnicodeToUtf8(uint32_t unicode) {
+        uint8_t b[6];
+        size_t len;
+        if (unicode <= 0x007F) {
+            // 0xxxxxxx
+            len = 1;
+            b[0] = unicode & 0x7F;
+        } else if (unicode <= 0x07FF) {
+            // 110yyyyx    10xxxxxx
+            len = 2;
+            b[0] = 0xC0 | ((unicode >> 6) & 0x1F);
+            b[1] = 0x80 | (unicode & 0x3F);
+        } else if (unicode <= 0xFFFF) {
+            // 1110yyyy    10yxxxxx    10xxxxxx
+            len = 3;
+            b[0] = 0xE0 | ((unicode >> 12) & 0x0F);
+            b[1] = 0x80 | ((unicode >> 6) & 0x3F);
+            b[2] = 0x80 | (unicode & 0x3F);
+        } else if (unicode <= 0x1FFFFF) {
+            // 11110yyy    10yyxxxx    10xxxxxx    10xxxxxx
+            len = 4;
+            b[0] = 0xF0 | ((unicode >> 18) & 0x07);
+            b[1] = 0x80 | ((unicode >> 12) & 0x3F);
+            b[2] = 0x80 | ((unicode >> 6) & 0x3F);
+            b[3] = 0x80 | (unicode & 0x3F);
+        } else if (unicode <= 0x3FFFFFF) {
+            // 111110yy    10yyyxxx    10xxxxxx    10xxxxxx    10xxxxxx
+            len = 5;
+            b[0] = 0xF8 | ((unicode >> 24) & 0x03);
+            b[1] = 0x80 | ((unicode >> 18) & 0x3F);
+            b[2] = 0x80 | ((unicode >> 12) & 0x3F);
+            b[3] = 0x80 | ((unicode >> 6) & 0x3F);
+            b[4] = 0x80 | (unicode & 0x3F);
+        } else if (unicode <= 0x7FFFFFF) {
+            // 1111110y    10yyyyxx    10xxxxxx    10xxxxxx    10xxxxxx    10xxxxxx
+            len = 6;
+            b[0] = 0xFC | ((unicode >> 30) & 0x01);
+            b[1] = 0x80 | ((unicode >> 24) & 0x3F);
+            b[2] = 0x80 | ((unicode >> 18) & 0x3F);
+            b[3] = 0x80 | ((unicode >> 12) & 0x3F);
+            b[4] = 0x80 | ((unicode >> 6) & 0x3F);
+            b[5] = 0x80 | (unicode & 0x3F);
+        } else {
+            return Failure(GenericError::Create("invalid unicode for utf8: %08x", unicode));
         }
-    }
-
-    Utf8LineReader::Line::Line():
-    element_num(0)
-    {}
-
-    Utf8LineReader::Utf8LineReader(const uint8_t * ptr, size_t length):
-    char_reader_(ptr, length)
-    {}
-    
-    Utf8LineReader::Utf8LineReader(const char * ptr, size_t length):
-    Utf8LineReader((const uint8_t *)(ptr), length)
-    {}
-    
-    Optional<Utf8LineReader::Line> Utf8LineReader::Read() {
-        Line ret;
-        
-        while (true) {
-            auto chro = char_reader_.Read();
-            if (!chro) {
-                break;
-            }
-            auto chr = *chro;
-            
-            if (chr == "\r") {
-                auto pos = char_reader_.position();
-                auto chr2o = char_reader_.Read();
-                if (!chr2o) {
-                    ret.string.append("\r");
-                    ret.element_num += 1;
-                    break;
-                }
-                auto chr2 = *chr2o;
-                if (chr2 == "\n") {
-                    ret.string.append("\r\n");
-                    ret.element_num += 2;
-                    break;
-                }
-                // back
-                char_reader_.set_position(pos);
-                break;
-            }
-            if (chr == "\n") {
-                ret.string.append("\n");
-                ret.element_num += 1;
-                break;
-            }
-            
-            ret.string.append(chr);
-            ret.element_num += 1;
-        }
-        
-        if (ret.element_num == 0) {
-            return None();
-        }
-        return Some(ret);
+        return Success(std::string((const char *)b, len));
     }
 }

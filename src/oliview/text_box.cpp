@@ -267,6 +267,10 @@ namespace oliview {
         return false;
     }
     
+    void TextBox::OnCharEvent(const CharEvent & event) {
+        
+    }
+    
     void TextBox::OnUpdateAnimation(float delta_time) {
         cursor_blink_time_ += delta_time;
         if (cursor_blink_time_ > 1.0f) {

@@ -3,6 +3,7 @@
 #include "./dependency.h"
 
 #include "./application_object.h"
+#include "./char_event.h"
 #include "./color.h"
 #include "./key_event.h"
 #include "./layouter.h"
@@ -112,6 +113,8 @@ namespace oliview {
         virtual bool OnKeyDownEvent(const KeyEvent & event);
         virtual bool OnKeyUpEvent(const KeyEvent & event);
         virtual bool OnKeyRepeatEvent(const KeyEvent & event);
+        
+        virtual void OnCharEvent(const CharEvent & event);
         
         virtual void OnUpdateAnimation(float delta_time);
         

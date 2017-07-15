@@ -516,6 +516,8 @@ namespace oliview {
         KeyEvent event;
         if (action == GLFW_PRESS) {
             event.set_type(KeyEventType::Down);
+            
+            Print(Format("key = 0x%04x", key));
         } else if (action == GLFW_RELEASE) {
             event.set_type(KeyEventType::Up);
         } else if (action == GLFW_REPEAT) {
@@ -529,8 +531,15 @@ namespace oliview {
     }
     
     void Window::CharHandler(GLFWwindow * window, unsigned int code) {
-        RHETORIC_UNUSED(window);
-        // TODO; test
-        Print(Format("char = 0x%04x", code));
+        auto thiz = (Window *)glfwGetWindowUserPointer(window);
+
+        auto target = thiz->focused_view();
+        if (!target) {
+            return;
+        }
+        CharEvent event;
+        event.set_unicode(static_cast<uint32_t>(code));
+        
+        target->OnCharEvent(event);
     }
 }

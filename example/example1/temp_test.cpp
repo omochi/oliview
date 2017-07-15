@@ -18,6 +18,4 @@ void EitherTest() {
 
 void Utf8Test() {
     
-    std::string str = "とても暑い\nお風呂のようだ\r夏はクソ\nぴ";
-    Utf8LineReader(str.c_str(), (int)str.size());
 }

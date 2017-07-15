@@ -1,6 +1,7 @@
 #pragma once
 
 #include "./font.h"
+#include "./char_event.h"
 #include "./key_event.h"
 #include "./math.h"
 #include "./text.h"
@@ -49,6 +50,8 @@ namespace oliview {
         virtual void OnMouseCancelEvent() override;
         
         virtual bool OnKeyDownEvent(const KeyEvent & event) override;
+        
+        virtual void OnCharEvent(const CharEvent & event) override;
         
         virtual void OnUpdateAnimation(float delta_time) override;
     private:
