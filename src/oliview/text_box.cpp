@@ -54,13 +54,13 @@ namespace oliview {
     }
 
     void TextBox::InsertTextAt(const Text::Index & index,
-                               const std::string & string,
+                               const Ptr<const Text> & text,
                                Text::Index * end_index_)
     {
         auto old_cursor_index = cursor_index_;
         
         Text::Index end_index;
-        text_->InsertAt(index, New<Text>(string), &end_index);
+        text_->InsertAt(index, text, &end_index);
         if (end_index_) {
             *end_index_ = end_index;
         }
@@ -247,28 +247,51 @@ namespace oliview {
     bool TextBox::OnKeyDownEvent(const KeyEvent & event) {
         switch (event.type()) {
             case KeyEventType::Down:
-            case KeyEventType::Repeat: {
-                if (event.key() == GLFW_KEY_RIGHT) {
-                    return MoveCursorRight();
-                } else if (event.key() == GLFW_KEY_LEFT) {
-                    return MoveCursorLeft();
-                } else if (event.key() == GLFW_KEY_UP) {
-                    return MoveCursorUp();
-                } else if (event.key() == GLFW_KEY_DOWN) {
-                    return MoveCursorDown();
+            case KeyEventType::Repeat:
+                switch (event.key()) {
+                    case GLFW_KEY_RIGHT:
+                        return MoveCursorRight();
+                    case GLFW_KEY_LEFT:
+                        return MoveCursorLeft();
+                    case GLFW_KEY_UP:
+                        return MoveCursorUp();
+                    case GLFW_KEY_DOWN:
+                        return MoveCursorDown();
+                    case GLFW_KEY_ENTER:
+                        InsertTextAt(cursor_index(), New<Text>("\r\n"), nullptr);
+                        return true;
+                    case GLFW_KEY_BACKSPACE: {
+                        auto end = cursor_index();
+                        auto begin = text_->BackIndex(end);
+                        if (begin == end) {
+                            return false;
+                        }
+                        DeleteTextAt(begin, end);
+                        return true;
+                    }
+                    case GLFW_KEY_DELETE: {
+                        auto begin = cursor_index();
+                        auto end = text_->AdvanceIndex(begin);
+                        if (begin == end) {
+                            return false;
+                        }
+                        DeleteTextAt(begin, end);
+                        return true;
+                    }
+                    default:
+                        return false;
                 }
-                
-                break;
-            }
             default:
-                break;
+                return false;
         }
-
-        return false;
     }
     
     void TextBox::OnCharEvent(const CharEvent & event) {
-        //TODO
+        auto str_ret = EncodeUnicodeToUtf8(event.unicode());
+        if (!str_ret) {
+            return;
+        }
+        InsertTextAt(cursor_index(), New<Text>(*str_ret), nullptr);
     }
     
     void TextBox::OnUpdateAnimation(float delta_time) {

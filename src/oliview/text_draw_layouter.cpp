@@ -126,10 +126,6 @@ namespace oliview {
         Text::Index index(line_index, 0);
         
         while (true) {
-            if (index == text->end_index()) {
-                break;
-            }
-            
             Ptr<TextDrawInfo::LineEntry> line_entry = LayoutSingleLine(ctx, text, index);
 
             auto char_positions = line_entry->char_positions();

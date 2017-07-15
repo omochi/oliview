@@ -147,26 +147,43 @@ namespace oliview {
         return Index(lines_.size() - 1, lines_.back()->size());
     }
     
-    Text::Index Text::AdvanceIndex(const Index & index_) const {
-        Index index = index_;
-        
+    Text::Index Text::AdvanceIndex(const Index & index) const {
         if (index == end_index()) {
             return index;
         }
+    
+        Index next_index = index;
+        while (true) {
+            if (next_index.line() != index.line()) {
+                break;
+            }
+            
+            auto chr = GetCharAt(next_index);
+            if (chr.length() == 0 ||
+                (chr == "\n" || chr == "\r"))
+            {
+                next_index = AdvanceIndexNoSkip(next_index);
+                continue;
+            }
+            
+            next_index = AdvanceIndexNoSkip(next_index);
         
-        auto acc = AccessCharAt(index);
-        RHETORIC_ASSERT(acc.string.length() > 0);
-        RHETORIC_ASSERT(acc.kind.presented());
-        
-        auto chr = acc.string.AsString();
-        if (ArrayFindIndexEq(newline_chars(), chr)) {
-            index = Index(index.line() + 1, 0);
-        } else {
-            index = Index(index.line(), acc.string.offset() + acc.string.length());
-            index = MayLineWrapIndex(index);
+            break;
         }
         
-        return index;
+        return next_index;
+    }
+    
+    Text::Index Text::AdvanceIndexNoSkip(const Index & index_) const {
+        Index index = index_;
+        if (index == end_index()) {
+            return index;
+        }
+        auto chr = GetCharAt(index);
+        if (chr.length() == 0) {
+            return Index(index.line() + 1, 0);
+        }
+        return Index(index.line(), index.byte() + chr.size());
     }
     
     Text::Index Text::BackIndex(const Index & index_) const {
@@ -178,16 +195,17 @@ namespace oliview {
                 return index;
             }
             if (index.byte() == 0) {
-                size_t line_index = index.line() - 1;
-                auto line = GetLineAt(line_index);
-                RHETORIC_ASSERT(line->size() > 0);
-                size_t char_index = line->size() - 1;
-                index = Index(line_index, char_index);
+                {
+                    size_t line_index = index.line() - 1;
+                    auto line = GetLineAt(line_index);
+                    RHETORIC_ASSERT(line->size() > 0);
+                    index = Index(line_index, line->size() - 1);
+                }
                 while (true) {
-                    if (char_index == 0) {
+                    if (index.byte() == 0) {
                         break;
                     }
-                    Index back_index = Index(line_index, char_index - 1);
+                    Index back_index = Index(index.line(), index.byte() - 1);
                     auto acc = AccessCharAt(back_index);
                     if (ArrayFindIndexEq(newline_chars(), acc.string.AsString())) {
                         index = back_index;
@@ -304,8 +322,9 @@ namespace oliview {
     
     Text::StringAccess<const std::string>
     Text::AccessCharAt(const Index & index_) const {
-        RHETORIC_ASSERT(CheckIndex(index_));
-        Index index = MayLineWrapIndex(index_);
+        Index index = index_;
+        
+        RHETORIC_ASSERT(CheckIndex(index));
         
         Ptr<std::string> line = lines_[index.line()];
 

@@ -76,15 +76,15 @@ void Window1::OnKeyDownEvent(const KeyEvent & event) {
         } else if (event.key() == GLFW_KEY_T) {
             switch (test_stage_) {
                 case 0: {
-                    text_box_->InsertTextAt(Text::Index(0, 9), "砂漠", nullptr);
+//                    text_box_->InsertTextAt(Text::Index(0, 9), New<Text>("砂漠"), nullptr);
                     break;
                 }
                 case 1: {
-                    text_box_->InsertTextAt(Text::Index(0, 9), "１行\n２行\n３行", nullptr);
+//                    text_box_->InsertTextAt(Text::Index(0, 9), New<Text>("１行\n２行\n３行"), nullptr);
                     break;
                 }
                 case 2: {
-                    text_box_->DeleteTextAt(Text::Index(2, 0), Text::Index(4, 0));
+//                    text_box_->DeleteTextAt(Text::Index(2, 0), Text::Index(4, 0));
                     break;
                 }
                 case 3: {

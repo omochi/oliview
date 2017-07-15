@@ -27,7 +27,7 @@ namespace oliview {
         
         
         void InsertTextAt(const Text::Index & index,
-                          const std::string & string,
+                          const Ptr<const Text> & string,
                           Text::Index * end_index);
         void DeleteTextAt(const Text::Index & begin,
                           const Text::Index & end);

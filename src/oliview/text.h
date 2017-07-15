@@ -66,6 +66,7 @@ namespace oliview {
         Index end_index() const;
         
         Index AdvanceIndex(const Index & index) const;
+        Index AdvanceIndexNoSkip(const Index & index) const;
         Index BackIndex(const Index & index) const;
         
         bool CheckIndex(const Index & index) const;
@@ -87,6 +88,12 @@ namespace oliview {
             kind(kind)
             {}
         };
+        
+        /*
+         文字単位で進む。
+         行末で1度停止して、次に行頭に移動する。
+         */
+        Index _AdvanceIndex(const Index & index) const;
         
         void FixLastLine();
         

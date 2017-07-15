@@ -5,7 +5,9 @@ void RunTests() {
     EitherTest();
     Utf8Test();
     TextAdvanceTest1();
+    TextAdvanceCrlfTest1();
     TextBackTest1();
+    TextBackCrlfTest1();
     TextInsertTest1();
     TextDeleteTest1();
 }
