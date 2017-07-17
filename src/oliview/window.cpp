@@ -542,7 +542,8 @@ namespace oliview {
     
     void Window::ScrollHandler(GLFWwindow * window, double x, double y) {
         auto thiz = (Window *)glfwGetWindowUserPointer(window);
-        
+        x *= 10.0;
+        y *= 10.0;
         Print(Format("Scroll %f, %f", x, y));
         
         double px, py;
