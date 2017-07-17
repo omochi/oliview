@@ -43,14 +43,11 @@ namespace oliview {
         glfwSetWindowFocusCallback(gw, &Window::FocusHandler);
         glfwSetMouseButtonCallback(gw, &Window::MouseButtonHandler);
         glfwSetCursorPosCallback(gw, &Window::CursorPosHandler);
+        glfwSetScrollCallback(gw, &Window::ScrollHandler);
         glfwSetKeyCallback(gw, &Window::KeyHandler);
         glfwSetCharCallback(gw, &Window::CharHandler);
         
         MakeContextCurrent();
-        
-        root_view_ = OLIVIEW_INIT(WindowRootView, app);
-        root_view_->_SetWindow(shared_from_this());
-        root_view_->set_background_color(Color(1, 1, 1, 1));
         
         int w, h;
         
@@ -60,6 +57,11 @@ namespace oliview {
         glfwGetFramebufferSize(gw, &w, &h);
         set_framebuffer_size(Size(w, h));
         
+        root_view_ = OLIVIEW_INIT(WindowRootView, app);
+        root_view_->_SetWindow(shared_from_this());
+        root_view_->set_background_color(Color(1, 1, 1, 1));
+        root_view_->set_frame(Rect(Vector2(), window_size()));
+                
         app->_AddWindow(shared_from_this());
     }
     
@@ -161,12 +163,19 @@ namespace oliview {
             if (event.type() == MouseEventType::Down) {
                 RHETORIC_ASSERT(event.button().presented());
                 
-                Ptr<View> hit_target = root_view_->MouseHitTest(event);
+                Ptr<View> hit_target = root_view_->MouseHitTest(event.pos());
                 if (hit_target) {
                     PostMouseDownEventTo(event, hit_target);
                 }
             }
             //TODO hover
+        }
+    }
+    
+    void Window::HandleScrollEvent(const ScrollEvent & event) {
+        Ptr<View> hit_target = root_view_->MouseHitTest(event.pos());
+        if (hit_target) {
+            PostScrollEventTo(event, hit_target);
         }
     }
     
@@ -205,7 +214,7 @@ namespace oliview {
                 break;
         }
     }
-
+    
     void Window::OnBeginDraw(NVGcontext * ctx) {
         RHETORIC_UNUSED(ctx);
     }
@@ -294,11 +303,10 @@ namespace oliview {
         MakeContextCurrent();
         OLIVIEW_GL_ASSERT_NO_ERROR();
         
-        float pixel_ratio = last_valid_framebuffer_size_.width() / last_valid_window_size_.width();
         nvgBeginFrame(ctx,
-                      (int)last_valid_window_size_.width(),
-                      (int)last_valid_window_size_.height(),
-                      pixel_ratio);
+                      (int)window_size_.width(),
+                      (int)window_size_.height(),
+                      pixel_ratio_);
         
         nvg_context_ = ctx;
         
@@ -352,7 +360,7 @@ namespace oliview {
             command.shadow = false;
             draws.push_back(command);
         }
-        root_view_->_CollectDrawCommand(&draws, true);
+        root_view_->_CollectDrawCommand(&draws);
         
         glViewport(0, 0, (int)framebuffer_size_.width(), (int)framebuffer_size_.height());
         OLIVIEW_GL_ASSERT_NO_ERROR();
@@ -373,18 +381,22 @@ namespace oliview {
     void Window::set_window_size(const Size & value) {
         window_size_ = value;
         
-        if (window_size_.width() != 0 && window_size_.height() != 0) {
-            last_valid_window_size_ = window_size_;
-        }
+        MayUpdatePixelRatio();
         
-        root_view_->set_frame(Rect(Vector2(0, 0), window_size_));
+        if (root_view_) {
+            root_view_->set_frame(Rect(Vector2(0, 0), window_size_));
+        }
     }
     
     void Window::set_framebuffer_size(const Size & value) {
         framebuffer_size_ = value;
         
-        if (framebuffer_size_.width() != 0 && framebuffer_size_.height() != 0) {
-            last_valid_framebuffer_size_ = framebuffer_size_;
+        MayUpdatePixelRatio();
+    }
+    
+    void Window::MayUpdatePixelRatio() {
+        if (framebuffer_size_.width() != 0 && window_size_.width() != 0) {
+            pixel_ratio_ = framebuffer_size_.width() / window_size_.width();
         }
     }
 
@@ -457,6 +469,24 @@ namespace oliview {
         }
     }
     
+    void Window::PostScrollEventTo(const ScrollEvent & event, const Ptr<View> & view_) {
+        Ptr<View> view = view_;
+        
+        bool consumed;
+        while (true) {
+            if (!view) {
+                break;
+            }
+            
+            ScrollEvent view_event = view->_ConvertScrollEventFromWindow(event);
+            consumed = view->OnScrollEvent(view_event);
+            if (consumed) {
+                return;
+            }
+            view = view->parent();
+        }
+    }
+    
     void Window::RefreshHandler(GLFWwindow * window) {
         auto thiz = (Window *)glfwGetWindowUserPointer(window);
         thiz->_Update();
@@ -510,14 +540,26 @@ namespace oliview {
         thiz->HandleMouseEvent(event);
     }
     
+    void Window::ScrollHandler(GLFWwindow * window, double x, double y) {
+        auto thiz = (Window *)glfwGetWindowUserPointer(window);
+        
+        Print(Format("Scroll %f, %f", x, y));
+        
+        double px, py;
+        glfwGetCursorPos(window, &px, &py);
+        
+        ScrollEvent event;
+        event.set_scroll(Vector2((float)x, (float)y));
+        event.set_pos(Vector2((float)px, (float)py));
+        thiz->HandleScrollEvent(event);
+    }
+    
     void Window::KeyHandler(GLFWwindow * window, int key, int scancode, int action, int modifier) {
         auto thiz = (Window *)glfwGetWindowUserPointer(window);
         
         KeyEvent event;
         if (action == GLFW_PRESS) {
             event.set_type(KeyEventType::Down);
-            
-            Print(Format("key = 0x%04x", key));
         } else if (action == GLFW_RELEASE) {
             event.set_type(KeyEventType::Up);
         } else if (action == GLFW_REPEAT) {

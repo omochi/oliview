@@ -5,11 +5,22 @@ namespace oliview {
     {}
 
     Vector3::Vector3(float x, float y, float z) {
-        elements_[0] = x;
-        elements_[1] = y;
-        elements_[2] = z;
+        set_x(x);
+        set_y(y);
+        set_z(z);
+    }
+    
+    Vector3::Vector3(const Vector3 & other) {
+        *this = other;
     }
 
+    Vector3 & Vector3::operator=(const Vector3 & other) {
+        set_x(other.x());
+        set_y(other.y());
+        set_z(other.z());
+        return *this;
+    }
+    
     float Vector3::x() const {
         return elements_[0];
     }
@@ -46,6 +57,28 @@ namespace oliview {
     float * Vector3::elements() {
         return elements_;
     }
+    
+    Vector3 Vector3::operator-() const {
+        return Vector3(-x(), -y(), -z());
+    }
+    
+    Vector3 Vector3::operator+(const Vector3 & other) const {
+        return Vector3(x() + other.x(), y() + other.y(), z() + other.z());
+    }
+    
+    Vector3 & Vector3::operator+=(const Vector3 & other) {
+        *this = *this + other;
+        return *this;
+    }
+    
+    Vector3 Vector3::operator-(const Vector3 & other) const {
+        return Vector3(x() - other.x(), y() - other.y(), z() - other.z());
+    }
+    
+    Vector3 & Vector3::operator-=(const Vector3 & other) {
+        *this = *this - other;
+        return *this;
+    }
 
     Vector2 Vector3::To2() const {
         return Vector2(x(), y());
@@ -55,10 +88,19 @@ namespace oliview {
         return Vector3(a * b.x(), a * b.y(), a * b.z());
     }
     
+    Vector3 operator*(const Vector3 & a, float b) {
+        return b * a;
+    }
+    
+    Vector3 & operator*=(Vector3 & a, float b) {
+        a = a * b;
+        return a;
+    }
+
     Vector3 operator/(const Vector3 & a, float b) {
         return (1.0f / b) * a;
     }
-
+    
     Vector3 & operator/=(Vector3 & a, float b) {
         a = a / b;
         return a;

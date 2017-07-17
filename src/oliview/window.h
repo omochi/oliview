@@ -8,6 +8,7 @@
 #include "./gl_assert.h"
 #include "./key_event.h"
 #include "./mouse_event.h"
+#include "./scroll_event.h"
 #include "./size.h"
 #include "./view.h"
 #include "./vector2.h"
@@ -29,6 +30,7 @@ namespace oliview {
         
         RHETORIC_GETTER(Size, window_size)
         RHETORIC_GETTER(Size, framebuffer_size)
+        RHETORIC_GETTER(float, pixel_ratio)
         Ptr<View> root_view() const;
         RHETORIC_GETTER(GLFWwindow *, glfw_window)
         
@@ -47,6 +49,7 @@ namespace oliview {
         void UnfocusView();
         
         void HandleMouseEvent(const MouseEvent & event);
+        void HandleScrollEvent(const ScrollEvent & event);
         void HandleKeyEvent(const KeyEvent & event);
         
         virtual void OnBeginDraw(NVGcontext * ctx);
@@ -74,11 +77,14 @@ namespace oliview {
         
         void set_window_size(const Size & value);
         void set_framebuffer_size(const Size & value);
+        
+        void MayUpdatePixelRatio();
 
         Ptr<View> GetNextFocusView(const Ptr<View> & view) const;
         Ptr<View> GetPrevFocusView(const Ptr<View> & view) const;
         
         void PostMouseDownEventTo(const MouseEvent & event, const Ptr<View> & view);
+        void PostScrollEventTo(const ScrollEvent & event, const Ptr<View> & view);
         
         GLFWwindow * glfw_window_;
         NVGcontext * nvg_context_;
@@ -87,9 +93,7 @@ namespace oliview {
 
         Size window_size_;
         Size framebuffer_size_;
-        
-        Size last_valid_window_size_;
-        Size last_valid_framebuffer_size_;
+        float pixel_ratio_;
         
         Ptr<WindowRootView> root_view_;
         
@@ -104,7 +108,8 @@ namespace oliview {
         static void FocusHandler(GLFWwindow * window, int focused);
         static void MouseButtonHandler(GLFWwindow * window, int button, int action, int modifier);
         static void CursorPosHandler(GLFWwindow * window, double x, double y);
-        static void KeyHandler(GLFWwindow *, int key, int scancode, int action, int modifier);
+        static void ScrollHandler(GLFWwindow * window, double x, double y);
+        static void KeyHandler(GLFWwindow * window, int key, int scancode, int action, int modifier);
         static void CharHandler(GLFWwindow * window, unsigned int code);
     };
 }

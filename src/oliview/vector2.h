@@ -10,6 +10,8 @@ namespace oliview {
     public:
         Vector2();
         Vector2(float x, float y);
+        Vector2(const Vector2 & other);
+        Vector2 & operator=(const Vector2 & other);
 
         float x() const;
         void set_x(float value);
@@ -27,8 +29,12 @@ namespace oliview {
 
         Vector2 ApplyTransform(const Matrix3x3 & m) const;
 
+        Vector2 operator-() const;
+        
         Vector2 operator+(const Vector2 & other) const;
+        Vector2 & operator+=(const Vector2 & other);
         Vector2 operator-(const Vector2 & other) const;
+        Vector2 & operator-=(const Vector2 & other);
         
         Vector2 GetMin(const Vector2 & other) const;
         Vector2 GetMax(const Vector2 & other) const;
@@ -38,6 +44,7 @@ namespace oliview {
 
     Vector2 operator*(float a, const Vector2 & b);
     Vector2 operator*(const Vector2 & a, float b);
+    Vector2 & operator*=(Vector2 & a, float b);
     Vector2 operator/(const Vector2 & a, float b);
     Vector2 & operator/=(Vector2 & a, float b);
 }

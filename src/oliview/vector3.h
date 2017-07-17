@@ -8,6 +8,8 @@ namespace oliview {
     public:
         Vector3();
         Vector3(float x, float y, float z);
+        Vector3(const Vector3 & other);
+        Vector3 & operator=(const Vector3 & other);
 
         float x() const;
         void set_x(float value);
@@ -23,13 +25,22 @@ namespace oliview {
 
         const float * elements() const;
         float * elements();
-
+        
+        Vector3 operator-() const;
+        
+        Vector3 operator+(const Vector3 & other) const;
+        Vector3 & operator+=(const Vector3 & other);
+        Vector3 operator-(const Vector3 & other) const;
+        Vector3 & operator-=(const Vector3 & other);
+        
         Vector2 To2() const;
     private:
         float elements_[3];
     };
 
     Vector3 operator*(float a, const Vector3 & b);
+    Vector3 operator*(const Vector3 & a, float b);
+    Vector3 & operator*=(Vector3 & a, float b);
 
     Vector3 operator/(const Vector3 & a, float b);
     Vector3 & operator/=(Vector3 & a, float b);

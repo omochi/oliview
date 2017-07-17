@@ -48,11 +48,9 @@ namespace oliview {
         virtual void OnMouseMoveEvent(const MouseEvent & event) override;
         virtual void OnMouseUpEvent(const MouseEvent & event) override;
         virtual void OnMouseCancelEvent() override;
-        
+        virtual bool OnScrollEvent(const ScrollEvent & event) override;
         virtual bool OnKeyDownEvent(const KeyEvent & event) override;
-        
         virtual void OnCharEvent(const CharEvent & event) override;
-        
         virtual void OnUpdateAnimation(float delta_time) override;
     private:
         Text::Index GetTextIndexForLineIndexX(size_t line_index, float x);

@@ -5,6 +5,7 @@
 #include "./application_object.h"
 #include "./char_event.h"
 #include "./color.h"
+#include "./edge_inset.h"
 #include "./key_event.h"
 #include "./layouter.h"
 #include "./matrix3x3.h"
@@ -12,6 +13,7 @@
 #include "./mouse_event.h"
 #include "./nanovg_util.h"
 #include "./rect.h"
+#include "./scroll_event.h"
 #include "./size.h"
 
 namespace oliview {
@@ -61,8 +63,9 @@ namespace oliview {
         RHETORIC_GETTER(Rect, frame)
         void set_frame(const Rect & value);
         
-        Rect local_frame() const;
-
+        RHETORIC_GETTER(Rect, bounds)
+        void set_bounds(const Rect & value);
+        
         RHETORIC_GETTER(Color, background_color)
         void set_background_color(const Color & value);
         
@@ -94,21 +97,20 @@ namespace oliview {
     
         virtual void DrawContent(NVGcontext * ctx);
         
-        Matrix3x3 local_transform() const;
-        Matrix3x3 window_transform() const;
-        
         Vector2 ConvertPointToWindow(const Vector2 & point) const;
         Vector2 ConvertPointFromWindow(const Vector2 & point) const;
         Vector2 ConvertPointToView(const Vector2 & point, const Ptr<View> & view) const;
         Vector2 ConvertPointFromView(const Vector2 & point, const Ptr<View> & view) const;
 
         virtual bool IsPointInside(const Vector2 & point) const;
-        virtual Ptr<View> MouseHitTest(const MouseEvent & event) const;
+        virtual Ptr<View> MouseHitTest(const Vector2 & pos) const;
         
         virtual bool OnMouseDownEvent(const MouseEvent & event);
         virtual void OnMouseMoveEvent(const MouseEvent & event);
         virtual void OnMouseUpEvent(const MouseEvent & event);
         virtual void OnMouseCancelEvent();
+        
+        virtual bool OnScrollEvent(const ScrollEvent & event);
         
         virtual bool OnKeyDownEvent(const KeyEvent & event);
         virtual bool OnKeyUpEvent(const KeyEvent & event);
@@ -123,11 +125,13 @@ namespace oliview {
 
         bool _InvokeLayout(NVGcontext * ctx);
         void _PrepareToDraw(const DrawInfo & info);
-        void _CollectDrawCommand(std::vector<DrawCommand> * commands, bool shadow);
+        void _CollectDrawCommand(std::vector<DrawCommand> * commands);
         void _InvokeDraw(NVGcontext * ctx, bool shadow);
         void _SetParent(const Ptr<View> & parent);
         void _SetWindow(const Ptr<Window> & window);
         MouseEvent _ConvertMouseEventFromWindow(const MouseEvent & event) const;
+        ScrollEvent _ConvertScrollEventFromWindow(const ScrollEvent & event) const;
+
         void _UpdateAnimation(float delta_time);
     private:
         void Layout(NVGcontext * ctx);
@@ -143,6 +147,7 @@ namespace oliview {
         WeakPtr<Window> window_;
 
         Rect frame_;
+        Rect bounds_;
         Color background_color_;
         
         bool needs_layout_;

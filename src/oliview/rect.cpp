@@ -37,6 +37,25 @@ namespace oliview {
         return Rect::FromPoints(p0, p1);
     }
     
+    Rect Rect::OffsetBy(const Vector2 & offset) const {
+        return Rect(origin() + offset, size());
+    }
+    
+    Rect Rect::InsetBy(const EdgeInset & inset) const {
+        auto origin = this->origin();
+        auto end = this->end();
+        
+        float top = origin.y() + inset.top();
+        float left = origin.x() + inset.left();
+        float bottom = end.y() - inset.bottom();
+        float right = end.x() - inset.right();
+        
+        bottom = std::max(top, bottom);
+        right = std::max(left, right);
+        
+        return Rect(Vector2(left, top), Size(right - left, bottom - top));
+    }
+    
     bool Rect::IsPointInside(const Vector2 & point) const {
         auto origin = this->origin();
         auto end = this->end();

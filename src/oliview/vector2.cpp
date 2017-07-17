@@ -8,8 +8,18 @@ namespace oliview {
     {}
 
     Vector2::Vector2(float x, float y) {
-        elements_[0] = x;
-        elements_[1] = y;
+        set_x(x);
+        set_y(y);
+    }
+    
+    Vector2::Vector2(const Vector2 & other) {
+        *this = other;
+    }
+    
+    Vector2 & Vector2::operator=(const Vector2 & other) {
+        set_x(other.x());
+        set_y(other.y());
+        return *this;
     }
 
     float Vector2::x() const {
@@ -51,15 +61,29 @@ namespace oliview {
         x /= x.z();
         return x.To2();
     }
+    
+    Vector2 Vector2::operator-() const {
+        return Vector2(-x(), -y());
+    }
 
     Vector2 Vector2::operator+(const Vector2 & other) const {
         return Vector2(x() + other.x(),
                        y() + other.y());
     }
+    
+    Vector2 & Vector2::operator+=(const Vector2 & other) {
+        *this = *this + other;
+        return *this;
+    }
 
     Vector2 Vector2::operator-(const Vector2 & other) const {
         return Vector2(x() - other.x(),
                        y() - other.y());
+    }
+    
+    Vector2 & Vector2::operator-=(const Vector2 & other) {
+        *this = *this - other;
+        return *this;
     }
     
     Vector2 Vector2::GetMin(const Vector2 & other) const {
@@ -75,15 +99,20 @@ namespace oliview {
     Vector2 operator*(float a, const Vector2 & b) {
         return Vector2(a * b.x(), a * b.y());
     }
-
+    
     Vector2 operator*(const Vector2 & a, float b) {
         return b * a;
+    }
+    
+    Vector2 & operator*=(Vector2 & a, float b) {
+        a = a * b;
+        return a;
     }
 
     Vector2 operator/(const Vector2 & a, float b) {
         return (1.0f / b) * a;
     }
-
+    
     Vector2 & operator/=(Vector2 & a, float b) {
         a = a / b;
         return a;

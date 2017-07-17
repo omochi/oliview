@@ -244,6 +244,17 @@ namespace oliview {
     void TextBox::OnMouseCancelEvent() {
     }
     
+    bool TextBox::OnScrollEvent(const ScrollEvent & event) {
+        auto bounds = this->bounds();
+        bounds.set_origin(bounds.origin() - event.scroll());
+        set_bounds(bounds);
+        Print(Format("TextBox scr %f, %f=> %f, %f",
+                     event.scroll().x(),
+                     event.scroll().y(),
+                     bounds.origin().x(), bounds.origin().y()));
+        return true;
+    }
+    
     bool TextBox::OnKeyDownEvent(const KeyEvent & event) {
         switch (event.type()) {
             case KeyEventType::Down:

@@ -2,6 +2,7 @@
 
 #include "./dependency.h"
 
+#include "./edge_inset.h"
 #include "./size.h"
 #include "./vector2.h"
 #include "./matrix3x3.h"
@@ -24,6 +25,9 @@ namespace oliview {
         
         Rect GetUnion(const Rect & other) const;
         Rect GetIntersection(const Rect & other) const;
+        
+        Rect OffsetBy(const Vector2 & offset) const;
+        Rect InsetBy(const EdgeInset & inset) const;
         
         bool IsPointInside(const Vector2 & point) const;
         

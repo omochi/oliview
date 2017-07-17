@@ -97,11 +97,17 @@ namespace oliview {
     void View::set_frame(const Rect & value) {
         frame_ = value;
         
+        bounds_.set_size(frame_.size());
+        
         SetNeedsLayout();
     }
     
-    Rect View::local_frame() const {
-        return Rect(Vector2(0, 0), frame_.size());
+    void View::set_bounds(const Rect & value) {
+        bounds_ = value;
+        
+        frame_.set_size(bounds_.size());
+        
+        SetNeedsLayout();
     }
 
     void View::set_background_color(const Color & value) {
@@ -225,21 +231,14 @@ namespace oliview {
     void View::DrawContent(NVGcontext * ctx) {
         RHETORIC_UNUSED(ctx);
     }
-    
-    Matrix3x3 View::local_transform() const {
-        return Matrix3x3::Translation(frame_.origin());
-    }
-    
-    Matrix3x3 View::window_transform() const {
-        return draw_info_.window_transform;
-    }
-    
+
     Vector2 View::ConvertPointToWindow(const Vector2 & point) const {
-        return point.ApplyTransform(window_transform());
+        Matrix3x3 m = draw_info_.window_transform;
+        return point.ApplyTransform(m);
     }
     
     Vector2 View::ConvertPointFromWindow(const Vector2 & point) const {
-        auto m = window_transform().Invert();
+        Matrix3x3 m = draw_info_.window_transform.Invert();
         return point.ApplyTransform(m);
     }
     
@@ -252,13 +251,13 @@ namespace oliview {
     }
     
     bool View::IsPointInside(const Vector2 & point) const {
-        return local_frame().IsPointInside(point);
+        return bounds().IsPointInside(point);
     }
     
-    Ptr<View> View::MouseHitTest(const MouseEvent & event) const {
+    Ptr<View> View::MouseHitTest(const Vector2 & pos) const {
         bool test_children = true;
         if (clipping_children()) {
-            if (!IsPointInside(event.pos())) {
+            if (!IsPointInside(pos)) {
                 test_children = false;
             }
         }
@@ -266,17 +265,15 @@ namespace oliview {
         if (test_children) {
             auto children = ArrayReversed(this->children());
             for (auto & child : children) {
-                Vector2 pos_in_child = ConvertPointToView(event.pos(), child);
-                MouseEvent child_event = event;
-                child_event.set_pos(pos_in_child);
-                auto ret = child->MouseHitTest(child_event);
+                Vector2 pos_in_child = ConvertPointToView(pos, child);
+                auto ret = child->MouseHitTest(pos_in_child);
                 if (ret) {
                     return ret;
                 }
             }
         }
         
-        if (IsPointInside(event.pos())) {
+        if (IsPointInside(pos)) {
             return const_cast<View *>(this)->shared_from_this();
         }
         
@@ -297,6 +294,11 @@ namespace oliview {
     }
     
     void View::OnMouseCancelEvent() {
+    }
+    
+    bool View::OnScrollEvent(const ScrollEvent & event) {
+        RHETORIC_UNUSED(event);
+        return false;
     }
     
     bool View::OnKeyDownEvent(const KeyEvent & event) {
@@ -352,12 +354,16 @@ namespace oliview {
     void View::_PrepareToDraw(const DrawInfo & info) {
         draw_info_ = info;
         
-        auto wtr = draw_info_.window_transform;
-        wtr = local_transform() * wtr;
+        Matrix3x3 wtr = Matrix3x3::Identity();
+        
+        wtr *= Matrix3x3::Translation(-bounds().origin());
+        wtr *= Matrix3x3::Translation(frame().origin());
+        wtr *= draw_info_.window_transform;
+        
         draw_info_.window_transform = wtr;
         
-        Rect frame_in_window = Rect(Vector2(), frame().size()).ApplyTransform(wtr);
-        draw_info_.content_clip_frame = frame_in_window.GetIntersection(draw_info_.parent_clip_frame);
+        Rect clip_in_window = bounds().ApplyTransform(draw_info_.window_transform);
+        draw_info_.content_clip_frame = clip_in_window.GetIntersection(draw_info_.parent_clip_frame);
 
         DrawInfo child_info = draw_info_;
         
@@ -374,10 +380,12 @@ namespace oliview {
         nvgSave(ctx);
         if (shadow) {
             NVGSetScissor(ctx, draw_info_.parent_clip_frame);
+            nvgResetTransform(ctx);
             NVGTransform(ctx, draw_info_.window_transform);
             DrawShadow(ctx);
         } else {
             NVGSetScissor(ctx, draw_info_.content_clip_frame);
+            nvgResetTransform(ctx);
             NVGTransform(ctx, draw_info_.window_transform);
             DrawBackground(ctx);
             DrawContent(ctx);
@@ -385,25 +393,19 @@ namespace oliview {
         nvgRestore(ctx);
     }
 
-    void View::_CollectDrawCommand(std::vector<DrawCommand> * commands, bool shadow) {
-        if (shadow) {
-            for (auto & child : children_) {
-                DrawCommand command;
-                command.view = child;
-                command.shadow = true;
-                commands->push_back(command);
-            }
-        }
-        
+    void View::_CollectDrawCommand(std::vector<DrawCommand> * commands) {
         for (auto & child : children_) {
             DrawCommand command;
             command.view = child;
+            command.shadow = true;
+            commands->push_back(command);
+            
             command.shadow = false;
             commands->push_back(command);
         }
 
         for (auto & child : children_) {
-            child->_CollectDrawCommand(commands, shadow);
+            child->_CollectDrawCommand(commands);
         }
     }
     
@@ -451,6 +453,12 @@ namespace oliview {
         return ret;
     }
     
+    ScrollEvent View::_ConvertScrollEventFromWindow(const ScrollEvent & event) const {
+        ScrollEvent ret = event;
+        ret.set_pos(ConvertPointFromWindow(event.pos()));
+        return ret;        
+    }
+    
     void View::_UpdateAnimation(float delta_time) {
         OnUpdateAnimation(delta_time);
         
@@ -469,20 +477,22 @@ namespace oliview {
     
     void View::DrawBackground(NVGcontext * ctx) {
         nvgBeginPath(ctx);
-        NVGAddRectPath(ctx, local_frame());
+        NVGAddRectPath(ctx, bounds());
         NVGSetFillColor(ctx, background_color_);
         nvgFill(ctx);
     }
     
     void View::DrawShadow(NVGcontext * ctx) {
         if (focused()) {
-            Vector2 shadow_origin = Vector2(-2.0f, -2.0f);
-            Vector2 shadow_size = frame().size().ToVector() + Vector2(4.0f, 4.0f);
+            EdgeInset shadow_inset(-2, -2, -2, -2);
+            Rect shadow_rect = bounds().InsetBy(shadow_inset);
             
             nvgBeginPath(ctx);
             
-            nvgRoundedRect(ctx, shadow_origin.x(), shadow_origin.y(),
-                           shadow_size.x(), shadow_size.y(), 2.0f);
+            nvgRoundedRect(ctx,
+                           shadow_rect.origin().x(), shadow_rect.origin().y(),
+                           shadow_rect.size().width(), shadow_rect.size().height(),
+                           2.0f);
             NVGSetFillColor(ctx, Color(0.0f, 0.4f, 0.8f, 0.3f));
             
             nvgFill(ctx);
