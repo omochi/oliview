@@ -488,11 +488,7 @@ namespace oliview {
             Rect shadow_rect = bounds().InsetBy(shadow_inset);
             
             nvgBeginPath(ctx);
-            
-            nvgRoundedRect(ctx,
-                           shadow_rect.origin().x(), shadow_rect.origin().y(),
-                           shadow_rect.size().width(), shadow_rect.size().height(),
-                           2.0f);
+            NVGAddRoundRectPath(ctx, shadow_rect, 2.0f);
             NVGSetFillColor(ctx, Color(0.0f, 0.4f, 0.8f, 0.3f));
             
             nvgFill(ctx);

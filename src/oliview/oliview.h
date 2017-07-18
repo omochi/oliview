@@ -3,6 +3,7 @@
 #include "./dependency.h"
 
 #include "./application.h"
+#include "./axis.h"
 #include "./color.h"
 #include "./font.h"
 #include "./font_manager.h"
@@ -18,6 +19,8 @@
 #include "./mouse_event.h"
 #include "./nanovg_util.h"
 #include "./rect.h"
+#include "./scroll_bar.h"
+#include "./scroll_event.h"
 #include "./size.h"
 #include "./string_slice.h"
 #include "./table_dimension.h"

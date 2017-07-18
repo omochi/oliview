@@ -10,6 +10,7 @@ private:
     int test_stage_;
     
     Ptr<TextBox> text_box_;
+    Ptr<ScrollBar> scroll_bar_;
 };
 
 class Window1View : public View {

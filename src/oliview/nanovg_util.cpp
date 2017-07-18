@@ -29,6 +29,16 @@ namespace oliview {
                 rect.size().width(), rect.size().height());
     }
     
+    void NVGAddRoundRectPath(NVGcontext * ctx,
+                             const Rect & rect,
+                             float radius)
+    {
+        nvgRoundedRect(ctx,
+                       rect.origin().x(), rect.origin().y(),
+                       rect.size().width(), rect.size().height(),
+                       radius);
+    }
+    
     void NVGSetFillColor(NVGcontext * ctx,
                       const Color & color)
     {

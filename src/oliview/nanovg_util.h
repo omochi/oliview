@@ -15,6 +15,9 @@ namespace oliview {
                       const Matrix3x3 & matrix);
     void NVGAddRectPath(NVGcontext * ctx,
                         const Rect & rect);
+    void NVGAddRoundRectPath(NVGcontext * ctx,
+                             const Rect & rect,
+                             float radius);
     void NVGSetFillColor(NVGcontext * ctx,
                          const Color & color);
     void NVGSetFont(NVGcontext * ctx,
