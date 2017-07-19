@@ -18,6 +18,14 @@ namespace oliview {
     Vector2 Rect::end() const {
         return origin_ + size_.ToVector();
     }
+    
+    Range<float> Rect::x_range() const {
+        return MakeRange(origin().x(), end().x());
+    }
+    
+    Range<float> Rect::y_range() const {
+        return MakeRange(origin().y(), end().y());
+    }
 
     Rect Rect::ApplyTransform(const Matrix3x3 & m) const {
         auto p0 = origin().ApplyTransform(m);
@@ -55,12 +63,10 @@ namespace oliview {
         
         return Rect(Vector2(left, top), Size(right - left, bottom - top));
     }
-    
-    bool Rect::IsPointInside(const Vector2 & point) const {
-        auto origin = this->origin();
-        auto end = this->end();
-        return origin.x() <= point.x() && point.x() <= end.x() &&
-        origin.y() <= point.y() && point.y() <= end.y();
+
+    bool Rect::Contains(const Vector2 & point) const {
+        return x_range().Contains(point.x()) &&
+        y_range().Contains(point.y());
     }
     
     Rect Rect::FromPoints(const Vector2 & p0,

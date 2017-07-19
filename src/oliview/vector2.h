@@ -2,6 +2,8 @@
 
 #include "./dependency.h"
 
+#include "./axis.h"
+
 namespace oliview {
     class Vector3;
     class Matrix3x3;

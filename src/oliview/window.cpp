@@ -142,33 +142,51 @@ namespace oliview {
     }
     
     void Window::HandleMouseEvent(const MouseEvent & event_) {
-        MouseEvent event = event_;
-        
         if (mouse_target_) {
-            event = mouse_target_->_ConvertMouseEventFromWindow(event);
-            
-            if (event.type() == MouseEventType::Up) {
-                RHETORIC_ASSERT(event.button().presented());
-                
-                if (mouse_source_button_ == event.button()) {
-                    mouse_target_->OnMouseUpEvent(event);
-                    
-                    mouse_target_ = nullptr;
-                    mouse_source_button_ = None();
+            switch (event_.type()) {
+                case MouseEventType::Up: {
+                    RHETORIC_ASSERT(event_.button().presented());
+
+                    MouseEvent event = mouse_target_->_ConvertMouseEventFromWindow(event_);
+
+                    if (mouse_source_button_ == event.button()) {
+                        mouse_target_->OnMouseUpEvent(event);
+                        
+                        mouse_target_ = nullptr;
+                        mouse_source_button_ = None();
+                    }
+                    break;
                 }
-            } else if (event.type() == MouseEventType::Move) {
-                mouse_target_->OnMouseMoveEvent(event);
+                case MouseEventType::Move: {
+                    MouseEvent event = mouse_target_->_ConvertMouseEventFromWindow(event_);
+
+                    mouse_target_->OnMouseMoveEvent(event);
+                    break;
+                }
+                case MouseEventType::Down:
+                case MouseEventType::Cancel:
+                    break;
             }
         } else {
-            if (event.type() == MouseEventType::Down) {
-                RHETORIC_ASSERT(event.button().presented());
-                
-                Ptr<View> hit_target = root_view_->MouseHitTest(event.pos());
-                if (hit_target) {
-                    PostMouseDownEventTo(event, hit_target);
+            switch (event_.type()) {
+                case MouseEventType::Down: {
+                    RHETORIC_ASSERT(event_.button().presented());
+                    MouseEvent event = root_view_->_ConvertMouseEventFromWindow(event_);
+                    Ptr<View> hit_target = root_view_->MouseHitTest(event.pos());
+                    if (hit_target) {
+                        PostMouseDownEventTo(event, hit_target);
+                    }
+                    break;
                 }
+                case MouseEventType::Move: {
+                    MouseEvent event = root_view_->_ConvertMouseEventFromWindow(event_);
+                    BroadcastMouseMoveEventTo(event, root_view_);
+                    break;
+                }
+                case MouseEventType::Up:
+                case MouseEventType::Cancel:
+                    break;
             }
-            //TODO hover
         }
     }
     
@@ -270,13 +288,10 @@ namespace oliview {
     
     void Window::_OnRemoveView(const Ptr<View> & view) {
         if (view == mouse_target_) {
-            mouse_target_->OnMouseCancelEvent();
-            
-            mouse_target_ = nullptr;
-            mouse_source_button_ = None();
+            CancelMouseEvent();
         }
         
-        if (view == focused_view_) {
+        if (view->focused()) {
             view->Unfocus();            
         }
     }
@@ -285,11 +300,13 @@ namespace oliview {
         auto old = focused_view();
         if (old) {
             focused_view_ = nullptr;
+            old->_SetFocused(false);
             old->OnUnfocus();
         }
         
         if (view) {
             focused_view_ = view;
+            old->_SetFocused(true);
             view->OnFocus();
         }
     }
@@ -469,6 +486,22 @@ namespace oliview {
         }
     }
     
+    
+    void Window::BroadcastMouseMoveEventTo(const MouseEvent & window_event, const Ptr<View> & view) {
+        MouseEvent event = view->_ConvertMouseEventFromWindow(window_event);
+        view->OnMouseMoveEvent(event);
+        
+        for (auto & child : view->children()) {
+            BroadcastMouseMoveEventTo(window_event, child);
+        }
+    }
+    
+    void Window::CancelMouseEvent() {
+        mouse_target_->OnMouseCancelEvent();
+        mouse_target_ = nullptr;
+        mouse_source_button_ = None();
+    }
+    
     void Window::PostScrollEventTo(const ScrollEvent & event, const Ptr<View> & view_) {
         Ptr<View> view = view_;
         
@@ -486,7 +519,7 @@ namespace oliview {
             view = view->parent();
         }
     }
-    
+
     void Window::RefreshHandler(GLFWwindow * window) {
         auto thiz = (Window *)glfwGetWindowUserPointer(window);
         thiz->_Update();
@@ -509,12 +542,14 @@ namespace oliview {
         }
     }
     
+    Vector2 Window::mouse_position() const {
+        double x, y;
+        glfwGetCursorPos(glfw_window_, &x, &y);
+        return Vector2((float)x, (float)y);
+    }
+    
     void Window::MouseButtonHandler(GLFWwindow * window, int button, int action, int modifier) {
         auto thiz = (Window *)glfwGetWindowUserPointer(window);
-        
-        double x, y;
-        glfwGetCursorPos(window, &x, &y);
-        
         MouseEvent event;
         if (action == GLFW_PRESS) {
             event.set_type(MouseEventType::Down);
@@ -523,20 +558,17 @@ namespace oliview {
         } else {
             return;
         }
-        event.set_pos(Vector2((float)x, (float)y));
+        event.set_pos(thiz->mouse_position());
         event.set_button(Some(button));
         event.set_modifier(Some(modifier));
-
         thiz->HandleMouseEvent(event);
     }
     
     void Window::CursorPosHandler(GLFWwindow * window, double x, double y) {
         auto thiz = (Window *)glfwGetWindowUserPointer(window);
-        
         MouseEvent event;
         event.set_type(MouseEventType::Move);
         event.set_pos(Vector2((float)x, (float)y));
-
         thiz->HandleMouseEvent(event);
     }
     
@@ -544,14 +576,9 @@ namespace oliview {
         auto thiz = (Window *)glfwGetWindowUserPointer(window);
         x *= 10.0;
         y *= 10.0;
-        Print(Format("Scroll %f, %f", x, y));
-        
-        double px, py;
-        glfwGetCursorPos(window, &px, &py);
-        
         ScrollEvent event;
         event.set_scroll(Vector2((float)x, (float)y));
-        event.set_pos(Vector2((float)px, (float)py));
+        event.set_pos(thiz->mouse_position());
         thiz->HandleScrollEvent(event);
     }
     

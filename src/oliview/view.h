@@ -72,7 +72,7 @@ namespace oliview {
         RHETORIC_GETTER(bool, clipping_children)
         void set_clipping_children(bool value);
         
-        bool focused() const;
+        RHETORIC_GETTER(bool, focused)
         
         RHETORIC_GETTER(bool, focusable)
         void set_focusable(bool value);
@@ -131,7 +131,7 @@ namespace oliview {
         void _SetWindow(const Ptr<Window> & window);
         MouseEvent _ConvertMouseEventFromWindow(const MouseEvent & event) const;
         ScrollEvent _ConvertScrollEventFromWindow(const ScrollEvent & event) const;
-
+        void _SetFocused(bool value);
         void _UpdateAnimation(float delta_time);
     private:
         void Layout(NVGcontext * ctx);
@@ -156,6 +156,8 @@ namespace oliview {
         bool self_layouting_;
         bool clipping_children_;
         bool focusable_;
+        
+        bool focused_;
 
         DrawInfo draw_info_;
     };

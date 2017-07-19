@@ -17,7 +17,8 @@ namespace oliview {
     needs_layout_(true),
     self_layouting_(false),
     clipping_children_(false),
-    focusable_(false)
+    focusable_(false),
+    focused_(false)
     {}
     
     View::~View() {}
@@ -116,12 +117,6 @@ namespace oliview {
     
     void View::set_clipping_children(bool value) {
         clipping_children_ = value;
-    }
-    
-    bool View::focused() const {
-        auto w = window();
-        if (!w) { return false; }
-        return w->focused_view() == shared_from_this();
     }
     
     void View::set_focusable(bool value) {
@@ -251,13 +246,15 @@ namespace oliview {
     }
     
     bool View::IsPointInside(const Vector2 & point) const {
-        return bounds().IsPointInside(point);
+        return bounds().Contains(point);
     }
     
     Ptr<View> View::MouseHitTest(const Vector2 & pos) const {
+        bool is_inside = IsPointInside(pos);
+        
         bool test_children = true;
         if (clipping_children()) {
-            if (!IsPointInside(pos)) {
+            if (!is_inside) {
                 test_children = false;
             }
         }
@@ -273,54 +270,46 @@ namespace oliview {
             }
         }
         
-        if (IsPointInside(pos)) {
+        if (is_inside) {
             return const_cast<View *>(this)->shared_from_this();
         }
         
         return nullptr;
     }
     
-    bool View::OnMouseDownEvent(const MouseEvent & event) {
-        RHETORIC_UNUSED(event);
+    bool View::OnMouseDownEvent(const MouseEvent &) {
         return false;
     }
     
-    void View::OnMouseMoveEvent(const MouseEvent & event) {
-        RHETORIC_UNUSED(event);
+    void View::OnMouseMoveEvent(const MouseEvent &) {
     }
     
-    void View::OnMouseUpEvent(const MouseEvent & event) {
-        RHETORIC_UNUSED(event);
+    void View::OnMouseUpEvent(const MouseEvent &) {
     }
     
     void View::OnMouseCancelEvent() {
     }
     
-    bool View::OnScrollEvent(const ScrollEvent & event) {
-        RHETORIC_UNUSED(event);
+    bool View::OnScrollEvent(const ScrollEvent &) {
         return false;
     }
     
-    bool View::OnKeyDownEvent(const KeyEvent & event) {
-        RHETORIC_UNUSED(event);
+    bool View::OnKeyDownEvent(const KeyEvent &) {
         return false;
     }
     
-    bool View::OnKeyUpEvent(const KeyEvent & event) {
-        RHETORIC_UNUSED(event);
+    bool View::OnKeyUpEvent(const KeyEvent &) {
         return false;
     }
-    bool View::OnKeyRepeatEvent(const KeyEvent & event) {
-        RHETORIC_UNUSED(event);
+
+    bool View::OnKeyRepeatEvent(const KeyEvent &) {
         return false;
     }
     
-    void View::OnCharEvent(const CharEvent & event) {
-        RHETORIC_UNUSED(event);
+    void View::OnCharEvent(const CharEvent &) {
     }
     
-    void View::OnUpdateAnimation(float delta_time) {
-        RHETORIC_UNUSED(delta_time);
+    void View::OnUpdateAnimation(float) {
     }
     
     void View::OnFocus() {
@@ -419,17 +408,15 @@ namespace oliview {
         parent_ = parent;
         
         auto old_window = this->window();
-        if (old_window) {
-            InvokeWindowOnRemoveView(old_window);
-        }
-        
         Ptr<Window> new_window;
         if (parent) {
             new_window = parent->window();
         }
         
+        if (old_window) {
+            InvokeWindowOnRemoveView(old_window);
+        }
         _SetWindow(new_window);
-
         if (new_window) {
             InvokeWindowOnAddView(new_window);
         }
@@ -457,6 +444,10 @@ namespace oliview {
         ScrollEvent ret = event;
         ret.set_pos(ConvertPointFromWindow(event.pos()));
         return ret;        
+    }
+    
+    void View::_SetFocused(bool value) {
+        focused_ = value;
     }
     
     void View::_UpdateAnimation(float delta_time) {

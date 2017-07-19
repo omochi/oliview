@@ -70,7 +70,9 @@ void Window1::Init(const Ptr<Application> & app) {
     
     {
         auto view = OLIVIEW_INIT(ScrollBar, app, Axis::Y);
-        view->set_background_color(Color(0.6, 0.9, 0.6, 1.0));
+        view->set_content_size(1000);
+        view->set_visible_size(100);
+        view->ScrollTo(300);
         content_view->AddChild(view);
         view->set_frame(Rect(Vector2(500, 50), Size(15, 200)));
     }

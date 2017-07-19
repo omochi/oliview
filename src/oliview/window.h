@@ -34,6 +34,8 @@ namespace oliview {
         Ptr<View> root_view() const;
         RHETORIC_GETTER(GLFWwindow *, glfw_window)
         
+        Vector2 mouse_position() const;
+        
         bool focused() const;
         
         void Focus();
@@ -84,6 +86,9 @@ namespace oliview {
         Ptr<View> GetPrevFocusView(const Ptr<View> & view) const;
         
         void PostMouseDownEventTo(const MouseEvent & event, const Ptr<View> & view);
+        void BroadcastMouseMoveEventTo(const MouseEvent & window_event, const Ptr<View> & view);
+        void CancelMouseEvent();
+        
         void PostScrollEventTo(const ScrollEvent & event, const Ptr<View> & view);
         
         GLFWwindow * glfw_window_;

@@ -20,6 +20,9 @@ namespace oliview {
         Vector2 center() const;
 
         Vector2 end() const;
+        
+        Range<float> x_range() const;
+        Range<float> y_range() const;
 
         Rect ApplyTransform(const Matrix3x3 & m) const;
         
@@ -29,7 +32,7 @@ namespace oliview {
         Rect OffsetBy(const Vector2 & offset) const;
         Rect InsetBy(const EdgeInset & inset) const;
         
-        bool IsPointInside(const Vector2 & point) const;
+        bool Contains(const Vector2 & point) const;
         
         static Rect FromPoints(const Vector2 & p0,
                                const Vector2 & p1);
