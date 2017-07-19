@@ -43,34 +43,64 @@ namespace oliview {
         return scroll_position_ != old;
     }
     
-    bool ScrollBar::OnMouseDownEvent(const MouseEvent & event) {
-        //  TODO: PageUp/Down (margin 10)
-        
+    bool ScrollBar::ScrollByPageUp() {
+        return ScrollTo(scroll_position_ - visible_size_ + 10.0f);
+    }
+    
+    bool ScrollBar::ScrollByPageDown() {
+        return ScrollTo(scroll_position_ + visible_size_ - 10.0f);
+    }
+    
+    bool ScrollBar::OnMouseDownEvent(const MouseEvent & event) {        
         auto pos = event.pos();
-        if (GetKnobHitRect().Contains(pos)) {
-            knob_active_ = true;
-            
-            auto range = GetKnobRange();
-            switch (axis_) {
-                case Axis::X:
-                    knob_mouse_offset_ = Some(range.lower_bound() - pos.x());
-                    break;
-                case Axis::Y:
-                    knob_mouse_offset_ = Some(range.lower_bound() - pos.y());
-                    break;
-            }
-            
-            return true;
+        if (!bounds().Contains(pos)) {
+            return false;
         }
         
-        return false;
+        auto knob_hit = GetKnobHitRect();
+        
+        switch (axis_) {
+            case Axis::X: {
+                if (!knob_hit.y_range().Contains(pos.y())) {
+                    return false;
+                }
+                auto range = knob_hit.x_range();
+                if (pos.x() < range.lower_bound()) {
+                    return ScrollByPageUp();
+                } else if (pos.x() < range.upper_bound()) {
+                    knob_mouse_offset_ = Some(range.lower_bound() - pos.x());
+                    return true;
+                } else {
+                    return ScrollByPageDown();
+                }
+                break;
+            }
+            case Axis::Y: {
+                if (!knob_hit.x_range().Contains(pos.x())) {
+                    return false;
+                }
+                auto range = knob_hit.y_range();
+                if (pos.y() < range.lower_bound()) {
+                    return ScrollByPageUp();
+                } else if (pos.y() < range.upper_bound()) {
+                    knob_mouse_offset_ = Some(range.lower_bound() - pos.y());
+                    return true;
+                } else {
+                    return ScrollByPageDown();
+                }
+            }
+        }
+        
+        RHETORIC_FATAL("never");
     }
     
     void ScrollBar::OnMouseMoveEvent(const MouseEvent & event) {
         if (knob_mouse_offset_) {
             float y = event.pos().get(AxisToIndex(axis_)) + *knob_mouse_offset_;
             if (ScrollTo(GetScrollPositionForPosition(y))) {
-                // TODO event
+                if (scroll_handler_) {
+                    scroll_handler_(scroll_position_);
+                }
             }
         } else {
             UpdateKnobActive(event.pos());
@@ -89,7 +119,9 @@ namespace oliview {
         float delta = event.scroll().get(AxisToIndex(axis_));
         
         if (ScrollTo(scroll_position() + delta)) {
-            // TODO event
+            if (scroll_handler_) {
+                scroll_handler_(scroll_position_);
+            }
             return true;
         }
         
@@ -128,14 +160,34 @@ namespace oliview {
     
     void ScrollBar::DrawContent(NVGcontext * ctx) {
         auto knob_range = GetKnobRange();
+        auto bounds = this->bounds();
         
         switch (axis_) {
             case Axis::X: {
-                //TODO
+                float top = bounds.origin().y();
+                float left = bounds.origin().x();
+                float right = bounds.size().width();
+                float bottom = top + bar_width_;
+
+                nvgBeginPath(ctx);
+                NVGAddRectPath(ctx, Rect(Vector2(left, top), Size(right - left, 1)));
+                NVGAddRectPath(ctx, Rect(Vector2(left, bottom - 1), Size(right - left, 1)));
+                NVGSetFillColor(ctx, border_color_);
+                nvgFill(ctx);
+                
+                nvgBeginPath(ctx);
+                NVGAddRoundRectPath(ctx, Rect(Vector2(knob_range.lower_bound(), top + 4.0f),
+                                              Size(knob_range.count(), 8.0f)), 4.0f);
+                if (knob_active_) {
+                    NVGSetFillColor(ctx, knob_active_color_);
+                } else {
+                    NVGSetFillColor(ctx, knob_normal_color_);
+                }
+                nvgFill(ctx);
+                
                 break;
             }
             case Axis::Y: {
-                auto bounds = this->bounds();
                 float top = bounds.origin().y();
                 float left = bounds.origin().x();
                 float right = left + bar_width_;

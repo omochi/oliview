@@ -76,6 +76,15 @@ void Window1::Init(const Ptr<Application> & app) {
         content_view->AddChild(view);
         view->set_frame(Rect(Vector2(500, 50), Size(15, 200)));
     }
+    
+    {
+        auto view = OLIVIEW_INIT(ScrollBar, app, Axis::X);
+        view->set_content_size(1000);
+        view->set_visible_size(100);
+        view->ScrollTo(300);
+        content_view->AddChild(view);
+        view->set_frame(Rect(Vector2(200, 250), Size(300, 15)));
+    }
 }
 
 void Window1::OnKeyDownEvent(const KeyEvent & event) {

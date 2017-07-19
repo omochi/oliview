@@ -11,8 +11,7 @@ namespace oliview {
     
     class ScrollBar : public View {
     public:        
-        // TODO: move to rhetoric
-        virtual void Init(const Ptr<Application> &) override __attribute__((unavailable)) {}
+        virtual void Init(const Ptr<Application> &) override RHETORIC_UNAVAILABLE {}
         
         void Init(const Ptr<Application> & application, Axis axis);
         
@@ -26,6 +25,10 @@ namespace oliview {
         
         RHETORIC_GETTER(float, scroll_position)
         bool ScrollTo(float value);
+        bool ScrollByPageUp();
+        bool ScrollByPageDown();
+        
+        RHETORIC_ACCESSOR(std::function<void(float)>, scroll_handler)
         
         virtual bool OnMouseDownEvent(const MouseEvent & event) override;
         virtual void OnMouseMoveEvent(const MouseEvent & event) override;
@@ -54,7 +57,7 @@ namespace oliview {
         float scroll_position_;
         bool knob_active_;
         Option<float> knob_mouse_offset_;
-        
+        std::function<void(float)> scroll_handler_;
         
         float bar_width_;
         Color border_color_;
