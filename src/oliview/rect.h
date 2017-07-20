@@ -34,6 +34,9 @@ namespace oliview {
         
         bool Contains(const Vector2 & point) const;
         
+        bool operator==(const Rect & other) const;
+        RHETORIC_EQUATABLE_DEFAULT(Rect)
+        
         static Rect FromPoints(const Vector2 & p0,
                                const Vector2 & p1);
     private:

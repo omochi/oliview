@@ -55,20 +55,22 @@ namespace oliview {
         SetNeedsLayout();
     }
     
-    Size Label::MeasureContent(NVGcontext * ctx, const MeasureQuery & query) const {
+    Size Label::MeasureOwnContent(NVGcontext * ctx, const MeasureQuery & query) const {
         auto layout = text_layouter_->Layout(ctx,
                                              text_,
                                              query.max_width());
         return layout->frame().size();
     }
     
-    void Label::LayoutContent(NVGcontext * ctx) {
+    void Label::LayoutOwnContent(NVGcontext * ctx) {
         text_draw_info_ = text_layouter_->Layout(ctx,
                                                  text_,
                                                  Some(frame().size().width()));
+        float top = text_draw_info_->frame().origin().y();
+        text_draw_info_->set_draw_offset(Vector2(0, -top));
     }
 
-    void Label::DrawContent(NVGcontext * ctx) {
+    void Label::DrawOwnContent(NVGcontext * ctx) {
         NVGSetFillColor(ctx, font_color());
         
         text_layouter_->Draw(ctx, text_, text_draw_info_);

@@ -39,9 +39,9 @@ namespace oliview {
         bool MoveCursorUp();
         bool MoveCursorDown();
         
-        virtual Size MeasureContent(NVGcontext * ctx, const MeasureQuery & query) const override;
-        virtual void LayoutContent(NVGcontext * ctx) override;
-        virtual void DrawContent(NVGcontext * ctx) override;
+        virtual Size MeasureOwnContent(NVGcontext * ctx, const MeasureQuery & query) const override;
+        virtual void LayoutOwnContent(NVGcontext * ctx) override;
+        virtual void DrawOwnContent(NVGcontext * ctx) override;
                 
         virtual bool OnMouseDownEvent(const MouseEvent & event) override;
         virtual void OnMouseMoveEvent(const MouseEvent & event) override;

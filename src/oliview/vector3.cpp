@@ -79,6 +79,12 @@ namespace oliview {
         *this = *this - other;
         return *this;
     }
+    
+    bool Vector3::operator==(const Vector3 & other) const {
+        return x() == other.x() &&
+        y() == other.y() &&
+        z() == other.z();
+    }
 
     Vector2 Vector3::To2() const {
         return Vector2(x(), y());

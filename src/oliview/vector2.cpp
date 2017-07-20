@@ -86,6 +86,10 @@ namespace oliview {
         return *this;
     }
     
+    bool Vector2::operator==(const Vector2 & other) const {
+        return x() == other.x() && y() == other.y();
+    }
+    
     Vector2 Vector2::GetMin(const Vector2 & other) const {
         return Vector2(std::min(x(), other.x()),
                        std::min(y(), other.y()));

@@ -38,6 +38,9 @@ namespace oliview {
         Vector2 operator-(const Vector2 & other) const;
         Vector2 & operator-=(const Vector2 & other);
         
+        bool operator==(const Vector2 & other) const;
+        RHETORIC_EQUATABLE_DEFAULT(Vector2)
+        
         Vector2 GetMin(const Vector2 & other) const;
         Vector2 GetMax(const Vector2 & other) const;
     private:

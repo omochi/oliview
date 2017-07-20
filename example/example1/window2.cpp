@@ -55,16 +55,16 @@ void Window2::Init(const Ptr<Application> & app) {
         layouter->AddItemAreaDef(def);
     }
     
-//    auto view2 = OLIVIEW_INIT(Label, app, "hello grid layouter ! この列の幅は私が決める");
-//    view2->set_background_color(Color(0.8, 0.9, 0.8, 1.0));
-//    root_view->AddChild(view2);
-//    {
-//        GridLayouter::ItemAreaDef def;
-//        def.set_item(view2);
-//        def.set_row_position(MakeIndexRange(0, 1));
-//        def.set_column_position(MakeIndexRange(1, 2));
-//        layouter->AddItemAreaDef(def);
-//    }
+    auto view2 = OLIVIEW_INIT(Label, app, "hello grid layouter ! この列の幅は私が決める");
+    view2->set_background_color(Color(0.8, 0.9, 0.8, 1.0));
+    root_view->AddChild(view2);
+    {
+        GridLayouter::ItemAreaDef def;
+        def.set_item(view2);
+        def.set_row_position(MakeIndexRange(0, 1));
+        def.set_column_position(MakeIndexRange(1, 2));
+        layouter->AddItemAreaDef(def);
+    }
     
     auto view3 = OLIVIEW_INIT(View, app);
     view3->set_background_color(Color(1, 1, 0, 1));

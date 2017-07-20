@@ -69,6 +69,11 @@ namespace oliview {
         y_range().Contains(point.y());
     }
     
+    bool Rect::operator==(const Rect & other) const {
+        return origin() == other.origin() &&
+        size() == other.size();
+    }
+    
     Rect Rect::FromPoints(const Vector2 & p0,
                           const Vector2 & p1)
     {

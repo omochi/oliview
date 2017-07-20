@@ -574,8 +574,8 @@ namespace oliview {
     
     void Window::ScrollHandler(GLFWwindow * window, double x, double y) {
         auto thiz = (Window *)glfwGetWindowUserPointer(window);
-        x *= 10.0;
-        y *= 10.0;
+        x *= -10.0;
+        y *= -10.0;
         ScrollEvent event;
         event.set_scroll(Vector2((float)x, (float)y));
         event.set_pos(thiz->mouse_position());

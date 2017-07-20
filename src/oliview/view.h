@@ -19,6 +19,14 @@
 namespace oliview {
     class Application;
     class Window;
+    
+    /*
+     Measure: MeasureOwnContentとLayouterの結果をMaxして返す。
+     MeasureOwnContent: 継承を想定。
+     Layout: LayoutOwnContentとLayouterのLayoutを呼び出す。
+     LayoutOwnContent: 継承を想定。
+     DrawOwnContent: 継承を想定。
+     */
 
     class View : public ApplicationObject {
     public:
@@ -90,12 +98,13 @@ namespace oliview {
         RHETORIC_GETTER(Ptr<Layouter>, children_layouter)
         void set_children_layouter(const Ptr<Layouter> & value);
         
-        Size Measure(NVGcontext * ctx, const MeasureQuery & query) const;
-        virtual Size MeasureContent(NVGcontext * ctx, const MeasureQuery & query) const;
+        virtual Size Measure(NVGcontext * ctx, const MeasureQuery & query) const;
+        virtual Size MeasureOwnContent(NVGcontext * ctx, const MeasureQuery & query) const;
 
-        virtual void LayoutContent(NVGcontext * ctx);
+        virtual void Layout(NVGcontext * ctx);
+        virtual void LayoutOwnContent(NVGcontext * ctx);
     
-        virtual void DrawContent(NVGcontext * ctx);
+        virtual void DrawOwnContent(NVGcontext * ctx);
         
         Vector2 ConvertPointToWindow(const Vector2 & point) const;
         Vector2 ConvertPointFromWindow(const Vector2 & point) const;
@@ -134,7 +143,6 @@ namespace oliview {
         void _SetFocused(bool value);
         void _UpdateAnimation(float delta_time);
     private:
-        void Layout(NVGcontext * ctx);
         void DrawBackground(NVGcontext * ctx);
         void DrawShadow(NVGcontext * ctx);
         
@@ -153,7 +161,6 @@ namespace oliview {
         bool needs_layout_;
         Ptr<Layouter> children_layouter_;
         
-        bool self_layouting_;
         bool clipping_children_;
         bool focusable_;
         

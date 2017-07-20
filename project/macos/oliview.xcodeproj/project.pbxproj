@@ -14,6 +14,8 @@
 		D6079AC71F193023005316D3 /* char_event.h in Headers */ = {isa = PBXBuildFile; fileRef = D6079AC51F193023005316D3 /* char_event.h */; };
 		D6079ACD1F1A66ED005316D3 /* scroll_event.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D6079ACB1F1A66ED005316D3 /* scroll_event.cpp */; };
 		D6079ACE1F1A66ED005316D3 /* scroll_event.h in Headers */ = {isa = PBXBuildFile; fileRef = D6079ACC1F1A66ED005316D3 /* scroll_event.h */; };
+		D6123EB81F205D0700C5CBF6 /* scroll_view.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D6123EB61F205D0700C5CBF6 /* scroll_view.cpp */; };
+		D6123EB91F205D0700C5CBF6 /* scroll_view.h in Headers */ = {isa = PBXBuildFile; fileRef = D6123EB71F205D0700C5CBF6 /* scroll_view.h */; };
 		D639A04B1F0D5FAC0059B6BA /* table_dimension.h in Headers */ = {isa = PBXBuildFile; fileRef = D639A0491F0D5FAC0059B6BA /* table_dimension.h */; };
 		D639A04F1F0E70D20059B6BA /* text_box.h in Headers */ = {isa = PBXBuildFile; fileRef = D639A04D1F0E70D20059B6BA /* text_box.h */; };
 		D639A0601F0FCEE30059B6BA /* string_slice.h in Headers */ = {isa = PBXBuildFile; fileRef = D639A05E1F0FCEE30059B6BA /* string_slice.h */; };
@@ -104,6 +106,8 @@
 		D6079AC51F193023005316D3 /* char_event.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = char_event.h; sourceTree = "<group>"; };
 		D6079ACB1F1A66ED005316D3 /* scroll_event.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = scroll_event.cpp; sourceTree = "<group>"; };
 		D6079ACC1F1A66ED005316D3 /* scroll_event.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = scroll_event.h; sourceTree = "<group>"; };
+		D6123EB61F205D0700C5CBF6 /* scroll_view.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = scroll_view.cpp; sourceTree = "<group>"; };
+		D6123EB71F205D0700C5CBF6 /* scroll_view.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = scroll_view.h; sourceTree = "<group>"; };
 		D639A0491F0D5FAC0059B6BA /* table_dimension.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = table_dimension.h; sourceTree = "<group>"; };
 		D639A04D1F0E70D20059B6BA /* text_box.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = text_box.h; sourceTree = "<group>"; };
 		D639A05E1F0FCEE30059B6BA /* string_slice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = string_slice.h; sourceTree = "<group>"; };
@@ -290,6 +294,8 @@
 				D6F560A81F1E3776009389FD /* scroll_bar.h */,
 				D6079ACB1F1A66ED005316D3 /* scroll_event.cpp */,
 				D6079ACC1F1A66ED005316D3 /* scroll_event.h */,
+				D6123EB61F205D0700C5CBF6 /* scroll_view.cpp */,
+				D6123EB71F205D0700C5CBF6 /* scroll_view.h */,
 				D6F1F2891F0F7D9E00A61981 /* size.cpp */,
 				D6F1F28A1F0F7D9E00A61981 /* size.h */,
 				D639A05E1F0FCEE30059B6BA /* string_slice.h */,
@@ -401,6 +407,7 @@
 				D6F560AE1F1E38EA009389FD /* axis.h in Headers */,
 				D6F1F2B91F0F7D9E00A61981 /* nanovg_util.h in Headers */,
 				D6F1F2A51F0F7D9E00A61981 /* font_manager.h in Headers */,
+				D6123EB91F205D0700C5CBF6 /* scroll_view.h in Headers */,
 				D6F1F2B01F0F7D9E00A61981 /* layouter.h in Headers */,
 				D6C3F74A1E9D29F70020D65A /* stb_image.h in Headers */,
 				D639A0601F0FCEE30059B6BA /* string_slice.h in Headers */,
@@ -530,6 +537,7 @@
 				D6FBA9511F18A014004BA8BE /* vector3.cpp in Sources */,
 				D6FBA9521F18A014004BA8BE /* view.cpp in Sources */,
 				D6F560A51F1CF093009389FD /* edge_inset.cpp in Sources */,
+				D6123EB81F205D0700C5CBF6 /* scroll_view.cpp in Sources */,
 				D6FBA9531F18A014004BA8BE /* window.cpp in Sources */,
 				D6FBA9541F18A014004BA8BE /* window_root_view.cpp in Sources */,
 			);

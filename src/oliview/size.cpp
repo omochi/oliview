@@ -15,6 +15,11 @@ namespace oliview {
     Size(vector.x(), vector.y())
     {}
     
+    bool Size::operator==(const Size & other) const {
+        return width() == other.width() &&
+        height() == other.height();
+    }
+    
     Size Size::GetMin(const Size & other) const {
         return Size(std::min(width(), other.width()),
                     std::min(height(), other.height()));

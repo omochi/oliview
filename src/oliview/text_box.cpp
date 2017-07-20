@@ -177,14 +177,14 @@ namespace oliview {
         return true;
     }
     
-    Size TextBox::MeasureContent(NVGcontext * ctx, const MeasureQuery & query) const {
+    Size TextBox::MeasureOwnContent(NVGcontext * ctx, const MeasureQuery & query) const {
         auto layout = text_layouter_->Layout(ctx,
                                              text_,
                                              query.max_width());
         return layout->frame().size();
     }
     
-    void TextBox::LayoutContent(NVGcontext * ctx) {
+    void TextBox::LayoutOwnContent(NVGcontext * ctx) {
         text_draw_info_ = text_layouter_->Layout(ctx,
                                                  text_,
                                                  Some(frame().size().width()));
@@ -192,7 +192,7 @@ namespace oliview {
         text_draw_info_->set_draw_offset(Vector2(0, -top));
     }
     
-    void TextBox::DrawContent(NVGcontext * ctx) {
+    void TextBox::DrawOwnContent(NVGcontext * ctx) {
         RHETORIC_ASSERT(text_draw_info_ != nullptr);
         
         NVGSetFillColor(ctx, font_color());
@@ -246,12 +246,12 @@ namespace oliview {
     
     bool TextBox::OnScrollEvent(const ScrollEvent & event) {
         auto bounds = this->bounds();
-        bounds.set_origin(bounds.origin() - event.scroll());
+        bounds.set_origin(bounds.origin() + event.scroll());
         set_bounds(bounds);
-        Print(Format("TextBox scr %f, %f=> %f, %f",
-                     event.scroll().x(),
-                     event.scroll().y(),
-                     bounds.origin().x(), bounds.origin().y()));
+//        Print(Format("TextBox scr %f, %f=> %f, %f",
+//                     event.scroll().x(),
+//                     event.scroll().y(),
+//                     bounds.origin().x(), bounds.origin().y()));
         return true;
     }
     

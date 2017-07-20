@@ -44,11 +44,11 @@ namespace oliview {
     }
     
     bool ScrollBar::ScrollByPageUp() {
-        return ScrollTo(scroll_position_ - visible_size_ + 10.0f);
+        return ScrollTo(GetPageUpPosition(), false);
     }
     
     bool ScrollBar::ScrollByPageDown() {
-        return ScrollTo(scroll_position_ + visible_size_ - 10.0f);
+        return ScrollTo(GetPageDownPosition(), false);
     }
     
     bool ScrollBar::OnMouseDownEvent(const MouseEvent & event) {        
@@ -66,12 +66,12 @@ namespace oliview {
                 }
                 auto range = knob_hit.x_range();
                 if (pos.x() < range.lower_bound()) {
-                    return ScrollByPageUp();
+                    return ScrollTo(GetPageUpPosition(), true);
                 } else if (pos.x() < range.upper_bound()) {
                     knob_mouse_offset_ = Some(range.lower_bound() - pos.x());
                     return true;
                 } else {
-                    return ScrollByPageDown();
+                    return ScrollTo(GetPageDownPosition(), true);
                 }
                 break;
             }
@@ -81,12 +81,12 @@ namespace oliview {
                 }
                 auto range = knob_hit.y_range();
                 if (pos.y() < range.lower_bound()) {
-                    return ScrollByPageUp();
+                    return ScrollTo(GetPageUpPosition(), true);
                 } else if (pos.y() < range.upper_bound()) {
                     knob_mouse_offset_ = Some(range.lower_bound() - pos.y());
                     return true;
                 } else {
-                    return ScrollByPageDown();
+                    return ScrollTo(GetPageDownPosition(), true);
                 }
             }
         }
@@ -96,12 +96,9 @@ namespace oliview {
     
     void ScrollBar::OnMouseMoveEvent(const MouseEvent & event) {
         if (knob_mouse_offset_) {
-            float y = event.pos().get(AxisToIndex(axis_)) + *knob_mouse_offset_;
-            if (ScrollTo(GetScrollPositionForPosition(y))) {
-                if (scroll_handler_) {
-                    scroll_handler_(scroll_position_);
-                }
-            }
+            float mouse_y = event.pos().get(AxisToIndex(axis_)) + *knob_mouse_offset_;
+            float scroll_y = GetScrollPositionForPosition(mouse_y);
+            ScrollTo(scroll_y, true);
         } else {
             UpdateKnobActive(event.pos());
         }
@@ -115,21 +112,7 @@ namespace oliview {
         EndKnobDragging();
     }
     
-    bool ScrollBar::OnScrollEvent(const ScrollEvent & event) {
-        float delta = event.scroll().get(AxisToIndex(axis_));
-        
-        if (ScrollTo(scroll_position() + delta)) {
-            if (scroll_handler_) {
-                scroll_handler_(scroll_position_);
-            }
-            return true;
-        }
-        
-        return false;
-    }
-
-    
-    Size ScrollBar::MeasureContent(NVGcontext * ctx, const MeasureQuery & query) const {
+    Size ScrollBar::MeasureOwnContent(NVGcontext * ctx, const MeasureQuery & query) const {
         RHETORIC_UNUSED(ctx);
         
         switch (axis_) {
@@ -154,11 +137,11 @@ namespace oliview {
         RHETORIC_FATAL("never");
     }
     
-    void ScrollBar::LayoutContent(NVGcontext * ctx) {
+    void ScrollBar::LayoutOwnContent(NVGcontext * ctx) {
         RHETORIC_UNUSED(ctx);
     }
     
-    void ScrollBar::DrawContent(NVGcontext * ctx) {
+    void ScrollBar::DrawOwnContent(NVGcontext * ctx) {
         auto knob_range = GetKnobRange();
         auto bounds = this->bounds();
         
@@ -212,6 +195,26 @@ namespace oliview {
                 break;
             }
         }
+    }
+    
+    float ScrollBar::GetPageUpPosition() {
+        return scroll_position_ - visible_size_ + 10.0f;
+    }
+    
+    float ScrollBar::GetPageDownPosition() {
+        return scroll_position_ + visible_size_ - 10.0f;
+    }
+    
+    bool ScrollBar::ScrollTo(float value, bool event_emission) {
+        if (!ScrollTo(value)) {
+            return false;
+        }
+        if (event_emission) {
+            if (scroll_handler_) {
+                scroll_handler_(scroll_position_);
+            }
+        }
+        return true;
     }
     
     void ScrollBar::ClampScrollPosition() {

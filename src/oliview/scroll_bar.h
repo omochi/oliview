@@ -35,12 +35,14 @@ namespace oliview {
         virtual void OnMouseUpEvent(const MouseEvent & event) override;
         virtual void OnMouseCancelEvent() override;
         
-        virtual bool OnScrollEvent(const ScrollEvent & event) override;
-        
-        virtual Size MeasureContent(NVGcontext * ctx, const MeasureQuery & query) const override;
-        virtual void LayoutContent(NVGcontext * ctx) override;
-        virtual void DrawContent(NVGcontext * ctx) override;
+        virtual Size MeasureOwnContent(NVGcontext * ctx, const MeasureQuery & query) const override;
+        virtual void LayoutOwnContent(NVGcontext * ctx) override;
+        virtual void DrawOwnContent(NVGcontext * ctx) override;
     private:
+        float GetPageUpPosition();
+        float GetPageDownPosition();
+        bool ScrollTo(float value, bool event_emission);
+        
         void ClampScrollPosition();
         
         Range<float> GetBarSpaceRange() const;

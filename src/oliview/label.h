@@ -23,9 +23,9 @@ namespace oliview {
         void set_font_size(float value);
         RHETORIC_ACCESSOR(Color, font_color)
 
-        virtual Size MeasureContent(NVGcontext * ctx, const MeasureQuery & query) const override;
-        virtual void LayoutContent(NVGcontext * ctx) override;
-        virtual void DrawContent(NVGcontext * ctx) override;
+        virtual Size MeasureOwnContent(NVGcontext * ctx, const MeasureQuery & query) const override;
+        virtual void LayoutOwnContent(NVGcontext * ctx) override;
+        virtual void DrawOwnContent(NVGcontext * ctx) override;
     private:
         Ptr<Text> text_;
         Color font_color_;

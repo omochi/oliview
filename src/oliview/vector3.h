@@ -33,6 +33,9 @@ namespace oliview {
         Vector3 operator-(const Vector3 & other) const;
         Vector3 & operator-=(const Vector3 & other);
         
+        bool operator==(const Vector3 & other) const;
+        RHETORIC_EQUATABLE_DEFAULT(Vector3)
+        
         Vector2 To2() const;
     private:
         float elements_[3];

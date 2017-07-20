@@ -15,7 +15,6 @@ namespace oliview {
     View::View():
     background_color_(1, 1, 1, 0),
     needs_layout_(true),
-    self_layouting_(false),
     clipping_children_(false),
     focusable_(false),
     focused_(false)
@@ -96,18 +95,22 @@ namespace oliview {
     }
 
     void View::set_frame(const Rect & value) {
+        if (frame_ == value) {
+            return;
+        }
+        
         frame_ = value;
-        
-        bounds_.set_size(frame_.size());
-        
+        set_bounds(Rect(bounds().origin(), frame_.size()));
         SetNeedsLayout();
     }
     
     void View::set_bounds(const Rect & value) {
+        if (bounds_ == value) {
+            return;
+        }
+        
         bounds_ = value;
-        
         frame_.set_size(bounds_.size());
-        
         SetNeedsLayout();
     }
 
@@ -188,7 +191,7 @@ namespace oliview {
     }
     
     Size View::Measure(NVGcontext * ctx, const MeasureQuery & query) const {
-        Size size = MeasureContent(ctx, query);
+        Size size = MeasureOwnContent(ctx, query);
         
         if (children_layouter_) {
             Size layouter_size = children_layouter_->Measure(ctx, query);
@@ -199,31 +202,26 @@ namespace oliview {
         return size;
     }
     
-    Size View::MeasureContent(NVGcontext * ctx, const MeasureQuery & query) const {
-        RHETORIC_UNUSED(ctx);
-        
-        if (children_layouter_) {
-            return Size(0, 0);
-        }
-        
-        float width = frame().size().width();
-        float height = frame().size().height();
-        
-        if (query.max_width()) {
-            width = std::min(width, *query.max_width());
-        }
-        if (query.max_height()) {
-            height = std::min(height, *query.max_height());
-        }
-        
+    Size View::MeasureOwnContent(NVGcontext *, const MeasureQuery & query) const {        
+        float width = query.max_width().GetOr(0.0f);
+        float height = query.max_height().GetOr(0.0f);
+                
         return Size(width, height);
     }
     
-    void View::LayoutContent(NVGcontext * ctx) {
+    void View::Layout(NVGcontext * ctx) {
+        LayoutOwnContent(ctx);
+        
+        if (children_layouter_) {
+            children_layouter_->Layout(ctx);
+        }
+    }
+    
+    void View::LayoutOwnContent(NVGcontext * ctx) {
         RHETORIC_UNUSED(ctx);
     }
 
-    void View::DrawContent(NVGcontext * ctx) {
+    void View::DrawOwnContent(NVGcontext * ctx) {
         RHETORIC_UNUSED(ctx);
     }
 
@@ -324,9 +322,7 @@ namespace oliview {
         if (needs_layout_) {
             needs_layout_ = false;
             
-            self_layouting_ = true;
             Layout(ctx);
-            self_layouting_ = false;
             
             updated = true;
         }
@@ -377,7 +373,7 @@ namespace oliview {
             nvgResetTransform(ctx);
             NVGTransform(ctx, draw_info_.window_transform);
             DrawBackground(ctx);
-            DrawContent(ctx);
+            DrawOwnContent(ctx);
         }
         nvgRestore(ctx);
     }
@@ -398,9 +394,7 @@ namespace oliview {
         }
     }
     
-    void View::_SetParent(const Ptr<View> & parent) {
-        RHETORIC_ASSERT(!self_layouting_);
-        
+    void View::_SetParent(const Ptr<View> & parent) {        
         if (parent) {
             RHETORIC_ASSERT(application() == parent->application());
         }
@@ -457,15 +451,7 @@ namespace oliview {
             child->_UpdateAnimation(delta_time);
         }
     }
-    
-    void View::Layout(NVGcontext * ctx) {
-        LayoutContent(ctx);
-        
-        if (children_layouter_) {
-            children_layouter_->Layout(ctx);
-        }
-    }
-    
+
     void View::DrawBackground(NVGcontext * ctx) {
         nvgBeginPath(ctx);
         NVGAddRectPath(ctx, bounds());

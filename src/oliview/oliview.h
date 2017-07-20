@@ -21,6 +21,7 @@
 #include "./rect.h"
 #include "./scroll_bar.h"
 #include "./scroll_event.h"
+#include "./scroll_view.h"
 #include "./size.h"
 #include "./string_slice.h"
 #include "./table_dimension.h"

@@ -11,6 +11,7 @@ private:
     
     Ptr<TextBox> text_box_;
     Ptr<ScrollBar> scroll_bar_;
+    Ptr<ScrollView> scroll_view_;
 };
 
 class Window1View : public View {

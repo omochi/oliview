@@ -60,13 +60,15 @@ void Window1::Init(const Ptr<Application> & app) {
 //                          Size(59, 46)));
 //    view4->set_background_color(Color(1, 0, 0, 1));
 
-    auto view5 = OLIVIEW_INIT(TextBox, app);
-    text_box_ = view5;
-    view5->set_background_color(Color(0.8, 0.7, 0.5, 1.0));
-    content_view->AddChild(view5);
-    view5->set_frame(Rect(Vector2(200, 50),
-                          Size(300, 200)));
-    view5->set_text(New<Text>("初期テキスト\nお肉gg\n\n↑空行"));
+    {
+        auto view5 = OLIVIEW_INIT(TextBox, app);
+        text_box_ = view5;
+        view5->set_background_color(Color(0.8, 0.7, 0.5, 1.0));
+        content_view->AddChild(view5);
+        view5->set_frame(Rect(Vector2(200, 50),
+                              Size(300, 200)));
+        view5->set_text(New<Text>("初期テキスト\nお肉gg\n\n↑空行"));
+    }
     
     {
         auto view = OLIVIEW_INIT(ScrollBar, app, Axis::Y);
@@ -84,6 +86,35 @@ void Window1::Init(const Ptr<Application> & app) {
         view->ScrollTo(300);
         content_view->AddChild(view);
         view->set_frame(Rect(Vector2(200, 250), Size(300, 15)));
+    }
+    
+    {
+        auto view = OLIVIEW_INIT(ScrollView, app);
+        scroll_view_ = view;
+        content_view->AddChild(view);
+        view->content_view()->set_background_color(Color(1.0f, 0.8f, 0.8f, 1.0f));
+        view->set_frame(Rect(Vector2(540, 50), Size(300, 200)));
+        
+        {
+            auto vw = OLIVIEW_INIT(View, app);
+            scroll_view_->content_view()->AddChild(vw);
+            vw->set_frame(Rect(Vector2(0, 0), Size(100, 100)));
+            vw->set_background_color(Color(0.8f, 0.4f, 0.4f, 1.0f));
+        }
+        
+        {
+            auto vw = OLIVIEW_INIT(View, app);
+            scroll_view_->content_view()->AddChild(vw);
+            vw->set_frame(Rect(Vector2(250, 0), Size(100, 100)));
+            vw->set_background_color(Color(0.6f, 0.6f, 0.4f, 1.0f));
+        }
+        
+        {
+            auto vw = OLIVIEW_INIT(View, app);
+            scroll_view_->content_view()->AddChild(vw);
+            vw->set_frame(Rect(Vector2(100, 150), Size(100, 100)));
+            vw->set_background_color(Color(0.4f, 0.8f, 0.4f, 1.0f));
+        }
     }
 }
 
