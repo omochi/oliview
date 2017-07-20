@@ -6,6 +6,8 @@ class Window1 : public Window {
 public:
     virtual void Init(const Ptr<Application> & app) override;
     virtual void OnKeyDownEvent(const KeyEvent & event) override;
+    
+    virtual void LayoutContentView(NVGcontext * ctx, const Ptr<View> & view) override;
 private:
     int test_stage_;
     

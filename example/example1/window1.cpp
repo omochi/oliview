@@ -8,11 +8,11 @@ void Window1::Init(const Ptr<Application> & app) {
     auto content_view = OLIVIEW_INIT(Window1View, app);
     content_view->set_background_color(Color(1.0, 1.0, 0.9, 1.0));
     content_view->set_frame(Rect(Vector2(0, 0), Size(400, 400)));
-    root_view()->AddChild(content_view);
+    this->content_view()->AddChild(content_view);
     
     {
         auto layouter = New<GridLayouter>();
-        root_view()->set_children_layouter(layouter);
+        this->content_view()->set_children_layouter(layouter);
         
         {
             GridLayouter::TrackDef def;
@@ -146,3 +146,15 @@ void Window1::OnKeyDownEvent(const KeyEvent & event) {
         }
     }
 }
+
+void Window1::LayoutContentView(NVGcontext * ctx, const Ptr<View> & view) {
+    Window::LayoutContentView(ctx, view);
+    
+    float left = 540;
+    float top = 50;
+    float right = view->frame().size().width() - 20;
+    float bottom = view->frame().size().height() - 160;
+    scroll_view_->set_frame(Rect(Vector2(left, top),
+                                 Size(right - left, bottom - top)));
+}
+

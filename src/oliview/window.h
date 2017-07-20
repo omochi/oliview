@@ -12,6 +12,7 @@
 #include "./size.h"
 #include "./view.h"
 #include "./vector2.h"
+#include "./window_content_view.h"
 #include "./window_root_view.h"
 
 namespace oliview {
@@ -31,7 +32,7 @@ namespace oliview {
         RHETORIC_GETTER(Size, window_size)
         RHETORIC_GETTER(Size, framebuffer_size)
         RHETORIC_GETTER(float, pixel_ratio)
-        Ptr<View> root_view() const;
+        Ptr<View> content_view() const;
         RHETORIC_GETTER(GLFWwindow *, glfw_window)
         
         Vector2 mouse_position() const;
@@ -49,6 +50,8 @@ namespace oliview {
         void FocusNext();
         void FocusPrev();
         void UnfocusView();
+        
+        virtual void LayoutContentView(NVGcontext * ctx, const Ptr<View> & view);
         
         void HandleMouseEvent(const MouseEvent & event);
         void HandleScrollEvent(const ScrollEvent & event);
@@ -101,6 +104,7 @@ namespace oliview {
         float pixel_ratio_;
         
         Ptr<WindowRootView> root_view_;
+        Ptr<WindowContentView> content_view_;
         
         Ptr<View> mouse_target_;
         Option<int> mouse_source_button_;

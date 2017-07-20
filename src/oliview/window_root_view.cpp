@@ -3,8 +3,9 @@
 #include "./window.h"
 
 namespace oliview {
-    void WindowRootView::Init(const Ptr<Application> & application) {
-        View::Init(application);
+    void WindowRootView::Layout(NVGcontext *) {
+        auto cv = window()->content_view();
+        cv->set_frame(bounds());
     }
     
     bool WindowRootView::OnMouseDownEvent(const MouseEvent & event) {

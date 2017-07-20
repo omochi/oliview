@@ -82,6 +82,9 @@ namespace oliview {
         
         RHETORIC_GETTER(bool, focused)
         
+        RHETORIC_GETTER(bool, visible);
+        void set_visible(bool value);
+        
         RHETORIC_GETTER(bool, focusable)
         void set_focusable(bool value);
         
@@ -164,6 +167,7 @@ namespace oliview {
         bool clipping_children_;
         bool focusable_;
         
+        bool visible_;
         bool focused_;
 
         DrawInfo draw_info_;

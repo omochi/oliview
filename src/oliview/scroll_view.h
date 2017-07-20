@@ -22,11 +22,6 @@ namespace oliview {
      Layouterに対して max_width無し, max_height無しでMeasureして
      得られる理想サイズに対して、
      そのサイズ + frameのmaxで空間サイズを張る。
-     
-     スクロールバーは空間をはみ出る場合に自動で表示され、
-     その際には窓サイズを小さくして再レイアウトされる。
-     縦方向のはみ出しを見て、縦バーを出して横幅を縮める。
-     横方向のはみ出しがあるようなら、横バーを出して縦幅を縮める。
      */
     class ScrollView : public View {
     public:
@@ -49,22 +44,16 @@ namespace oliview {
         virtual bool OnScrollEvent(const ScrollEvent & event) override;
     private:
         void ClampScrollPosition();
+        Size ComputeContentSize(NVGcontext * ctx, const Size & visible_size) const;
         
         Size content_size_;
         Vector2 scroll_position_;
         
         bool auto_content_size_enabled_;
         
-        Ptr<ScrollContentView> content_view_;
+        Ptr<View> content_view_;
         Ptr<ScrollBar> y_bar_;
         Ptr<ScrollBar> x_bar_;
-    };
-    
-    class ScrollContentView : public View {
-    public:
-        virtual void Init(const Ptr<Application> & app) override;
-    private:
-        
     };
 }
 

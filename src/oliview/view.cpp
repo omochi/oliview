@@ -17,6 +17,7 @@ namespace oliview {
     needs_layout_(true),
     clipping_children_(false),
     focusable_(false),
+    visible_(true),
     focused_(false)
     {}
     
@@ -120,6 +121,14 @@ namespace oliview {
     
     void View::set_clipping_children(bool value) {
         clipping_children_ = value;
+    }
+    
+    void View::set_visible(bool value) {
+        visible_ = value;
+        
+        if (!visible_) {
+            Unfocus();
+        }
     }
     
     void View::set_focusable(bool value) {
@@ -248,6 +257,10 @@ namespace oliview {
     }
     
     Ptr<View> View::MouseHitTest(const Vector2 & pos) const {
+        if (!visible()) {
+            return nullptr;
+        }
+        
         bool is_inside = IsPointInside(pos);
         
         bool test_children = true;
@@ -337,6 +350,10 @@ namespace oliview {
     }
 
     void View::_PrepareToDraw(const DrawInfo & info) {
+        if (!visible()) {
+            return;
+        }
+        
         draw_info_ = info;
         
         Matrix3x3 wtr = Matrix3x3::Identity();
@@ -380,6 +397,10 @@ namespace oliview {
 
     void View::_CollectDrawCommand(std::vector<DrawCommand> * commands) {
         for (auto & child : children_) {
+            if (!child->visible()) {
+                continue;
+            }
+            
             DrawCommand command;
             command.view = child;
             command.shadow = true;
@@ -390,6 +411,10 @@ namespace oliview {
         }
 
         for (auto & child : children_) {
+            if (!child->visible()) {
+                continue;
+            }
+            
             child->_CollectDrawCommand(commands);
         }
     }

@@ -7,8 +7,8 @@ namespace oliview {
     
     class WindowRootView : public View {
     public:
-        virtual void Init(const Ptr<Application> & application) override;
-    private:        
+        virtual void Layout(NVGcontext * ctx) override;
+        
         virtual bool OnMouseDownEvent(const MouseEvent & event) override;
         virtual bool OnKeyDownEvent(const KeyEvent & event) override;
     };

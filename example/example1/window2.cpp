@@ -3,7 +3,7 @@
 void Window2::Init(const Ptr<Application> & app) {
     Window::Init(app);
     
-    auto root_view = this->root_view();
+    auto root_view = this->content_view();
     auto layouter = New<GridLayouter>();
     root_view->set_children_layouter(layouter);
     

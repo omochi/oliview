@@ -61,6 +61,11 @@ namespace oliview {
         root_view_->_SetWindow(shared_from_this());
         root_view_->set_background_color(Color(1, 1, 1, 1));
         root_view_->set_frame(Rect(Vector2(), window_size()));
+        
+        content_view_ = OLIVIEW_INIT(WindowContentView, app);
+        root_view_->AddChild(content_view_);
+        content_view_->set_background_color(Color(1, 1, 1, 1));
+        content_view_->set_frame(root_view_->bounds());
                 
         app->_AddWindow(shared_from_this());
     }
@@ -78,16 +83,14 @@ namespace oliview {
         RHETORIC_ASSERT(app != nullptr);
         app->_RemoveWindow(shared_from_this());
 
-        root_view_ = nullptr;
-
         glfwDestroyWindow(glfw_window_);
 
         glfwSetWindowUserPointer(glfw_window_, nullptr);
         glfw_window_ = nullptr;
     }
     
-    Ptr<View> Window::root_view() const {
-        return root_view_;
+    Ptr<View> Window::content_view() const {
+        return content_view_;
     }
     
     bool Window::focused() const {
@@ -114,7 +117,7 @@ namespace oliview {
             if (!focus) {
                 break;
             }
-            if (focus->focusable()) {
+            if (focus->focusable() && focus->visible()) {
                 break;
             }
         }
@@ -129,7 +132,7 @@ namespace oliview {
             if (!focus) {
                 break;
             }
-            if (focus->focusable()) {
+            if (focus->focusable() && focus->visible()) {
                 break;
             }
         }
@@ -139,6 +142,15 @@ namespace oliview {
     
     void Window::UnfocusView() {
         _Focus(nullptr);
+    }
+    
+    void Window::LayoutContentView(NVGcontext * ctx, const Ptr<View> & view) {        
+        view->LayoutOwnContent(ctx);
+        
+        auto layouter = view->children_layouter();
+        if (layouter) {
+            layouter->Layout(ctx);
+        }
     }
     
     void Window::HandleMouseEvent(const MouseEvent & event_) {
@@ -420,7 +432,7 @@ namespace oliview {
     Ptr<View> Window::GetNextFocusView(const Ptr<View> & view_) const {
         Ptr<View> view = view_;
         if (!view) {
-            return root_view();
+            return root_view_;
         }
         
         auto child = view->GetFirstFocusChild();
@@ -445,7 +457,7 @@ namespace oliview {
         Ptr<View> view = view_;
         
         if (!view) {
-            view = root_view();
+            view = root_view_;
         } else {
             auto parent = view->parent();
             if (!parent) {
