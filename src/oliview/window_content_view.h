@@ -7,7 +7,9 @@ namespace oliview {
     
     class WindowContentView : public View {
     public:
-        virtual void Layout(NVGcontext * ctx) override;
+        RHETORIC_SUBCLASS_SHARED_FROM_THIS(WindowContentView, View)
+        
+        virtual void LayoutOwnContent(NVGcontext * ctx) override;
     private:
         
     };

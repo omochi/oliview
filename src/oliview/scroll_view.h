@@ -3,13 +3,12 @@
 #include "./axis.h"
 #include "./init_macro.h"
 #include "./scroll_bar.h"
+#include "./scroll_content_view.h"
 #include "./scroll_event.h"
 #include "./size.h"
 #include "./view.h"
 
 namespace oliview {
-    class ScrollContentView;
-    
     /*
      frame: 親ビューで見た窓サイズ
      content_size: スクロール空間のサイズ
@@ -27,6 +26,8 @@ namespace oliview {
     public:
         virtual void Init(const Ptr<Application> & app) override;
         
+        RHETORIC_SUBCLASS_SHARED_FROM_THIS(ScrollView, View)
+        
         Ptr<View> content_view() const;
         
         RHETORIC_GETTER(Size, content_size)
@@ -35,15 +36,22 @@ namespace oliview {
         RHETORIC_GETTER(bool, auto_content_size_enabled)
         void set_auto_content_size_enabled(bool value);
         
-        RHETORIC_GETTER(Vector2, scroll_position)
+        RHETORIC_GETTER(Rect, scroll_visible_rect)
+        
         bool ScrollTo(const Vector2 & position);
+        
+        virtual Size MeasureScrollContentView(NVGcontext * ctx,
+                                              const Ptr<ScrollContentView> & view,
+                                              const Size & visible_size) const;
+        virtual void LayoutScrollContentView(NVGcontext * ctx,
+                                             const Ptr<ScrollContentView> & view);
         
         virtual Size Measure(NVGcontext * ctx, const MeasureQuery & query) const override;
         virtual void Layout(NVGcontext * ctx) override;
         
         virtual bool OnScrollEvent(const ScrollEvent & event) override;
     private:
-        void ClampScrollPosition();
+        bool UpdateScrollVisibleRect(const Rect & value);
         
         struct ComputeBarsVisibilityResult {
             bool y_bar;
@@ -54,15 +62,13 @@ namespace oliview {
             ComputeBarsVisibilityResult();
         };
         ComputeBarsVisibilityResult ComputeBarsVisibility(NVGcontext * ctx) const;
-        
-        Size ComputeContentSize(NVGcontext * ctx, const Size & visible_size) const;
-        
+                
         Size content_size_;
-        Vector2 scroll_position_;
+        Rect scroll_visible_rect_;
         
         bool auto_content_size_enabled_;
         
-        Ptr<View> content_view_;
+        Ptr<ScrollContentView> content_view_;
         Ptr<ScrollBar> y_bar_;
         Ptr<ScrollBar> x_bar_;
     };

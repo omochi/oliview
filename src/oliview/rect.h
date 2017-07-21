@@ -2,6 +2,7 @@
 
 #include "./dependency.h"
 
+#include "./axis.h"
 #include "./edge_inset.h"
 #include "./size.h"
 #include "./vector2.h"
@@ -23,6 +24,7 @@ namespace oliview {
         
         Range<float> x_range() const;
         Range<float> y_range() const;
+        Range<float> GetRangeFor(Axis axis) const;
 
         Rect ApplyTransform(const Matrix3x3 & m) const;
         

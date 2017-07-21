@@ -25,80 +25,81 @@ namespace oliview {
     
     void ScrollBar::set_content_size(float value) {
         content_size_ = value;
-        ClampScrollPosition();
         SetNeedsLayout();
+        
+        UpdateScrollPosition(scroll_position_);
     }
     
     void ScrollBar::set_visible_size(float value) {
         visible_size_ = value;
-        ClampScrollPosition();
         SetNeedsLayout();
+        
+        UpdateScrollPosition(scroll_position_);
     }
     
     bool ScrollBar::ScrollTo(float value) {
-        auto old = scroll_position_;
-        scroll_position_ = value;
-        ClampScrollPosition();
-        SetNeedsLayout();
-        return scroll_position_ != old;
+        bool updated = UpdateScrollPosition(value);
+        return updated;
     }
     
     bool ScrollBar::ScrollByPageUp() {
-        return ScrollTo(GetPageUpPosition(), false);
+        if (!ScrollTo(GetPageUpPosition())) {
+            return false;
+        }
+        EmitScrollEvent();
+        return true;
     }
     
     bool ScrollBar::ScrollByPageDown() {
-        return ScrollTo(GetPageDownPosition(), false);
+        if (!ScrollTo(GetPageDownPosition())) {
+            return false;
+        }
+        EmitScrollEvent();
+        return true;
     }
     
     bool ScrollBar::OnMouseDownEvent(const MouseEvent & event) {        
-        auto pos = event.pos();
-        if (!bounds().Contains(pos)) {
+        if (!bounds().Contains(event.pos())) {
             return false;
         }
         
         auto knob_hit = GetKnobHitRect();
         
-        switch (axis_) {
-            case Axis::X: {
-                if (!knob_hit.y_range().Contains(pos.y())) {
-                    return false;
-                }
-                auto range = knob_hit.x_range();
-                if (pos.x() < range.lower_bound()) {
-                    return ScrollTo(GetPageUpPosition(), true);
-                } else if (pos.x() < range.upper_bound()) {
-                    knob_mouse_offset_ = Some(range.lower_bound() - pos.x());
-                    return true;
-                } else {
-                    return ScrollTo(GetPageDownPosition(), true);
-                }
-                break;
+        Range<float> axis_hit_range = knob_hit.GetRangeFor(axis_);
+        Range<float> cross_hit_range = knob_hit.GetRangeFor(GetNextAxis(axis_));
+        float axis_pos = event.pos().get(AxisToIndex(axis_));
+        float cross_pos = event.pos().get(AxisToIndex(GetNextAxis(axis_)));
+        
+        if (!cross_hit_range.Contains(cross_pos)) {
+            return false;
+        }
+        if (axis_pos < axis_hit_range.lower_bound()) {
+            if (!ScrollTo(GetPageUpPosition())) {
+                return false;
             }
-            case Axis::Y: {
-                if (!knob_hit.x_range().Contains(pos.x())) {
-                    return false;
-                }
-                auto range = knob_hit.y_range();
-                if (pos.y() < range.lower_bound()) {
-                    return ScrollTo(GetPageUpPosition(), true);
-                } else if (pos.y() < range.upper_bound()) {
-                    knob_mouse_offset_ = Some(range.lower_bound() - pos.y());
-                    return true;
-                } else {
-                    return ScrollTo(GetPageDownPosition(), true);
-                }
+            EmitScrollEvent();
+            return true;
+        } else if (axis_pos < axis_hit_range.upper_bound()) {
+            knob_mouse_offset_ = Some(axis_hit_range.lower_bound() - axis_pos);
+            return true;
+        } else {
+            if (!ScrollTo(GetPageDownPosition())) {
+                return false;
             }
+            EmitScrollEvent();
+            return true;
         }
         
-        RHETORIC_FATAL("never");
     }
     
     void ScrollBar::OnMouseMoveEvent(const MouseEvent & event) {
         if (knob_mouse_offset_) {
             float mouse_y = event.pos().get(AxisToIndex(axis_)) + *knob_mouse_offset_;
             float scroll_y = GetScrollPositionForPosition(mouse_y);
-            ScrollTo(scroll_y, true);
+            if (!ScrollTo(scroll_y)) {
+                return;
+            }
+            EmitScrollEvent();
         } else {
             UpdateKnobActive(event.pos());
         }
@@ -205,22 +206,18 @@ namespace oliview {
         return scroll_position_ + visible_size_ - 10.0f;
     }
     
-    bool ScrollBar::ScrollTo(float value, bool event_emission) {
-        if (!ScrollTo(value)) {
-            return false;
+    void ScrollBar::EmitScrollEvent() {
+        if (scroll_handler_) {
+            scroll_handler_(scroll_position_);
         }
-        if (event_emission) {
-            if (scroll_handler_) {
-                scroll_handler_(scroll_position_);
-            }
-        }
-        return true;
     }
     
-    void ScrollBar::ClampScrollPosition() {
-        float x = scroll_position_;
-        x = Clamp(x, MakeRange(0.0f, content_size_ - visible_size_));
-        scroll_position_ = x;
+    bool ScrollBar::UpdateScrollPosition(float value) {
+        auto old = scroll_position_;
+        
+        scroll_position_ = Clamp(value, MakeRange(0.0f, content_size_ - visible_size_));
+        
+        return scroll_position_ != old;
     }
     
     Range<float> ScrollBar::GetBarSpaceRange() const {

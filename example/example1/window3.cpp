@@ -68,6 +68,3 @@ void Window3::Init(const Ptr<Application> & app) {
     
 }
 
-void Window3::OnBeginDraw(NVGcontext * ctx) {
-}
-

@@ -7,6 +7,9 @@ namespace oliview {
                              const Ptr<Text> & text,
                              const Option<float> & max_width)
     {
+        NVGSetFont(ctx, font());
+        nvgFontSize(ctx, font_size());
+        
         float ascent, descent, line_height;
         nvgTextMetrics(ctx, &ascent, &descent, &line_height);
         float font_height = ascent - descent;

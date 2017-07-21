@@ -51,20 +51,25 @@ namespace oliview {
         void FocusPrev();
         void UnfocusView();
         
-        virtual void LayoutContentView(NVGcontext * ctx, const Ptr<View> & view);
+        virtual void LayoutContentView(NVGcontext * ctx, const Ptr<WindowContentView> & view);
         
         void HandleMouseEvent(const MouseEvent & event);
         void HandleScrollEvent(const ScrollEvent & event);
         void HandleKeyEvent(const KeyEvent & event);
         
-        virtual void OnBeginDraw(NVGcontext * ctx);
-        virtual void OnEndDraw(NVGcontext * ctx);
-        
         virtual void OnKeyDownEvent(const KeyEvent & event);
         virtual void OnKeyUpEvent(const KeyEvent & event);
         virtual void OnKeyRepeatEvent(const KeyEvent & event);
         
-        void _Update();
+        virtual void Update();
+        
+        NVGcontext * BeginNVG();
+        virtual void Layout(NVGcontext * ctx);
+        virtual void Draw(NVGcontext * ctx);
+        void EndNVG(NVGcontext * ctx);
+        void Swap();
+        
+        void _InvokeUpdate();
         void _UpdateAnimation(float delta_time);
         void _MayClose();
         
@@ -73,12 +78,10 @@ namespace oliview {
         
         void _Focus(const Ptr<View> & view);
     private:
-        NVGcontext * BeginNVG();
-        void EndNVG(NVGcontext * ctx);
         void CancelNVG(NVGcontext * ctx);
         
-        void Layout(NVGcontext * ctx);
-        void Draw(NVGcontext * ctx);
+        void _Layout(NVGcontext * ctx);
+        void _Draw(NVGcontext * ctx);
         
         void set_window_size(const Size & value);
         void set_framebuffer_size(const Size & value);

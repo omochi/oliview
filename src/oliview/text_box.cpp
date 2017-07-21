@@ -4,7 +4,7 @@
 
 namespace oliview {    
     void TextBox::Init(const Ptr<Application> & application) {
-        View::Init(application);
+        ScrollView::Init(application);
         
         set_focusable(true);
         
@@ -19,6 +19,10 @@ namespace oliview {
         set_font(fm->default_font());
         set_font_size(12.0f);
         set_font_color(Color(0, 0, 0, 1));
+        
+        text_view_ = OLIVIEW_INIT(TextBoxContentView, application, shared_from_this());
+        text_view_->set_background_color(Color(0.9f, 0.9f, 1.0f, 1.0f));
+        content_view()->AddChild(text_view_);
     }
     
     Ptr<const Text> TextBox::text() const {
@@ -177,84 +181,33 @@ namespace oliview {
         return true;
     }
     
-    Size TextBox::MeasureOwnContent(NVGcontext * ctx, const MeasureQuery & query) const {
+    Size TextBox::MeasureScrollContentView(NVGcontext * ctx,
+                                           const Ptr<ScrollContentView> & view,
+                                           const Size & visible_size) const
+    {
+        RHETORIC_UNUSED(view);
         auto layout = text_layouter_->Layout(ctx,
                                              text_,
-                                             query.max_width());
-        return layout->frame().size();
+                                             Some(visible_size.width()));
+        Size text_size = layout->frame().size();
+        Size size = text_size.GetMax(visible_size);
+        return size;
     }
     
-    void TextBox::LayoutOwnContent(NVGcontext * ctx) {
+    void TextBox::LayoutScrollContentView(NVGcontext * ctx,
+                                          const Ptr<ScrollContentView> & view)
+    {
+        RHETORIC_UNUSED(view);
+        text_view_->set_frame(Rect(Vector2(),
+                                   content_size()));
+        
         text_draw_info_ = text_layouter_->Layout(ctx,
                                                  text_,
-                                                 Some(frame().size().width()));
+                                                 Some(content_size().width()));
         float top = text_draw_info_->frame().origin().y();
         text_draw_info_->set_draw_offset(Vector2(0, -top));
     }
-    
-    void TextBox::DrawOwnContent(NVGcontext * ctx) {
-        RHETORIC_ASSERT(text_draw_info_ != nullptr);
-        
-        NVGSetFillColor(ctx, font_color());
-        
-        text_layouter_->Draw(ctx, text_, text_draw_info_);
-        
-        if (focused()) {
-            if (cursor_blink_time_ <= 0.5f) {
-                text_layouter_->DrawCursor(ctx, cursor_index(), text_draw_info_);
-            }
-        }
-    }
-    
-//    Ptr<View> TextBox::MouseHitTest(const MouseEvent & event) {
-//        auto ret = View::HitTest(event);
-//        if (ret) {
-//            return ret;
-//        }
-//        if (IsPointInside(event.pos())) {
-//            return shared_from_this();
-//        }
-//        return nullptr;
-//    }
-    
-    bool TextBox::OnMouseDownEvent(const MouseEvent & event) {
-        if (!text_draw_info_) {
-            return false;
-        }
-        
-        auto position_index = text_draw_info_->GetIndexFor(event.pos());
-        auto text_index = text_draw_info_->GetTextIndexFor(position_index, text_);
-        
-        set_cursor_index(text_index);
-        cursor_x_ = GetCursorRect().origin().x();
-        
-        Focus();
-        
-        return true;
-    }
-    
-    void TextBox::OnMouseMoveEvent(const MouseEvent & event) {
-        RHETORIC_UNUSED(event);
-    }
-    
-    void TextBox::OnMouseUpEvent(const MouseEvent & event) {
-        RHETORIC_UNUSED(event);
-    }
-    
-    void TextBox::OnMouseCancelEvent() {
-    }
-    
-    bool TextBox::OnScrollEvent(const ScrollEvent & event) {
-        auto bounds = this->bounds();
-        bounds.set_origin(bounds.origin() + event.scroll());
-        set_bounds(bounds);
-//        Print(Format("TextBox scr %f, %f=> %f, %f",
-//                     event.scroll().x(),
-//                     event.scroll().y(),
-//                     bounds.origin().x(), bounds.origin().y()));
-        return true;
-    }
-    
+
     bool TextBox::OnKeyDownEvent(const KeyEvent & event) {
         switch (event.type()) {
             case KeyEventType::Down:
@@ -312,6 +265,39 @@ namespace oliview {
         }
     }
     
+    bool TextBox::_OnTextViewMouseDownEvent(const MouseEvent & event) {
+        if (!text_draw_info_) {
+            return false;
+        }
+        
+        auto position_index = text_draw_info_->GetIndexFor(event.pos());
+        auto text_index = text_draw_info_->GetTextIndexFor(position_index, text_);
+        
+        set_cursor_index(text_index);
+        cursor_x_ = GetCursorRect().origin().x();
+        
+        this->Focus();
+        
+        return true;
+    }
+    
+    void TextBox::_DrawTextViewContent(NVGcontext * ctx,
+                                       const Ptr<TextBoxContentView> & view)
+    {
+        RHETORIC_UNUSED(view);
+        RHETORIC_ASSERT(text_draw_info_ != nullptr);
+        
+        NVGSetFillColor(ctx, font_color());
+        
+        text_layouter_->Draw(ctx, text_, text_draw_info_);
+        
+        if (focused()) {
+            if (cursor_blink_time_ <= 0.5f) {
+                text_layouter_->DrawCursor(ctx, cursor_index(), text_draw_info_);
+            }
+        }
+    }
+
     Text::Index TextBox::GetTextIndexForLineIndexX(size_t line_index, float x) {
         RHETORIC_ASSERT(text_draw_info_ != nullptr);
         

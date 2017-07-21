@@ -147,7 +147,7 @@ void Window1::OnKeyDownEvent(const KeyEvent & event) {
     }
 }
 
-void Window1::LayoutContentView(NVGcontext * ctx, const Ptr<View> & view) {
+void Window1::LayoutContentView(NVGcontext * ctx, const Ptr<WindowContentView> & view) {
     Window::LayoutContentView(ctx, view);
     
     float left = 540;

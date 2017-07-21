@@ -229,7 +229,7 @@ namespace oliview {
     void View::LayoutOwnContent(NVGcontext * ctx) {
         RHETORIC_UNUSED(ctx);
     }
-
+    
     void View::DrawOwnContent(NVGcontext * ctx) {
         RHETORIC_UNUSED(ctx);
     }

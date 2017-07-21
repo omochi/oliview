@@ -22,6 +22,10 @@
 		D639A0641F0FD96C0059B6BA /* text_draw_info.h in Headers */ = {isa = PBXBuildFile; fileRef = D639A0621F0FD96C0059B6BA /* text_draw_info.h */; };
 		D6441E451F20FCEF002ABDF4 /* window_content_view.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D6441E431F20FCEF002ABDF4 /* window_content_view.cpp */; };
 		D6441E461F20FCEF002ABDF4 /* window_content_view.h in Headers */ = {isa = PBXBuildFile; fileRef = D6441E441F20FCEF002ABDF4 /* window_content_view.h */; };
+		D6441E521F22420B002ABDF4 /* scroll_content_view.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D6441E501F22420B002ABDF4 /* scroll_content_view.cpp */; };
+		D6441E531F22420B002ABDF4 /* scroll_content_view.h in Headers */ = {isa = PBXBuildFile; fileRef = D6441E511F22420B002ABDF4 /* scroll_content_view.h */; };
+		D6441E561F22530F002ABDF4 /* text_box_content_view.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D6441E541F22530F002ABDF4 /* text_box_content_view.cpp */; };
+		D6441E571F22530F002ABDF4 /* text_box_content_view.h in Headers */ = {isa = PBXBuildFile; fileRef = D6441E551F22530F002ABDF4 /* text_box_content_view.h */; };
 		D678E3A91F053A8700B9A4C0 /* text_draw_layouter.h in Headers */ = {isa = PBXBuildFile; fileRef = D678E3A71F053A8700B9A4C0 /* text_draw_layouter.h */; };
 		D6860C3A1F14C32E00ED2230 /* mouse_event.h in Headers */ = {isa = PBXBuildFile; fileRef = D6860C381F14C32E00ED2230 /* mouse_event.h */; };
 		D6C3F7381E9D29D90020D65A /* glfw3.h in Headers */ = {isa = PBXBuildFile; fileRef = D6C3F7331E9D29D90020D65A /* glfw3.h */; };
@@ -118,6 +122,10 @@
 		D639A0651F0FFBFF0059B6BA /* math_inline.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = math_inline.h; sourceTree = "<group>"; };
 		D6441E431F20FCEF002ABDF4 /* window_content_view.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = window_content_view.cpp; sourceTree = "<group>"; };
 		D6441E441F20FCEF002ABDF4 /* window_content_view.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = window_content_view.h; sourceTree = "<group>"; };
+		D6441E501F22420B002ABDF4 /* scroll_content_view.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = scroll_content_view.cpp; sourceTree = "<group>"; };
+		D6441E511F22420B002ABDF4 /* scroll_content_view.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = scroll_content_view.h; sourceTree = "<group>"; };
+		D6441E541F22530F002ABDF4 /* text_box_content_view.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = text_box_content_view.cpp; sourceTree = "<group>"; };
+		D6441E551F22530F002ABDF4 /* text_box_content_view.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = text_box_content_view.h; sourceTree = "<group>"; };
 		D678E3A71F053A8700B9A4C0 /* text_draw_layouter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = text_draw_layouter.h; sourceTree = "<group>"; };
 		D6860C371F14C32E00ED2230 /* mouse_event.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = mouse_event.cpp; sourceTree = "<group>"; };
 		D6860C381F14C32E00ED2230 /* mouse_event.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = mouse_event.h; sourceTree = "<group>"; };
@@ -298,6 +306,8 @@
 				D6F560A81F1E3776009389FD /* scroll_bar.h */,
 				D6079ACB1F1A66ED005316D3 /* scroll_event.cpp */,
 				D6079ACC1F1A66ED005316D3 /* scroll_event.h */,
+				D6441E501F22420B002ABDF4 /* scroll_content_view.cpp */,
+				D6441E511F22420B002ABDF4 /* scroll_content_view.h */,
 				D6123EB61F205D0700C5CBF6 /* scroll_view.cpp */,
 				D6123EB71F205D0700C5CBF6 /* scroll_view.h */,
 				D6F1F2891F0F7D9E00A61981 /* size.cpp */,
@@ -310,6 +320,8 @@
 				D6F1F2921F0F7D9E00A61981 /* text.h */,
 				D6F1F28D1F0F7D9E00A61981 /* text_box.cpp */,
 				D6F1F28E1F0F7D9E00A61981 /* text_box.h */,
+				D6441E541F22530F002ABDF4 /* text_box_content_view.cpp */,
+				D6441E551F22530F002ABDF4 /* text_box_content_view.h */,
 				D639A0611F0FD96C0059B6BA /* text_draw_info.cpp */,
 				D639A0621F0FD96C0059B6BA /* text_draw_info.h */,
 				D6F1F28F1F0F7D9E00A61981 /* text_draw_layouter.cpp */,
@@ -419,6 +431,7 @@
 				D6C3F74A1E9D29F70020D65A /* stb_image.h in Headers */,
 				D639A0601F0FCEE30059B6BA /* string_slice.h in Headers */,
 				D6F1F2C41F0F7D9E00A61981 /* text_draw_layouter.h in Headers */,
+				D6441E571F22530F002ABDF4 /* text_box_content_view.h in Headers */,
 				D6F1F2BA1F0F7D9E00A61981 /* oliview.h in Headers */,
 				D6E246E91F172F920004F947 /* window_root_view.h in Headers */,
 				D6F1F2BC1F0F7D9E00A61981 /* rect.h in Headers */,
@@ -448,6 +461,7 @@
 				D6F1F2A71F0F7D9E00A61981 /* font.h in Headers */,
 				D639A04B1F0D5FAC0059B6BA /* table_dimension.h in Headers */,
 				D678E3A91F053A8700B9A4C0 /* text_draw_layouter.h in Headers */,
+				D6441E531F22420B002ABDF4 /* scroll_content_view.h in Headers */,
 				D6C3F7391E9D29D90020D65A /* glfw3native.h in Headers */,
 				D6F1F2A31F0F7D9E00A61981 /* dependency.h in Headers */,
 				D639A0641F0FD96C0059B6BA /* text_draw_info.h in Headers */,
@@ -531,6 +545,7 @@
 				D6FBA9481F18A014004BA8BE /* size.cpp in Sources */,
 				D6079ACD1F1A66ED005316D3 /* scroll_event.cpp in Sources */,
 				D6079AC21F18C41F005316D3 /* application_object.cpp in Sources */,
+				D6441E561F22530F002ABDF4 /* text_box_content_view.cpp in Sources */,
 				D6FBA9491F18A014004BA8BE /* table_dimension.cpp in Sources */,
 				D6FBA94A1F18A014004BA8BE /* text.cpp in Sources */,
 				D6FBA94B1F18A014004BA8BE /* text_box.cpp in Sources */,
@@ -546,6 +561,7 @@
 				D6FBA9521F18A014004BA8BE /* view.cpp in Sources */,
 				D6F560A51F1CF093009389FD /* edge_inset.cpp in Sources */,
 				D6123EB81F205D0700C5CBF6 /* scroll_view.cpp in Sources */,
+				D6441E521F22420B002ABDF4 /* scroll_content_view.cpp in Sources */,
 				D6FBA9531F18A014004BA8BE /* window.cpp in Sources */,
 				D6FBA9541F18A014004BA8BE /* window_root_view.cpp in Sources */,
 			);

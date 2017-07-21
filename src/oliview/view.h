@@ -106,7 +106,7 @@ namespace oliview {
 
         virtual void Layout(NVGcontext * ctx);
         virtual void LayoutOwnContent(NVGcontext * ctx);
-    
+            
         virtual void DrawOwnContent(NVGcontext * ctx);
         
         Vector2 ConvertPointToWindow(const Vector2 & point) const;

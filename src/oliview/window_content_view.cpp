@@ -3,7 +3,7 @@
 #include "./window.h"
 
 namespace oliview {
-    void WindowContentView::Layout(NVGcontext * ctx) {
+    void WindowContentView::LayoutOwnContent(NVGcontext * ctx) {
         window()->LayoutContentView(ctx, shared_from_this());
     }
 }

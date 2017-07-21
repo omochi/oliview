@@ -41,9 +41,9 @@ namespace oliview {
     private:
         float GetPageUpPosition();
         float GetPageDownPosition();
-        bool ScrollTo(float value, bool event_emission);
+        void EmitScrollEvent();
         
-        void ClampScrollPosition();
+        bool UpdateScrollPosition(float value);
         
         Range<float> GetBarSpaceRange() const;
         Range<float> GetKnobRange() const;

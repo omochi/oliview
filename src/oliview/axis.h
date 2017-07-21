@@ -10,4 +10,6 @@ namespace oliview {
     
     size_t AxisToIndex(Axis axis);
     Result<Axis> AxisFromIndex(size_t index);
+    
+    Axis GetNextAxis(Axis axis);
 }

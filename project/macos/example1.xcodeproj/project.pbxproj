@@ -12,6 +12,7 @@
 		D639A0521F0E7F8B0059B6BA /* window2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D639A0501F0E7F8B0059B6BA /* window2.cpp */; };
 		D639A05C1F0EA8A10059B6BA /* window1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D639A05A1F0EA8A10059B6BA /* window1.cpp */; };
 		D6441E491F210765002ABDF4 /* window4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D6441E471F210765002ABDF4 /* window4.cpp */; };
+		D6441E4F1F223D1F002ABDF4 /* window5.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D6441E4D1F223D1F002ABDF4 /* window5.cpp */; };
 		D675A60A1EB7452F00576E18 /* libfreetype.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D675A6091EB7452F00576E18 /* libfreetype.a */; };
 		D6C3F6D41E99B4320020D65A /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D6C3F6D31E99B4320020D65A /* main.cpp */; };
 		D6C3F6E61E9A0A960020D65A /* liboliview.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D6C3F6E51E9A0A960020D65A /* liboliview.a */; };
@@ -49,6 +50,8 @@
 		D639A05B1F0EA8A10059B6BA /* window1.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = window1.h; sourceTree = "<group>"; };
 		D6441E471F210765002ABDF4 /* window4.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = window4.cpp; sourceTree = "<group>"; };
 		D6441E481F210765002ABDF4 /* window4.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = window4.h; sourceTree = "<group>"; };
+		D6441E4D1F223D1F002ABDF4 /* window5.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = window5.cpp; sourceTree = "<group>"; };
+		D6441E4E1F223D1F002ABDF4 /* window5.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = window5.h; sourceTree = "<group>"; };
 		D675A6091EB7452F00576E18 /* libfreetype.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libfreetype.a; path = ../../../../../../../../usr/local/Cellar/freetype/2.6.3/lib/libfreetype.a; sourceTree = "<group>"; };
 		D6C3F6C11E99AEAA0020D65A /* example1 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = example1; sourceTree = BUILT_PRODUCTS_DIR; };
 		D6C3F6D31E99B4320020D65A /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
@@ -118,6 +121,8 @@
 				D6E246E01F17067C0004F947 /* window3.h */,
 				D6441E471F210765002ABDF4 /* window4.cpp */,
 				D6441E481F210765002ABDF4 /* window4.h */,
+				D6441E4D1F223D1F002ABDF4 /* window5.cpp */,
+				D6441E4E1F223D1F002ABDF4 /* window5.h */,
 				D6F1F2D31F0F7DFB00A61981 /* temp_test.cpp */,
 				D6F1F2D41F0F7DFB00A61981 /* temp_test.h */,
 				D6F1F2D61F13568200A61981 /* text_test.cpp */,
@@ -209,6 +214,7 @@
 				D6F1F2D51F0F7DFB00A61981 /* temp_test.cpp in Sources */,
 				D6C3F6D41E99B4320020D65A /* main.cpp in Sources */,
 				D639A0521F0E7F8B0059B6BA /* window2.cpp in Sources */,
+				D6441E4F1F223D1F002ABDF4 /* window5.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

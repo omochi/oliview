@@ -26,6 +26,16 @@ namespace oliview {
     Range<float> Rect::y_range() const {
         return MakeRange(origin().y(), end().y());
     }
+    
+    Range<float> Rect::GetRangeFor(Axis axis) const {
+        switch (axis) {
+            case Axis::X:
+                return x_range();
+            case Axis::Y:
+                return y_range();
+        }
+        RHETORIC_FATAL("never");
+    }
 
     Rect Rect::ApplyTransform(const Matrix3x3 & m) const {
         auto p0 = origin().ApplyTransform(m);

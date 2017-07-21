@@ -104,6 +104,7 @@ namespace oliview {
     void Window::MakeContextCurrent() {
         if (closed()) { return; }
         glfwMakeContextCurrent(glfw_window_);
+        OLIVIEW_GL_ASSERT_NO_ERROR();
     }
     
     bool Window::ShouldClose() const {
@@ -144,14 +145,9 @@ namespace oliview {
         _Focus(nullptr);
     }
     
-    void Window::LayoutContentView(NVGcontext * ctx, const Ptr<View> & view) {        
-        view->LayoutOwnContent(ctx);
-        
-        auto layouter = view->children_layouter();
-        if (layouter) {
-            layouter->Layout(ctx);
-        }
-    }
+    void Window::LayoutContentView(NVGcontext *,
+                                   const Ptr<WindowContentView> &)
+    {}
     
     void Window::HandleMouseEvent(const MouseEvent & event_) {
         if (mouse_target_) {
@@ -245,33 +241,61 @@ namespace oliview {
         }
     }
     
-    void Window::OnBeginDraw(NVGcontext * ctx) {
-        RHETORIC_UNUSED(ctx);
+    void Window::OnKeyDownEvent(const KeyEvent &) {
+    }
+    void Window::OnKeyUpEvent(const KeyEvent &) {
+    }
+    void Window::OnKeyRepeatEvent(const KeyEvent &) {
     }
     
-    void Window::OnEndDraw(NVGcontext * ctx) {
-        RHETORIC_UNUSED(ctx);
-    }
-    
-    void Window::OnKeyDownEvent(const KeyEvent & event) {
-        RHETORIC_UNUSED(event);
-    }
-    void Window::OnKeyUpEvent(const KeyEvent & event) {
-        RHETORIC_UNUSED(event);
-    }
-    void Window::OnKeyRepeatEvent(const KeyEvent & event) {
-        RHETORIC_UNUSED(event);
-    }
-    
-    void Window::_Update() {
-        _MayClose();
-        if (closed()) { return; }
-        
+    void Window::Update() {
+        MakeContextCurrent();
         NVGcontext * ctx = BeginNVG();
         Layout(ctx);
         Draw(ctx);
         EndNVG(ctx);
+        Swap();
+    }
+    
+    NVGcontext * Window::BeginNVG() {
+        RHETORIC_ASSERT(nvg_context_ == nullptr);
+        
+        auto app = application();
+        auto ctx = app->_nvg_context();
+
+        nvgBeginFrame(ctx,
+                      (int)window_size_.width(),
+                      (int)window_size_.height(),
+                      pixel_ratio_);
+        
+        nvg_context_ = ctx;
+        
+        return ctx;
+    }
+
+    void Window::Layout(NVGcontext * ctx) {
+        _Layout(ctx);
+    }
+    
+    void Window::Draw(NVGcontext * ctx) {
+        _Draw(ctx);
+    }
+    
+    void Window::EndNVG(NVGcontext * ctx) {
+        RHETORIC_ASSERT(nvg_context_ == ctx);
+        
+        nvgEndFrame(ctx);
+        nvg_context_ = nullptr;
+    }
+    
+    void Window::Swap() {
         glfwSwapBuffers(glfw_window_);
+    }
+    
+    void Window::_InvokeUpdate() {
+        _MayClose();
+        if (closed()) { return; }
+        Update();
     }
     
     void Window::_UpdateAnimation(float delta_time) {
@@ -318,35 +342,9 @@ namespace oliview {
         
         if (view) {
             focused_view_ = view;
-            old->_SetFocused(true);
+            view->_SetFocused(true);
             view->OnFocus();
         }
-    }
-    
-    NVGcontext * Window::BeginNVG() {
-        RHETORIC_ASSERT(nvg_context_ == nullptr);
-        
-        auto app = application();
-        auto ctx = app->_nvg_context();
-        
-        MakeContextCurrent();
-        OLIVIEW_GL_ASSERT_NO_ERROR();
-        
-        nvgBeginFrame(ctx,
-                      (int)window_size_.width(),
-                      (int)window_size_.height(),
-                      pixel_ratio_);
-        
-        nvg_context_ = ctx;
-        
-        return ctx;
-    }
-    
-    void Window::EndNVG(NVGcontext * ctx) {
-        RHETORIC_ASSERT(nvg_context_ == ctx);
-        
-        nvgEndFrame(ctx);
-        nvg_context_ = nullptr;
     }
     
     void Window::CancelNVG(NVGcontext * ctx) {
@@ -356,7 +354,7 @@ namespace oliview {
         nvg_context_ = nullptr;
     }
     
-    void Window::Layout(NVGcontext * ctx) {
+    void Window::_Layout(NVGcontext * ctx) {
         int count = 0;
         while (true) {
             bool updated = root_view_->_InvokeLayout(ctx);
@@ -369,14 +367,12 @@ namespace oliview {
         }
     }
     
-    void Window::Draw(NVGcontext * ctx) {
+    void Window::_Draw(NVGcontext * ctx) {
         if (framebuffer_size_.width() == 0 ||
             framebuffer_size_.height() == 0)
         {
             return;
         }
-        
-        OnBeginDraw(ctx);
         
         View::DrawInfo draw_info;
         draw_info.parent_clip_frame = Rect(Vector2(0, 0), window_size_);
@@ -403,8 +399,6 @@ namespace oliview {
             if (!view) { continue; }
             view->_InvokeDraw(ctx, draw.shadow);
         }
-        
-        OnEndDraw(ctx);
     }
     
     void Window::set_window_size(const Size & value) {
@@ -534,7 +528,7 @@ namespace oliview {
 
     void Window::RefreshHandler(GLFWwindow * window) {
         auto thiz = (Window *)glfwGetWindowUserPointer(window);
-        thiz->_Update();
+        thiz->_InvokeUpdate();
     }
 
     void Window::WindowSizeHandler(GLFWwindow * window, int w, int h) {

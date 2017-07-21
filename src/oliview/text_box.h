@@ -4,13 +4,15 @@
 #include "./char_event.h"
 #include "./key_event.h"
 #include "./math.h"
+#include "./scroll_view.h"
 #include "./text.h"
+#include "./text_box_content_view.h"
 #include "./text_draw_info.h"
 #include "./text_draw_layouter.h"
 #include "./view.h"
 
 namespace oliview {
-    class TextBox : public View {
+    class TextBox : public ScrollView {
     public:
         virtual void Init(const Ptr<Application> & application) override;
         
@@ -39,18 +41,19 @@ namespace oliview {
         bool MoveCursorUp();
         bool MoveCursorDown();
         
-        virtual Size MeasureOwnContent(NVGcontext * ctx, const MeasureQuery & query) const override;
-        virtual void LayoutOwnContent(NVGcontext * ctx) override;
-        virtual void DrawOwnContent(NVGcontext * ctx) override;
-                
-        virtual bool OnMouseDownEvent(const MouseEvent & event) override;
-        virtual void OnMouseMoveEvent(const MouseEvent & event) override;
-        virtual void OnMouseUpEvent(const MouseEvent & event) override;
-        virtual void OnMouseCancelEvent() override;
-        virtual bool OnScrollEvent(const ScrollEvent & event) override;
+        virtual Size MeasureScrollContentView(NVGcontext * ctx,
+                                              const Ptr<ScrollContentView> & view,
+                                              const Size & visible_size) const override;
+        virtual void LayoutScrollContentView(NVGcontext * ctx,
+                                             const Ptr<ScrollContentView> & view) override;
+
         virtual bool OnKeyDownEvent(const KeyEvent & event) override;
         virtual void OnCharEvent(const CharEvent & event) override;
         virtual void OnUpdateAnimation(float delta_time) override;
+        
+        bool _OnTextViewMouseDownEvent(const MouseEvent & event);
+        void _DrawTextViewContent(NVGcontext * ctx,
+                                  const Ptr<TextBoxContentView> & view);
     private:
         Text::Index GetTextIndexForLineIndexX(size_t line_index, float x);
         Rect GetCursorRect() const;
@@ -58,6 +61,7 @@ namespace oliview {
         Ptr<Text> text_;
         Color font_color_;
         
+        Ptr<TextBoxContentView> text_view_;
         Ptr<TextDrawLayouter> text_layouter_;
         Ptr<TextDrawInfo> text_draw_info_;
         

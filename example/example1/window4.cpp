@@ -32,7 +32,7 @@ void Window4::Init(const Ptr<Application> & app) {
     }
 }
 
-void Window4::LayoutContentView(NVGcontext * ctx, const Ptr<View> & view) {
+void Window4::LayoutContentView(NVGcontext * ctx, const Ptr<WindowContentView> & view) {
     Window::LayoutContentView(ctx, view);
     
     scroll_view_->set_frame(view->bounds().InsetBy(EdgeInset(20, 20, 20, 20)));

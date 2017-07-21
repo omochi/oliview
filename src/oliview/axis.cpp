@@ -20,4 +20,14 @@ namespace oliview {
         }
         return GenericError::Create("invalid index: %" PRIdS, index);
     }
+    
+    Axis GetNextAxis(Axis axis) {
+        switch (axis) {
+            case Axis::X:
+                return Axis::Y;
+            case Axis::Y:
+                return Axis::X;
+        }
+        RHETORIC_FATAL("never");
+    }
 }

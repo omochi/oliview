@@ -39,7 +39,7 @@ namespace oliview {
                 
                 w->MakeContextCurrent();
                 w->_UpdateAnimation(delta_time.count());
-                w->_Update();
+                w->_InvokeUpdate();
             }
         }
 

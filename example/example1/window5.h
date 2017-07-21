@@ -2,10 +2,10 @@
 
 #include "./common.h"
 
-class Window4 : public Window {
+class Window5 : public Window {
 public:
     virtual void Init(const Ptr<Application> & app) override;
     virtual void LayoutContentView(NVGcontext * ctx, const Ptr<WindowContentView> & view) override;
 private:
-    Ptr<ScrollView> scroll_view_;
+    Ptr<TextBox> text_box_;
 };
