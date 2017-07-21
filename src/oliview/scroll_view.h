@@ -44,6 +44,17 @@ namespace oliview {
         virtual bool OnScrollEvent(const ScrollEvent & event) override;
     private:
         void ClampScrollPosition();
+        
+        struct ComputeBarsVisibilityResult {
+            bool y_bar;
+            bool x_bar;
+            Size visible_size;
+            Size content_size;
+            
+            ComputeBarsVisibilityResult();
+        };
+        ComputeBarsVisibilityResult ComputeBarsVisibility(NVGcontext * ctx) const;
+        
         Size ComputeContentSize(NVGcontext * ctx, const Size & visible_size) const;
         
         Size content_size_;

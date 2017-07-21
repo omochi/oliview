@@ -69,55 +69,30 @@ namespace oliview {
         auto layouter = content_view_->children_layouter();
         
         auto bounds = this->bounds();
-        Size visible_size = bounds.size();
         
-        y_bar_->set_visible(false);
-        x_bar_->set_visible(false);
+        auto bars_ret = ComputeBarsVisibility(ctx);
+
+        y_bar_->set_visible(bars_ret.y_bar);
+        x_bar_->set_visible(bars_ret.x_bar);
+        content_size_ = bars_ret.content_size;
+        auto visible_size = bars_ret.visible_size;
         
-        if (auto_content_size_enabled_) {
-            Size content_size;
-            while (true) {
-                content_size = ComputeContentSize(ctx, visible_size);
-                if (!y_bar_->visible()) {
-                    if (content_size.height() > visible_size.height()) {
-                        y_bar_->set_visible(true);
-                        visible_size.set_width(std::max(0.0f, visible_size.width() - 15.0f));
-                        continue;
-                    }
-                }
-                if (!x_bar_->visible()) {
-                    if (content_size.width() > visible_size.width()) {
-                        x_bar_->set_visible(true);
-                        visible_size.set_height(std::max(0.0f, visible_size.height() - 15.0f));
-                        continue;
-                    }
-                }
-                break;
-            }
-            
-            content_size_ = content_size;
-        } else {
-            // TODO
+        content_view_->set_frame(Rect(bounds.origin(), visible_size));
+        content_view_->set_bounds(Rect(scroll_position_, visible_size));
+        ClampScrollPosition();
+        
+        if (y_bar_->visible()) {
+            y_bar_->set_frame(Rect(Vector2(bounds.end().x() - 15.0f, bounds.origin().y()),
+                                   Size(15.0f, visible_size.height())));
+            y_bar_->set_content_size(content_size_.height());
+            y_bar_->set_visible_size(visible_size.height());
         }
         
-        {
-            content_view_->set_frame(Rect(bounds.origin(), visible_size));
-            content_view_->set_bounds(Rect(scroll_position_, visible_size));
-            ClampScrollPosition();
-            
-            if (y_bar_->visible()) {
-                y_bar_->set_frame(Rect(Vector2(bounds.end().x() - 15.0f, bounds.origin().y()),
-                                       Size(15.0f, visible_size.height())));
-                y_bar_->set_content_size(content_size_.height());
-                y_bar_->set_visible_size(visible_size.height());
-            }
-            
-            if (x_bar_->visible()) {
-                x_bar_->set_frame(Rect(Vector2(0, bounds.end().y() - 15.0f),
-                                       Size(visible_size.width(), 15.0f)));
-                x_bar_->set_content_size(content_size_.width());
-                x_bar_->set_visible_size(visible_size.width());
-            }
+        if (x_bar_->visible()) {
+            x_bar_->set_frame(Rect(Vector2(0, bounds.end().y() - 15.0f),
+                                   Size(visible_size.width(), 15.0f)));
+            x_bar_->set_content_size(content_size_.width());
+            x_bar_->set_visible_size(visible_size.width());
         }
         
         layouter = children_layouter();
@@ -143,6 +118,48 @@ namespace oliview {
         float y = Clamp(scroll_position_.y(),
                         MakeRange(0.0f, content_size_.height() - visible_size.height()));
         scroll_position_ = Vector2(x, y);
+    }
+    
+    ScrollView::ComputeBarsVisibilityResult::ComputeBarsVisibilityResult():
+    y_bar(false),
+    x_bar(false)
+    {}
+    
+    ScrollView::ComputeBarsVisibilityResult ScrollView::ComputeBarsVisibility(NVGcontext * ctx) const {
+        auto bounds = this->bounds();
+        
+        bool y_bar = false;
+        bool x_bar = false;
+        Size visible_size = bounds.size();
+        Size content_size = content_size_;
+        
+        while (true) {
+            if (auto_content_size_enabled_) {
+                content_size = ComputeContentSize(ctx, visible_size);
+            }
+            if (!y_bar) {
+                if (content_size.height() > visible_size.height()) {
+                    y_bar = true;
+                    visible_size.set_width(std::max(0.0f, visible_size.width() - 15.0f));
+                    continue;
+                }
+            }
+            if (!x_bar) {
+                if (content_size.width() > visible_size.width()) {
+                    x_bar = true;
+                    visible_size.set_height(std::max(0.0f, visible_size.height() - 15.0f));
+                    continue;
+                }
+            }
+            break;
+        }
+        
+        ComputeBarsVisibilityResult ret;
+        ret.y_bar = y_bar;
+        ret.x_bar = x_bar;
+        ret.visible_size = visible_size;
+        ret.content_size = content_size;
+        return ret;
     }
     
     Size ScrollView::ComputeContentSize(NVGcontext * ctx, const Size & visible_size) const {
