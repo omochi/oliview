@@ -9,7 +9,6 @@ namespace oliview {
         set_focusable(true);
         
         text_layouter_ = New<TextDrawLayouter>();
-        text_ = New<Text>();
         cursor_index_ = text_->begin_index();
         cursor_x_ = 0;
         cursor_blink_time_ = 0.0f;
@@ -23,6 +22,8 @@ namespace oliview {
         text_view_ = OLIVIEW_INIT(TextBoxContentView, application, shared_from_this());
         text_view_->set_background_color(Color(0.9f, 0.9f, 1.0f, 1.0f));
         content_view()->AddChild(text_view_);
+        
+        set_text(New<Text>());
     }
     
     Ptr<const Text> TextBox::text() const {

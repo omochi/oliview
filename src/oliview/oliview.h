@@ -30,6 +30,7 @@
 #include "./text_draw_info.h"
 #include "./text_draw_layouter.h"
 #include "./text_line_reader.h"
+#include "./text_view.h"
 #include "./utf8.h"
 #include "./vector2.h"
 #include "./vector3.h"

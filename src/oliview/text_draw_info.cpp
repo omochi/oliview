@@ -107,9 +107,16 @@ namespace oliview {
                 return CharPositionIndex(line_index, char_index);
             }
             
-            if ((line_index + 1 < lines_.size()) &&
-                lines_[line_index]->wrapped_line()) {
+            if (line->wrapped_line() && (line_index + 1 < lines_.size()))
+            {
                 continue;
+//                auto next_line = lines_[line_index + 1];
+//                if (next_line->char_position_num() > 0) {
+//                    auto next_head_char = next_line->GetCharPositionAt(0);
+//                    if (next_head_char->text_index().byte() < index.byte()) {
+//                        continue;
+//                    }
+//                }
             }
             
             return CharPositionIndex(line_index, chars.size());

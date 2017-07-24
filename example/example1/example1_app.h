@@ -7,6 +7,7 @@
 #include "./window3.h"
 #include "./window4.h"
 #include "./window5.h"
+#include "./window6.h"
 
 class Example1App : public Application {
 public:

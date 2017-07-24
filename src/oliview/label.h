@@ -12,15 +12,18 @@ namespace oliview {
     class Label : public View {
     public:
         virtual void Init(const Ptr<Application> & application) override;
-        virtual void Init(const Ptr<Application> & application,
-                          const std::string & text);
+        
+        RHETORIC_SUBCLASS_SHARED_FROM_THIS(Label, View)
 
-        std::string text() const;
-        void set_text(const std::string & value);
+        Ptr<const Text> text() const;
+        void set_text(const Ptr<const Text> & value);
+        
         Ptr<Font> font() const;
         void set_font(const Ptr<Font> & value);
+        
         float font_size() const;
         void set_font_size(float value);
+        
         RHETORIC_ACCESSOR(Color, font_color)
 
         virtual Size MeasureOwnContent(NVGcontext * ctx, const MeasureQuery & query) const override;

@@ -23,8 +23,10 @@ namespace oliview {
         
         Ptr<Font> font() const;
         void set_font(const Ptr<Font> & value);
+        
         float font_size() const;
         void set_font_size(float value);
+        
         RHETORIC_ACCESSOR(Color, font_color)
         
         void InsertTextAt(const Text::Index & index,

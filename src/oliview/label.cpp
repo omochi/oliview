@@ -4,32 +4,25 @@
 
 namespace oliview {
     void Label::Init(const Ptr<Application> & application) {
-        Init(application, "");
-    }
-    
-    void Label::Init(const Ptr<Application> & application,
-                     const std::string & text)
-    {
         View::Init(application);
         
         text_layouter_ = New<TextDrawLayouter>();
-        text_ = New<Text>();
         
         auto fm = application->font_manager();
         
         set_font(fm->default_font());
         set_font_size(12.0f);
         set_font_color(Color(0, 0, 0, 1));
-        set_text(text);
+        
+        set_text(New<Text>());
     }
     
-    std::string Label::text() const {
-        return text_->string();
+    Ptr<const Text> Label::text() const {
+        return text_;
     }
     
-    void Label::set_text(const std::string & value) {
-        text_ = New<Text>();
-        text_->set_string(value);
+    void Label::set_text(const Ptr<const Text> & value) {
+        text_ = New<Text>(*value);
         text_draw_info_ = nullptr;
         
         SetNeedsLayout();

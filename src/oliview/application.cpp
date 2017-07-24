@@ -108,6 +108,7 @@ namespace oliview {
         }
 
         glfwSetTime(0.0);
+        glfwSwapInterval(0);
 
         OnInit();
     }
