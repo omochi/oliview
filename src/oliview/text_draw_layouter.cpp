@@ -2,6 +2,10 @@
 
 namespace oliview {
     
+    TextDrawLayouter::TextDrawLayouter():
+    text_alignment_(TextAlignment::Left)
+    {}
+    
     Ptr<TextDrawInfo>
     TextDrawLayouter::Layout(NVGcontext * ctx,
                              const Ptr<Text> & text,
@@ -26,8 +30,6 @@ namespace oliview {
                                           max_width);
             
             for (auto entry : line_result->lines()) {
-                entry->set_text_index(Text::Index(line_index, 0));
-                
                 result_lines.push_back(entry);
             }
         }
@@ -40,25 +42,57 @@ namespace oliview {
         
         float top = 0;
         float bottom = 0;
-        float right = 0;
+        float text_width = 0;
         float draw_y = 0;
-        
+
         top = result->GetLineTop(draw_y);
         
         for (size_t i = 0; i < result_lines.size(); i++) {
             auto line = result_lines[i];
             line->set_draw_y(draw_y);
             
-            right = std::max(right, line->draw_width());
+            text_width = std::max(text_width, line->draw_width());
             
             top = std::min(top, result->GetLineTop(draw_y));
             bottom = std::max(bottom, result->GetLineBottom(draw_y));
             
             draw_y += result->line_height();
         }
+
+        float layout_width;
+        if (max_width) {
+            layout_width = *max_width;
+        } else {
+            layout_width = text_width;
+        }
         
+        float align_rate;
+        
+        switch (text_alignment_) {
+            case TextAlignment::Left:
+                align_rate = 0.0f;
+                break;
+            case TextAlignment::Center:
+                align_rate = 0.5f;
+                break;
+            case TextAlignment::Right:
+                align_rate = 1.0f;
+                break;
+        }
+        
+        float layout_left = (layout_width - text_width) * align_rate;
+        result->set_frame(Rect(Vector2(layout_left, top), Size(text_width, bottom - top)));
+
+        for (size_t i = 0; i < result_lines.size(); i++) {
+            auto line = result_lines[i];
+            
+            float x_offset = (layout_width - line->draw_width()) * align_rate;
+
+            line->offset_draw_x(x_offset);
+        }
+        
+        result->set_origin_x(layout_width * align_rate);
         result->set_lines(result_lines);
-        result->set_frame(Rect(Vector2(0, top), Size(right, bottom - top)));
 
         return result;
     }
@@ -78,7 +112,7 @@ namespace oliview {
             auto str = line->GetLine(text);
             
             NVGDrawText(ctx,
-                        draw_info->draw_offset().x(),
+                        line->draw_x() + draw_info->draw_offset().x(),
                         line->draw_y() + draw_info->draw_offset().y(),
                         str);
         }
@@ -138,7 +172,7 @@ namespace oliview {
             for (size_t i = 0; i < char_positions.size(); i++) {
                 auto & ch = char_positions[i];
                 if (max_width) {
-                    if (i > 0 && *max_width < ch->draw_right()) {
+                    if (i >= 8 && *max_width < ch->draw_right()) {
                         ArrayRemoveRange(&char_positions, MakeIndexRange(i, char_positions.size()));
                         
                         auto back_char = char_positions[i - 1];

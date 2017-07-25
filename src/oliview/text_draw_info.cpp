@@ -11,6 +11,12 @@ namespace oliview {
     draw_right_(draw_right)
     {}
     
+    void TextDrawInfo::CharPosition::offset_draw_x(float offset) {
+        draw_x_ += offset;
+        draw_left_ += offset;
+        draw_right_ += offset;
+    }
+    
     std::string TextDrawInfo::CharPosition::GetChar(const Ptr<Text> & text) const {
         return text->GetCharAt(text_index_);
     }
@@ -47,11 +53,24 @@ namespace oliview {
         return text->GetLineAt(begin_index.line())->substr(begin_index.byte(), len);
     }
     
+    float TextDrawInfo::LineEntry::draw_x() const {
+        if (char_positions_.size() == 0) {
+            return 0;
+        }
+        return char_positions_.front()->draw_x();
+    }
+    
     float TextDrawInfo::LineEntry::draw_width() const {
         if (char_positions_.size() == 0) {
             return 0;
         }
         return char_positions_.back()->draw_right();
+    }
+    
+    void TextDrawInfo::LineEntry::offset_draw_x(float offset) {
+        for (auto & chr : char_positions_) {
+            chr->offset_draw_x(offset);
+        }
     }
     
     TextDrawInfo::CharPositionIndex::CharPositionIndex():CharPositionIndex(0, 0)
@@ -211,13 +230,13 @@ namespace oliview {
     
     Vector2 TextDrawInfo::GetDrawPointFor(const CharPositionIndex & position_index) const {
         if (line_num() == 0) {
-            return Vector2(0, 0);
+            return Vector2(origin_x(), 0);
         }
         
         auto line_entry = GetLineAt(position_index.line_index);
         
         if (line_entry->char_position_num() == 0) {
-            return Vector2(0, line_entry->draw_y());
+            return Vector2(origin_x(), line_entry->draw_y());
         }
         
         if (position_index.char_index < line_entry->char_position_num()) {

@@ -28,6 +28,7 @@
 		D6BD1E3A1F263A3F0076EE1C /* text_view.h in Headers */ = {isa = PBXBuildFile; fileRef = D6BD1E381F263A3F0076EE1C /* text_view.h */; };
 		D6BD1E401F2781620076EE1C /* text_view_base.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D6BD1E3E1F2781620076EE1C /* text_view_base.cpp */; };
 		D6BD1E411F2781620076EE1C /* text_view_base.h in Headers */ = {isa = PBXBuildFile; fileRef = D6BD1E3F1F2781620076EE1C /* text_view_base.h */; };
+		D6BD1E451F2794080076EE1C /* text_alignment.h in Headers */ = {isa = PBXBuildFile; fileRef = D6BD1E431F2794080076EE1C /* text_alignment.h */; };
 		D6C3F7381E9D29D90020D65A /* glfw3.h in Headers */ = {isa = PBXBuildFile; fileRef = D6C3F7331E9D29D90020D65A /* glfw3.h */; };
 		D6C3F7391E9D29D90020D65A /* glfw3native.h in Headers */ = {isa = PBXBuildFile; fileRef = D6C3F7341E9D29D90020D65A /* glfw3native.h */; };
 		D6C3F7461E9D29F70020D65A /* fontstash.h in Headers */ = {isa = PBXBuildFile; fileRef = D6C3F73D1E9D29F70020D65A /* fontstash.h */; };
@@ -125,6 +126,7 @@
 		D6BD1E381F263A3F0076EE1C /* text_view.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = text_view.h; sourceTree = "<group>"; };
 		D6BD1E3E1F2781620076EE1C /* text_view_base.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = text_view_base.cpp; sourceTree = "<group>"; };
 		D6BD1E3F1F2781620076EE1C /* text_view_base.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = text_view_base.h; sourceTree = "<group>"; };
+		D6BD1E431F2794080076EE1C /* text_alignment.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = text_alignment.h; sourceTree = "<group>"; };
 		D6C3F6AA1E99AAB50020D65A /* liboliview.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = liboliview.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		D6C3F7331E9D29D90020D65A /* glfw3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = glfw3.h; sourceTree = "<group>"; };
 		D6C3F7341E9D29D90020D65A /* glfw3native.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = glfw3native.h; sourceTree = "<group>"; };
@@ -307,6 +309,7 @@
 				D6F1F28C1F0F7D9E00A61981 /* table_dimension.h */,
 				D6F1F2911F0F7D9E00A61981 /* text.cpp */,
 				D6F1F2921F0F7D9E00A61981 /* text.h */,
+				D6BD1E431F2794080076EE1C /* text_alignment.h */,
 				D6F1F28D1F0F7D9E00A61981 /* text_box.cpp */,
 				D6F1F28E1F0F7D9E00A61981 /* text_box.h */,
 				D639A0611F0FD96C0059B6BA /* text_draw_info.cpp */,
@@ -443,6 +446,7 @@
 				D6F1F2C01F0F7D9E00A61981 /* table_dimension.h in Headers */,
 				D6079AC71F193023005316D3 /* char_event.h in Headers */,
 				D6C3F7471E9D29F70020D65A /* nanovg.h in Headers */,
+				D6BD1E451F2794080076EE1C /* text_alignment.h in Headers */,
 				D6079AC31F18C41F005316D3 /* application_object.h in Headers */,
 				D6C3F7481E9D29F70020D65A /* nanovg_gl.h in Headers */,
 				D6F1F2BE1F0F7D9E00A61981 /* size.h in Headers */,

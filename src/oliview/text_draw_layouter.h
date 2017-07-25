@@ -5,14 +5,18 @@
 #include "./size.h"
 #include "./string_slice.h"
 #include "./text.h"
+#include "./text_alignment.h"
 #include "./text_draw_info.h"
 #include "./utf8.h"
 
 namespace oliview {
     class TextDrawLayouter {
-    public:        
+    public:
+        TextDrawLayouter();
+        
         RHETORIC_ACCESSOR(Ptr<Font>, font)
         RHETORIC_ACCESSOR_TRIVIAL(float, font_size)
+        RHETORIC_ACCESSOR_TRIVIAL(TextAlignment, text_alignment)
         
         Ptr<TextDrawInfo> Layout(NVGcontext * ctx,
                                  const Ptr<Text> & text,
@@ -44,5 +48,6 @@ namespace oliview {
         
         Ptr<Font> font_;
         float font_size_;
+        TextAlignment text_alignment_;
     };
 }

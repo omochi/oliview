@@ -128,6 +128,15 @@ namespace oliview {
         font_color_ = value;
     }
     
+    TextAlignment TextViewBase::text_alignment() const {
+        return text_layouter_->text_alignment();
+    }
+    
+    void TextViewBase::set_text_alignment(TextAlignment value) {
+        text_layouter_->set_text_alignment(value);
+        SetNeedsLayout();
+    }
+    
     Text::Index TextViewBase::cursor_index() const {
         return cursor_index_;
     }
@@ -213,6 +222,7 @@ namespace oliview {
                                                  text_,
                                                  Some(bounds().size().width()));
         float top = text_draw_info_->frame().origin().y();
+        
         text_draw_info_->set_draw_offset(Vector2(0, -top));
     }
     

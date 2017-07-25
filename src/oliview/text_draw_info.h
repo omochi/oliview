@@ -26,6 +26,8 @@ namespace oliview {
             RHETORIC_ACCESSOR(float, draw_left)
             RHETORIC_ACCESSOR(float, draw_right)
             
+            void offset_draw_x(float offset);
+            
             std::string GetChar(const Ptr<Text> & text) const;
         private:
             Text::Index text_index_;
@@ -46,8 +48,12 @@ namespace oliview {
             Ptr<CharPosition> GetCharPositionAt(size_t index) const;
             RHETORIC_ACCESSOR(Option<std::string>, newline)
             std::string GetLine(const Ptr<Text> & text) const;
+            
+            float draw_x() const;
             float draw_width() const;
             RHETORIC_ACCESSOR_TRIVIAL(float, draw_y)
+            
+            void offset_draw_x(float offset);
         private:
             Text::Index text_index_;
             bool wrapped_line_;
@@ -101,6 +107,7 @@ namespace oliview {
         float GetLineTop(float y) const;
         float GetLineBottom(float y) const;
         
+        RHETORIC_ACCESSOR(float, origin_x)        
         RHETORIC_ACCESSOR(Vector2, draw_offset)
     private:
         std::vector<Ptr<LineEntry>> lines_;
@@ -110,6 +117,8 @@ namespace oliview {
         float font_descent_;
         float line_height_;
         float line_gap_;
+        
+        float origin_x_;
         
         Vector2 draw_offset_;
 

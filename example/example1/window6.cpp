@@ -8,6 +8,7 @@ void Window6::Init(const Ptr<Application> & app) {
         text_view_ = view;
         content_view()->AddChild(view);
         view->set_background_color(Color(1.0f, 0.9f, 0.8f, 1.0f));
+        view->set_text_alignment(TextAlignment::Right);
 //        view->set_editable(false);
 //        view->set_focusable(false);
         view->set_text(New<Text>("C++14\n"

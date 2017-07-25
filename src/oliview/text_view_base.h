@@ -3,6 +3,7 @@
 #include "./color.h"
 #include "./font.h"
 #include "./text.h"
+#include "./text_alignment.h"
 #include "./text_draw_layouter.h"
 #include "./text_draw_info.h"
 #include "./view.h"
@@ -38,6 +39,9 @@ namespace oliview {
         
         Color font_color() const;
         void set_font_color(const Color & value);
+        
+        TextAlignment text_alignment() const;
+        void set_text_alignment(TextAlignment value);
         
         // cursor
         
