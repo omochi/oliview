@@ -7,6 +7,6 @@ void Example1App::OnInit() {
 //    OLIVIEW_INIT(Window2, app);
 //    OLIVIEW_INIT(Window3, app);
 //    OLIVIEW_INIT(Window4, app);
-//    OLIVIEW_INIT(Window5, app);
+    OLIVIEW_INIT(Window5, app);
     OLIVIEW_INIT(Window6, app);
 }

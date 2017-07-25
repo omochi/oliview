@@ -1,25 +1,18 @@
 #pragma once
 
+#include "./color.h"
 #include "./font.h"
-#include "./char_event.h"
-#include "./key_event.h"
-#include "./math.h"
-#include "./scroll_view.h"
 #include "./text.h"
-#include "./text_draw_info.h"
 #include "./text_draw_layouter.h"
-#include "./text_view_base.h"
+#include "./text_draw_info.h"
 #include "./view.h"
 
 namespace oliview {
-    class TextBoxTextView;
-    
-    class TextBox : public ScrollView {
+    class TextViewBase : public View {
     public:
         virtual void Init(const Ptr<Application> & application) override;
-        virtual ~TextBox();
         
-        RHETORIC_SUBCLASS_SHARED_FROM_THIS(TextBox, ScrollView)
+        RHETORIC_SUBCLASS_SHARED_FROM_THIS(TextViewBase, View)
         
         bool editable() const;
         void set_editable(bool value);
@@ -58,32 +51,38 @@ namespace oliview {
         
         // view control
         
-        virtual Size MeasureScrollContentView(NVGcontext * ctx,
-                                              const Ptr<ScrollContentView> & view,
-                                              const Size & visible_size) const override;
-        virtual void LayoutScrollContentView(NVGcontext * ctx,
-                                             const Ptr<ScrollContentView> & view) override;
-
+        virtual Size MeasureOwnContent(NVGcontext * ctx, const MeasureQuery & query) const override;
+        virtual void LayoutOwnContent(NVGcontext * ctx) override;
+        virtual void DrawOwnContent(NVGcontext * ctx) override;
+        
+        virtual void OnUpdateAnimation(float delta_time) override;
+        
+        virtual bool OnMouseDownEvent(const MouseEvent & event) override;
+        
         virtual bool OnKeyDownEvent(const KeyEvent & event) override;
+        virtual bool OnKeyRepeatEvent(const KeyEvent & event) override;
+        
         virtual void OnCharEvent(const CharEvent & event) override;
         
-        virtual void OnFocus() override;
-        virtual void OnUnfocus() override;
+        virtual bool _DoFocusByMouseDown() = 0;
+        
+        bool _cursor_visible() const;
+        void _set_cursor_visible(bool value);
     private:
-        Ptr<TextBoxTextView> text_view_;
-    };
-    
-    class TextBoxTextView : public TextViewBase {
-    public:
-        virtual void Init(const Ptr<Application> &) override RHETORIC_UNAVAILABLE {}
+        Text::Index GetTextIndexForLineIndexX(size_t line_index, float x);
+        Rect GetCursorRect() const;
         
-        virtual void Init(const Ptr<Application> & application,
-                          const Ptr<TextBox> & owner);
+        bool editable_;
         
-        RHETORIC_GETTER_WEAK(Ptr<TextBox>, owner)
+        Ptr<Text> text_;
+        Color font_color_;
         
-        virtual bool _DoFocusByMouseDown() override;
-    private:
-        WeakPtr<TextBox> owner_;
+        Ptr<TextDrawLayouter> text_layouter_;
+        Ptr<TextDrawInfo> text_draw_info_;
+        
+        bool cursor_visible_;
+        Text::Index cursor_index_;
+        float cursor_x_;
+        float cursor_blink_time_;
     };
 }
