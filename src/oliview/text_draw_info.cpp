@@ -55,16 +55,16 @@ namespace oliview {
     
     float TextDrawInfo::LineEntry::draw_x() const {
         if (char_positions_.size() == 0) {
-            return 0;
+            return 0.0f;
         }
         return char_positions_.front()->draw_x();
     }
     
     float TextDrawInfo::LineEntry::draw_width() const {
         if (char_positions_.size() == 0) {
-            return 0;
+            return 1.0f;
         }
-        return char_positions_.back()->draw_right();
+        return char_positions_.back()->draw_right() + 1.0f;
     }
     
     void TextDrawInfo::LineEntry::offset_draw_x(float offset) {

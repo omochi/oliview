@@ -8,6 +8,8 @@ namespace oliview {
         
         text_view_ = OLIVIEW_INIT(TextBoxTextView, application, shared_from_this());
         content_view()->AddChild(text_view_);
+        text_view_->set_focusable(false);
+//        text_view_->set_background_color(Color(1.0f, 0.7f, 1.0f, 1.0f));
         
         set_background_color(Color(1.0f, 1.0f, 1.0f, 1.0f));
         set_focusable(true);
@@ -73,6 +75,15 @@ namespace oliview {
     void TextBox::set_font_color(const Color & value) {
         text_view_->set_font_color(value);
     }
+    
+    TextAlignment TextBox::text_alignment() const {
+        return text_view_->text_alignment();
+    }
+    
+    void TextBox::set_text_alignment(TextAlignment value) {
+        text_view_->set_text_alignment(value);
+        SetNeedsLayout();
+    }
 
     Text::Index TextBox::cursor_index() const {
         return text_view_->cursor_index();
@@ -114,7 +125,7 @@ namespace oliview {
     {
         RHETORIC_UNUSED(ctx);
         RHETORIC_UNUSED(view);
-        text_view_->set_frame(Rect(Vector2(), content_size()));
+        text_view_->set_frame(Rect(Vector2(), content_size().GetMax(visible_size())));
     }
 
     bool TextBox::OnKeyDownEvent(const KeyEvent & event) {

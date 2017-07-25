@@ -19,10 +19,10 @@ namespace oliview {
         AddChild(x_bar_);
         
         y_bar_->set_scroll_handler([this](auto y) {
-            ScrollTo(Vector2(scroll_visible_rect_.origin().x(), y));
+            ScrollTo(Vector2(scroll_position_.x(), y));
         });
         x_bar_->set_scroll_handler([this](auto x) {
-            ScrollTo(Vector2(x, scroll_visible_rect_.origin().y()));
+            ScrollTo(Vector2(x, scroll_position_.y()));
         });
     }
     
@@ -33,32 +33,23 @@ namespace oliview {
     void ScrollView::set_content_size(const Size & value) {
         content_size_ = value;
         SetNeedsLayout();
-        
-        if (UpdateScrollVisibleRect(scroll_visible_rect_)) {
-            // TODO: event
-        }
     }
     
     void ScrollView::set_auto_content_size_enabled(bool value) {
         auto_content_size_enabled_ = value;
-        
         SetNeedsLayout();
     }
     
     bool ScrollView::ScrollTo(const Vector2 & position) {
-        auto rect = scroll_visible_rect_;
-        rect.set_origin(position);
-        auto updated = UpdateScrollVisibleRect(rect);
+        auto updated = UpdateScrollPosition(position);
         if (!updated) {
             return false;
         }
         
-        y_bar_->ScrollTo(scroll_visible_rect_.origin().y());
-        x_bar_->ScrollTo(scroll_visible_rect_.origin().x());
+        y_bar_->ScrollTo(scroll_position_.y());
+        x_bar_->ScrollTo(scroll_position_.x());
 
-        SetNeedsLayout();
-        
-        // TODO: event
+        content_view_->set_bounds(Rect(scroll_position_, visible_size_));
         
         return true;
     }
@@ -103,28 +94,27 @@ namespace oliview {
         y_bar_->set_visible(bars_ret.y_bar);
         x_bar_->set_visible(bars_ret.x_bar);
         content_size_ = bars_ret.content_size;
+        visible_size_ = bars_ret.visible_size;
         
-        auto rect = scroll_visible_rect_;
-        rect.set_size(bars_ret.visible_size);
-        bool updated = UpdateScrollVisibleRect(rect);
-        auto visible_size = scroll_visible_rect_.size();
+        content_view_->set_frame(Rect(bounds.origin(), visible_size_));
         
-        content_view_->set_bounds(scroll_visible_rect_);
-        content_view_->set_frame(Rect(bounds.origin(), visible_size));
-        content_view_->SetNeedsLayout();
+        bool updated = UpdateScrollPosition(scroll_position_);
+        if (updated) {
+            content_view_->set_bounds(Rect(scroll_position_, visible_size_));
+        }
 
         if (y_bar_->visible()) {
             y_bar_->set_frame(Rect(Vector2(bounds.end().x() - 15.0f, bounds.origin().y()),
-                                   Size(15.0f, scroll_visible_rect_.size().height())));
+                                   Size(15.0f, visible_size_.height())));
             y_bar_->set_content_size(content_size_.height());
-            y_bar_->set_visible_size(visible_size.height());
+            y_bar_->set_visible_size(visible_size_.height());
         }
         
         if (x_bar_->visible()) {
             x_bar_->set_frame(Rect(Vector2(0, bounds.end().y() - 15.0f),
-                                   Size(visible_size.width(), 15.0f)));
+                                   Size(visible_size_.width(), 15.0f)));
             x_bar_->set_content_size(content_size_.width());
-            x_bar_->set_visible_size(visible_size.width());
+            x_bar_->set_visible_size(visible_size_.width());
         }
         
         if (updated) {
@@ -140,26 +130,24 @@ namespace oliview {
     bool ScrollView::OnScrollEvent(const ScrollEvent & event) {
         Vector2 delta = event.scroll();
         
-        if (ScrollTo(scroll_visible_rect_.origin() + delta)) {
+        if (ScrollTo(scroll_position_ + delta)) {
             return true;
         }
         
         return false;
     }
     
-    bool ScrollView::UpdateScrollVisibleRect(const Rect & value) {
-        auto old = scroll_visible_rect_;
+    bool ScrollView::UpdateScrollPosition(const Vector2 & value) {
+        auto old = scroll_position_;
         
-        auto size = value.size();
+        float x = Clamp(value.x(),
+                        MakeRange(0.0f, content_size_.width() - visible_size_.width()));
+        float y = Clamp(value.y(),
+                        MakeRange(0.0f, content_size_.height() - visible_size_.height()));
         
-        float x = Clamp(value.origin().x(),
-                        MakeRange(0.0f, content_size_.width() - size.width()));
-        float y = Clamp(value.origin().y(),
-                        MakeRange(0.0f, content_size_.height() - size.height()));
+        scroll_position_ = Vector2(x, y);
         
-        scroll_visible_rect_ = Rect(Vector2(x, y), size);
-        
-        return old != scroll_visible_rect_;
+        return old != scroll_position_;
     }
     
     ScrollView::ComputeBarsVisibilityResult::ComputeBarsVisibilityResult():

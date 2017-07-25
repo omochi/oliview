@@ -46,6 +46,9 @@ namespace oliview {
         Color font_color() const;
         void set_font_color(const Color & value);
         
+        TextAlignment text_alignment() const;
+        void set_text_alignment(TextAlignment value);
+        
         // cursor
         
         Text::Index cursor_index() const;

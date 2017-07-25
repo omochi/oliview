@@ -91,7 +91,7 @@ namespace oliview {
             line->offset_draw_x(x_offset);
         }
         
-        result->set_origin_x(layout_width * align_rate);
+        result->set_origin_x(std::max(0.0f, layout_width - 1.0f) * align_rate);
         result->set_lines(result_lines);
 
         return result;
@@ -172,7 +172,7 @@ namespace oliview {
             for (size_t i = 0; i < char_positions.size(); i++) {
                 auto & ch = char_positions[i];
                 if (max_width) {
-                    if (i >= 8 && *max_width < ch->draw_right()) {
+                    if (i >= 8 && *max_width < ch->draw_right() + 1.0f) {
                         ArrayRemoveRange(&char_positions, MakeIndexRange(i, char_positions.size()));
                         
                         auto back_char = char_positions[i - 1];

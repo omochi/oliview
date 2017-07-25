@@ -36,7 +36,8 @@ namespace oliview {
         RHETORIC_GETTER(bool, auto_content_size_enabled)
         void set_auto_content_size_enabled(bool value);
         
-        RHETORIC_GETTER(Rect, scroll_visible_rect)
+        RHETORIC_GETTER(Vector2, scroll_position)
+        RHETORIC_GETTER(Size, visible_size)
         
         bool ScrollTo(const Vector2 & position);
         
@@ -51,7 +52,7 @@ namespace oliview {
         
         virtual bool OnScrollEvent(const ScrollEvent & event) override;
     private:
-        bool UpdateScrollVisibleRect(const Rect & value);
+        bool UpdateScrollPosition(const Vector2 & value);
         
         struct ComputeBarsVisibilityResult {
             bool y_bar;
@@ -64,7 +65,8 @@ namespace oliview {
         ComputeBarsVisibilityResult ComputeBarsVisibility(NVGcontext * ctx) const;
                 
         Size content_size_;
-        Rect scroll_visible_rect_;
+        Vector2 scroll_position_;
+        Size visible_size_;
         
         bool auto_content_size_enabled_;
         

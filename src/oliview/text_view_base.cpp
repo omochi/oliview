@@ -211,9 +211,20 @@ namespace oliview {
     }
     
     Size TextViewBase::MeasureOwnContent(NVGcontext * ctx, const MeasureQuery & query) const {
+        Option<float> query_width_o = query.max_width();
         auto layout = text_layouter_->Layout(ctx,
                                              text_,
-                                             query.max_width());
+                                             query_width_o);
+
+        if (query_width_o) {
+            float measured_width = layout->frame().size().width();
+            if (*query_width_o < measured_width) {
+                layout = text_layouter_->Layout(ctx,
+                                                text_,
+                                                Some(measured_width));
+            }
+        }
+        
         return layout->frame().size();
     }
     
@@ -221,6 +232,7 @@ namespace oliview {
         text_draw_info_ = text_layouter_->Layout(ctx,
                                                  text_,
                                                  Some(bounds().size().width()));
+
         float top = text_draw_info_->frame().origin().y();
         
         text_draw_info_->set_draw_offset(Vector2(0, -top));
