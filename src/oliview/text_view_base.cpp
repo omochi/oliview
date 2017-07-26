@@ -181,11 +181,20 @@ namespace oliview {
             return false;
         }
         
-        auto char_position = text_draw_info_->GetIndexFor(cursor_index_);
+        TextDrawInfo::CharPositionIndex char_position = text_draw_info_->GetIndexFor(cursor_index_);
         if (char_position.line_index == 0) {
             return false;
         }
-        auto new_index = GetTextIndexForLineIndexX(char_position.line_index - 1, cursor_x_);
+
+        auto new_line_index = char_position.line_index - 1;
+        char_position = text_draw_info_->GetIndexFromX(new_line_index, cursor_x_);
+        if (text_draw_info_->IsWrappingPosition(char_position)) {
+            auto new_line = text_draw_info_->GetLineAt(new_line_index);
+            RHETORIC_ASSERT(new_line->char_position_num() > 0);
+            char_position.char_index -= 1;
+        }
+        
+        auto new_index = text_draw_info_->GetTextIndexFor(char_position, text_);
         if (cursor_index_ == new_index) {
             return false;
         }
@@ -198,11 +207,20 @@ namespace oliview {
             return false;
         }
         
-        auto char_position = text_draw_info_->GetIndexFor(cursor_index_);
+        TextDrawInfo::CharPositionIndex char_position = text_draw_info_->GetIndexFor(cursor_index_);
         if (char_position.line_index + 1 == text_draw_info_->line_num()) {
             return false;
         }
-        auto new_index = GetTextIndexForLineIndexX(char_position.line_index + 1, cursor_x_);
+        
+        auto new_line_index = char_position.line_index + 1;
+        char_position = text_draw_info_->GetIndexFromX(new_line_index, cursor_x_);
+        if (text_draw_info_->IsWrappingPosition(char_position)) {
+            auto new_line = text_draw_info_->GetLineAt(new_line_index);
+            RHETORIC_ASSERT(new_line->char_position_num() > 0);
+            char_position.char_index -= 1;
+        }
+        
+        auto new_index = text_draw_info_->GetTextIndexFor(char_position, text_);
         if (cursor_index_ == new_index) {
             return false;
         }
@@ -345,14 +363,6 @@ namespace oliview {
     
     void TextViewBase::_set_cursor_visible(bool value) {
         cursor_visible_ = value;
-    }
-    
-    Text::Index TextViewBase::GetTextIndexForLineIndexX(size_t line_index, float x) {
-        RHETORIC_ASSERT(text_draw_info_ != nullptr);
-        
-        size_t char_index = text_draw_info_->GetCharIndexForX(line_index, x);
-        TextDrawInfo::CharPositionIndex char_position_index(line_index, char_index);
-        return text_draw_info_->GetTextIndexFor(char_position_index, text_);
     }
     
     Rect TextViewBase::GetCursorRect() const {

@@ -92,7 +92,8 @@ namespace oliview {
         };
         GetLineIndexResult GetLineIndexForY(float y) const;
         
-        size_t GetCharIndexForX(size_t line_index, float x) const;
+        CharPositionIndex GetIndexFromX(size_t line_index, float x) const;
+        bool IsWrappingPosition(const CharPositionIndex & index) const;
         
         Text::Index GetTextIndexFor(const CharPositionIndex & position_index,
                                     const Ptr<Text> & text) const;

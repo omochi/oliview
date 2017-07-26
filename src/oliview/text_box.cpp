@@ -9,7 +9,6 @@ namespace oliview {
         text_view_ = OLIVIEW_INIT(TextBoxTextView, application, shared_from_this());
         content_view()->AddChild(text_view_);
         text_view_->set_focusable(false);
-//        text_view_->set_background_color(Color(1.0f, 0.7f, 1.0f, 1.0f));
         
         set_background_color(Color(1.0f, 1.0f, 1.0f, 1.0f));
         set_focusable(true);

@@ -155,9 +155,7 @@ namespace oliview {
         }
         
         auto line_index = line_ret.index.value();
-        auto char_index = GetCharIndexForX(line_index, position.x());
-        
-        return CharPositionIndex(line_index, char_index);
+        return GetIndexFromX(line_index, position.x());
     }
     
     TextDrawInfo::GetLineIndexResult::GetLineIndexResult():
@@ -188,22 +186,29 @@ namespace oliview {
         return ret;
     }
     
-    size_t TextDrawInfo::GetCharIndexForX(size_t line_index, float x) const {
-        GetLineIndexResult ret;
-        
+    TextDrawInfo::CharPositionIndex TextDrawInfo::GetIndexFromX(size_t line_index, float x) const {
         x = x - draw_offset().x();
         
         auto line = lines_[line_index];
-        for (size_t char_index = 0; char_index < line->char_position_num(); char_index++) {
+        size_t char_index = 0;
+        for (; char_index < line->char_position_num(); char_index++) {
             auto char_position = line->GetCharPositionAt(char_index);
             
             float char_center_x = (char_position->draw_left() + char_position->draw_right()) / 2.0f;
             if (x < char_center_x) {
-                return char_index;
+                break;
             }
         }
         
-        return line->char_position_num();
+        return CharPositionIndex(line_index, char_index);
+    }
+    
+    bool TextDrawInfo::IsWrappingPosition(const CharPositionIndex & index) const {
+        auto line = lines_[index.line_index];
+        if (line->wrapped_line() && index.char_index == line->char_position_num()) {
+            return true;
+        }
+        return false;
     }
     
     Text::Index TextDrawInfo::GetTextIndexFor(const CharPositionIndex & position_index,

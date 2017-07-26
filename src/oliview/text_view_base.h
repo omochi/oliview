@@ -73,7 +73,6 @@ namespace oliview {
         bool _cursor_visible() const;
         void _set_cursor_visible(bool value);
     private:
-        Text::Index GetTextIndexForLineIndexX(size_t line_index, float x);
         Rect GetCursorRect() const;
         
         bool editable_;
