@@ -43,6 +43,9 @@ namespace oliview {
         TextAlignment text_alignment() const;
         void set_text_alignment(TextAlignment value);
         
+        Option<size_t> max_line_num() const;
+        void set_max_line_num(const Option<size_t> & value);
+        
         // cursor
         
         Text::Index cursor_index() const;
@@ -65,6 +68,9 @@ namespace oliview {
         
         virtual bool OnKeyDownEvent(const KeyEvent & event) override;
         virtual bool OnKeyRepeatEvent(const KeyEvent & event) override;
+        virtual bool OnEnterKeyDown(const KeyEvent & event);
+        virtual bool OnBackspaceKeyDown(const KeyEvent & event);
+        virtual bool OnDeleteKeyDown(const KeyEvent & event);
         
         virtual void OnCharEvent(const CharEvent & event) override;
         
@@ -73,7 +79,14 @@ namespace oliview {
         bool _cursor_visible() const;
         void _set_cursor_visible(bool value);
     private:
+        void _InsertTextAt(const Text::Index & index,
+                           const Ptr<const Text> & text,
+                           Text::Index * end_index);
+        void _DeleteTextAt(const Text::Index & begin,
+                           const Text::Index & end);
+        
         Rect GetCursorRect() const;
+        void ClampLines();
         
         bool editable_;
         
@@ -87,5 +100,7 @@ namespace oliview {
         Text::Index cursor_index_;
         float cursor_x_;
         float cursor_blink_time_;
+        
+        Option<size_t> max_line_num_;
     };
 }

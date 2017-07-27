@@ -77,6 +77,8 @@ namespace oliview {
                       Index * end_index);
         void DeleteAt(const Index & begin,
                       const Index & end);
+        
+        Index GetNewlineIndex(size_t line_index) const;
     private:
         template <typename STR>
         struct StringAccess {

@@ -96,6 +96,7 @@ namespace oliview {
         virtual Ptr<View> GetPrevFocusChild(const Ptr<const View> & child) const;
         virtual Ptr<View> GetLastFocusChild() const;
         
+        bool needs_layout() const;
         void SetNeedsLayout();
         
         RHETORIC_GETTER(Ptr<Layouter>, children_layouter)

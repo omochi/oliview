@@ -7,19 +7,20 @@ namespace oliview {
     {}
     
     Option<std::string> TextLineReader::Read() {
-        std::vector<std::string> newline_chars = rhetoric::newline_strs();
+        if (index_ == string_->size()) {
+            return None();
+        }
+        
         size_t begin = index_;
+        std::vector<std::string> newline_strs = rhetoric::newline_strs();
         while (true) {
             if (index_ == string_->size()) {
-                if (index_ == begin) {
-                    return None();
-                }
                 break;
             }
             
-            auto check_ret = CheckStartWith(*string_, index_, newline_chars);
+            auto check_ret = CheckStartWith(*string_, index_, newline_strs);
             if (check_ret) {
-                index_ += newline_chars[check_ret->target_index].size();
+                index_ += newline_strs[check_ret->target_index].size();
                 break;
             }
             

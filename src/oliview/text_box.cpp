@@ -83,6 +83,17 @@ namespace oliview {
         text_view_->set_text_alignment(value);
         SetNeedsLayout();
     }
+    
+    Option<size_t> TextBox::max_line_num() const {
+        return text_view_->max_line_num();
+    }
+    
+    void TextBox::set_max_line_num(const Option<size_t> & value) {
+        text_view_->set_max_line_num(value);
+        if (text_view_->needs_layout()) {
+            SetNeedsLayout();
+        }
+    }
 
     Text::Index TextBox::cursor_index() const {
         return text_view_->cursor_index();

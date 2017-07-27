@@ -49,6 +49,9 @@ namespace oliview {
         TextAlignment text_alignment() const;
         void set_text_alignment(TextAlignment value);
         
+        Option<size_t> max_line_num() const;
+        void set_max_line_num(const Option<size_t> & value);
+
         // cursor
         
         Text::Index cursor_index() const;

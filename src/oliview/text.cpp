@@ -79,14 +79,8 @@ namespace oliview {
     void Text::set_lines(const std::vector<Ptr<const std::string>> & value) {
         std::vector<Ptr<std::string>> lines;
         
-        size_t index = 0;
-        Ptr<std::string> line;
-        while (true) {
-            if (index == value.size()) {
-                break;
-            }
-            Ptr<const std::string> target_line = value[index];
-            index += 1;
+        Ptr<std::string> current_line;
+        for (auto target_line : value) {
             auto reader = TextLineReader(target_line);
             while (true) {
                 auto new_line = reader.Read();
@@ -94,22 +88,21 @@ namespace oliview {
                     break;
                 }
                 
-                if (!line) {
-                    line = New<std::string>();
+                if (!current_line) {
+                    current_line = New<std::string>();
                 }
-                line->append(new_line.value());
+                current_line->append(new_line.value());
                 
-                if (CheckEndWith(*line, line->size(), newline_strs())) {
-                    lines.push_back(line);
-                    line = nullptr;
+                if (CheckEndWith(*current_line, current_line->size(), newline_strs())) {
+                    lines.push_back(current_line);
+                    current_line = nullptr;
                 }
             }
-            
         }
         
-        if (line) {
-            lines.push_back(line);
-            line = nullptr;
+        if (current_line) {
+            lines.push_back(current_line);
+            current_line = nullptr;
         }
         
         lines_ = lines;
@@ -316,6 +309,18 @@ namespace oliview {
         begin_line->replace(begin.byte(),
                             begin_line->size() - begin.byte(),
                             end_tail_str);
+    }
+    
+    Text::Index Text::GetNewlineIndex(size_t line_index) const {
+        Ptr<std::string> line = lines_[line_index];
+        size_t i = 0;
+        for (; i < line->size(); i++) {
+            char ch = (*line)[i];
+            if (ArrayFindIndexEq(newline_chars(), ch)) {
+                break;
+            }
+        }
+        return Text::Index(line_index, i);
     }
     
     void Text::FixLastLine() {

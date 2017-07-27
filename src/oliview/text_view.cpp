@@ -7,6 +7,7 @@ namespace oliview {
         TextViewBase::Init(application);
         
         set_background_color(Color(1.0f, 1.0f, 1.0f, 1.0f));
+        set_editable(false);
     }
     
     void TextView::OnFocus() {

@@ -40,65 +40,18 @@ namespace oliview {
     }
     
     void TextViewBase::InsertTextAt(const Text::Index & index,
-                                const Ptr<const Text> & text,
-                                Text::Index * end_index_)
+                                    const Ptr<const Text> & text,
+                                    Text::Index * end_index)
     {
-        auto old_cursor_index = cursor_index_;
-        
-        Text::Index end_index;
-        text_->InsertAt(index, text, &end_index);
-        if (end_index_) {
-            *end_index_ = end_index;
-        }
-        
-        Text::Index cursor_index(old_cursor_index);
-        
-        if (index <= old_cursor_index) {
-            if (index.line() == old_cursor_index.line()) {
-                size_t byte_offset = old_cursor_index.byte() - index.byte();
-                cursor_index = Text::Index(end_index.line(),
-                                           end_index.byte() + byte_offset);
-            } else {
-                size_t line_offset = old_cursor_index.line() - index.line();
-                cursor_index = Text::Index(end_index.line() + line_offset,
-                                           old_cursor_index.byte());
-            }
-        }
-        
-        if (old_cursor_index != cursor_index) {
-            set_cursor_index(cursor_index);
-        }
-        
+        _InsertTextAt(index, text, end_index);
+        ClampLines();
         SetNeedsLayout();
     }
     
     void TextViewBase::DeleteTextAt(const Text::Index & begin,
-                                const Text::Index & end)
+                                    const Text::Index & end)
     {
-        auto old_cursor_index = cursor_index_;
-        
-        text_->DeleteAt(begin, end);
-        
-        Text::Index cursor_index(old_cursor_index);
-        
-        if (begin <= old_cursor_index) {
-            if (old_cursor_index <= end) {
-                cursor_index = begin;
-            } else {
-                if (end.line() == old_cursor_index.line()) {
-                    size_t byte_offset = old_cursor_index.byte() - end.byte();
-                    cursor_index = Text::Index(begin.line(), begin.byte() + byte_offset);
-                } else {
-                    size_t line_offset = old_cursor_index.line() - end.line();
-                    cursor_index = Text::Index(begin.line() + line_offset, old_cursor_index.byte());
-                }
-            }
-        }
-        
-        if (old_cursor_index != cursor_index) {
-            set_cursor_index(cursor_index);
-        }
-        
+        _DeleteTextAt(begin, end);
         SetNeedsLayout();
     }
     
@@ -135,6 +88,15 @@ namespace oliview {
     void TextViewBase::set_text_alignment(TextAlignment value) {
         text_layouter_->set_text_alignment(value);
         SetNeedsLayout();
+    }
+    
+    Option<size_t> TextViewBase::max_line_num() const {
+        return max_line_num_;
+    }
+    
+    void TextViewBase::set_max_line_num(const Option<size_t> & value) {
+        max_line_num_ = value;
+        ClampLines();
     }
     
     Text::Index TextViewBase::cursor_index() const {
@@ -307,35 +269,11 @@ namespace oliview {
             case GLFW_KEY_DOWN:
                 return MoveCursorDown();
             case GLFW_KEY_ENTER:
-                if (!editable()) {
-                    return false;
-                }
-                InsertTextAt(cursor_index(), New<Text>("\n"), nullptr);
-                return true;
-            case GLFW_KEY_BACKSPACE: {
-                if (!editable()) {
-                    return false;
-                }
-                auto end = cursor_index();
-                auto begin = text_->BackIndex(end);
-                if (begin == end) {
-                    return false;
-                }
-                DeleteTextAt(begin, end);
-                return true;
-            }
-            case GLFW_KEY_DELETE: {
-                if (!editable()) {
-                    return false;
-                }
-                auto begin = cursor_index();
-                auto end = text_->AdvanceIndex(begin);
-                if (begin == end) {
-                    return false;
-                }
-                DeleteTextAt(begin, end);
-                return true;
-            }
+                return OnEnterKeyDown(event);
+            case GLFW_KEY_BACKSPACE:
+                return OnBackspaceKeyDown(event);
+            case GLFW_KEY_DELETE:
+                return OnDeleteKeyDown(event);
             default:
                 return false;
         }
@@ -343,6 +281,45 @@ namespace oliview {
     
     bool TextViewBase::OnKeyRepeatEvent(const KeyEvent & event) {
         return OnKeyDownEvent(event);
+    }
+    
+    bool TextViewBase::OnEnterKeyDown(const KeyEvent &) {
+        if (!editable()) {
+            return false;
+        }
+        if (max_line_num_) {
+            if (text_->line_num() >= *max_line_num_) {
+                return false;
+            }
+        }
+        
+        InsertTextAt(cursor_index(), New<Text>("\n"), nullptr);
+        return true;
+    }
+    
+    bool TextViewBase::OnBackspaceKeyDown(const KeyEvent &) {
+        if (!editable()) {
+            return false;
+        }
+        auto end = cursor_index();
+        auto begin = text_->BackIndex(end);
+        if (begin == end) {
+            return false;
+        }
+        DeleteTextAt(begin, end);
+        return true;
+    }
+    bool TextViewBase::OnDeleteKeyDown(const KeyEvent &) {
+        if (!editable()) {
+            return false;
+        }
+        auto begin = cursor_index();
+        auto end = text_->AdvanceIndex(begin);
+        if (begin == end) {
+            return false;
+        }
+        DeleteTextAt(begin, end);
+        return true;
     }
     
     void TextViewBase::OnCharEvent(const CharEvent & event) {
@@ -365,8 +342,86 @@ namespace oliview {
         cursor_visible_ = value;
     }
     
+    
+    void TextViewBase::_InsertTextAt(const Text::Index & index,
+                                     const Ptr<const Text> & text,
+                                     Text::Index * end_index_)
+    {
+        auto old_cursor_index = cursor_index_;
+        
+        Text::Index end_index;
+        text_->InsertAt(index, text, &end_index);
+        if (end_index_) {
+            *end_index_ = end_index;
+        }
+        
+        Text::Index cursor_index(old_cursor_index);
+        
+        if (index <= old_cursor_index) {
+            if (index.line() == old_cursor_index.line()) {
+                size_t byte_offset = old_cursor_index.byte() - index.byte();
+                cursor_index = Text::Index(end_index.line(),
+                                           end_index.byte() + byte_offset);
+            } else {
+                size_t line_offset = old_cursor_index.line() - index.line();
+                cursor_index = Text::Index(end_index.line() + line_offset,
+                                           old_cursor_index.byte());
+            }
+        }
+        
+        if (old_cursor_index != cursor_index) {
+            set_cursor_index(cursor_index);
+        }
+    }
+    
+    void TextViewBase::_DeleteTextAt(const Text::Index & begin,
+                                     const Text::Index & end)
+    {
+        auto old_cursor_index = cursor_index_;
+        
+        text_->DeleteAt(begin, end);
+        
+        Text::Index cursor_index(old_cursor_index);
+        
+        if (begin <= old_cursor_index) {
+            if (old_cursor_index <= end) {
+                cursor_index = begin;
+            } else {
+                if (end.line() == old_cursor_index.line()) {
+                    size_t byte_offset = old_cursor_index.byte() - end.byte();
+                    cursor_index = Text::Index(begin.line(), begin.byte() + byte_offset);
+                } else {
+                    size_t line_offset = old_cursor_index.line() - end.line();
+                    cursor_index = Text::Index(begin.line() + line_offset, old_cursor_index.byte());
+                }
+            }
+        }
+        
+        if (old_cursor_index != cursor_index) {
+            set_cursor_index(cursor_index);
+        }
+    }
+    
     Rect TextViewBase::GetCursorRect() const {
         RHETORIC_ASSERT(text_draw_info_ != nullptr);
         return text_layouter_->GetCursorRect(cursor_index_, text_draw_info_);
+    }
+    
+    void TextViewBase::ClampLines() {
+        if (!max_line_num_) {
+            return;
+        }
+        
+        size_t max_line_num = *max_line_num_;
+        if (max_line_num == 0) {
+            DeleteTextAt(text_->begin_index(), text_->end_index());
+            return;
+        }
+        
+        if (text_->line_num() > max_line_num) {
+            auto delete_index = text_->GetNewlineIndex(max_line_num - 1);
+            DeleteTextAt(delete_index, text_->end_index());
+            return;
+        }
     }
 }

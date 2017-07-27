@@ -7,7 +7,6 @@ void Window5::Init(const Ptr<Application> & app) {
         auto view = OLIVIEW_INIT(TextBox, app);
         text_box_ = view;
         content_view()->AddChild(view);
-//        view->content_view()->set_background_color(Color(1.0f, 0.8f, 0.8f, 1.0f));
         view->set_text_alignment(TextAlignment::Left);
         view->set_text(New<Text>("C++14\n"
                                  "\n"
@@ -42,3 +41,12 @@ void Window5::LayoutContentView(NVGcontext * ctx, const Ptr<WindowContentView> &
     text_box_->set_frame(view->bounds().InsetBy(EdgeInset(50, 50, 50, 50)));
 }
 
+void Window5::OnKeyDownEvent(const KeyEvent & event) {
+    if (event.key() == GLFW_KEY_C) {
+        if ((event.modifier() & GLFW_MOD_SHIFT) != 0) {
+            text_box_->set_max_line_num(None());
+        } else {
+            text_box_->set_max_line_num(Some(3));
+        }
+    }
+}

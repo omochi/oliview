@@ -181,6 +181,10 @@ namespace oliview {
         return GetChildAt(child_num() - 1);
     }
     
+    bool View::needs_layout() const {
+        return needs_layout_;
+    }
+    
     void View::SetNeedsLayout() {
         needs_layout_ = true;
     }
