@@ -17,6 +17,7 @@ namespace oliview {
         RHETORIC_ACCESSOR(Ptr<Font>, font)
         RHETORIC_ACCESSOR_TRIVIAL(float, font_size)
         RHETORIC_ACCESSOR_TRIVIAL(TextAlignment, text_alignment)
+        RHETORIC_ACCESSOR_TRIVIAL(bool, word_wrap_enabled)
         
         Ptr<TextDrawInfo> Layout(NVGcontext * ctx,
                                  const Ptr<Text> & text,
@@ -49,5 +50,6 @@ namespace oliview {
         Ptr<Font> font_;
         float font_size_;
         TextAlignment text_alignment_;
+        bool word_wrap_enabled_;
     };
 }

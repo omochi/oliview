@@ -24,6 +24,10 @@ namespace oliview {
     }
     
     void ScrollBar::set_content_size(float value) {
+        if (content_size_ == value) {
+            return;
+        }
+        
         content_size_ = value;
         SetNeedsLayout();
         
@@ -31,6 +35,10 @@ namespace oliview {
     }
     
     void ScrollBar::set_visible_size(float value) {
+        if (visible_size_ == value) {
+            return;
+        }
+        
         visible_size_ = value;
         SetNeedsLayout();
         

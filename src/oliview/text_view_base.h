@@ -46,6 +46,9 @@ namespace oliview {
         Option<size_t> max_line_num() const;
         void set_max_line_num(const Option<size_t> & value);
         
+        bool word_wrap_enabled() const;
+        void set_word_wrap_enabled(bool value);
+        
         // cursor
         
         Text::Index cursor_index() const;

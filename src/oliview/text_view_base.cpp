@@ -99,6 +99,15 @@ namespace oliview {
         ClampLines();
     }
     
+    bool TextViewBase::word_wrap_enabled() const {
+        return text_layouter_->word_wrap_enabled();
+    }
+    
+    void TextViewBase::set_word_wrap_enabled(bool value) {
+        text_layouter_->set_word_wrap_enabled(value);
+        SetNeedsLayout();
+    }
+    
     Text::Index TextViewBase::cursor_index() const {
         return cursor_index_;
     }

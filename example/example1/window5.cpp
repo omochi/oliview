@@ -8,6 +8,7 @@ void Window5::Init(const Ptr<Application> & app) {
         text_box_ = view;
         content_view()->AddChild(view);
         view->set_text_alignment(TextAlignment::Left);
+        view->set_word_wrap_enabled(false);
         view->set_text(New<Text>("C++14\n"
                                  "\n"
                                  "C++14 は、プログラミング言語 C++ のISO標準 ISO/IEC 14882:2014 の略称である。"

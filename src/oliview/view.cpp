@@ -187,6 +187,11 @@ namespace oliview {
     
     void View::SetNeedsLayout() {
         needs_layout_ = true;
+        
+        auto parent = this->parent();
+        if (parent) {
+            parent->SetNeedsLayout();
+        }
     }
     
     void View::set_children_layouter(const Ptr<Layouter> & value) {

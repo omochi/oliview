@@ -31,6 +31,10 @@ namespace oliview {
     }
     
     void ScrollView::set_content_size(const Size & value) {
+        if (content_size_ == value) {
+            return;
+        }
+        
         content_size_ = value;
         SetNeedsLayout();
     }

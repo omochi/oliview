@@ -3,7 +3,8 @@
 namespace oliview {
     
     TextDrawLayouter::TextDrawLayouter():
-    text_alignment_(TextAlignment::Left)
+    text_alignment_(TextAlignment::Left),
+    word_wrap_enabled_(true)
     {}
     
     Ptr<TextDrawInfo>
@@ -166,31 +167,25 @@ namespace oliview {
             Ptr<TextDrawInfo::LineEntry> line_entry = LayoutSingleLine(ctx, text, index);
 
             auto char_positions = line_entry->char_positions();
-
-            bool wrapped = false;
             
             for (size_t i = 0; i < char_positions.size(); i++) {
                 auto & ch = char_positions[i];
-                if (max_width) {
+                if (word_wrap_enabled_ && max_width) {
                     if (i >= 8 && *max_width < ch->draw_right() + 1.0f) {
                         ArrayRemoveRange(&char_positions, MakeIndexRange(i, char_positions.size()));
                         
                         auto back_char = char_positions[i - 1];
                         index = text->AdvanceIndex(back_char->text_index());
-                        wrapped = true;
+                        line_entry->set_wrapped_line(true);
                         break;
                     }
                 }
             }
             line_entry->set_char_positions(char_positions);
             
-            if (wrapped) {
-                line_entry->set_wrapped_line(wrapped);
-            }
-            
             result_lines.push_back(line_entry);
             
-            if (!wrapped) {
+            if (!line_entry->wrapped_line()) {
                 break;
             }
         }

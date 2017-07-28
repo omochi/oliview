@@ -30,8 +30,6 @@ namespace oliview {
     
     void TextBox::set_text(const Ptr<const Text> & value) {
         text_view_->set_text(value);
-        
-        SetNeedsLayout();
     }
     
     void TextBox::InsertTextAt(const Text::Index & index,
@@ -39,14 +37,12 @@ namespace oliview {
                                Text::Index * end_index)
     {
         text_view_->InsertTextAt(index, text, end_index);
-        SetNeedsLayout();
     }
     
     void TextBox::DeleteTextAt(const Text::Index & begin,
                                const Text::Index & end)
     {
         text_view_->DeleteTextAt(begin, end);        
-        SetNeedsLayout();
     }
     
     Ptr<Font> TextBox::font() const {
@@ -55,7 +51,6 @@ namespace oliview {
     
     void TextBox::set_font(const Ptr<Font> & value) {
         text_view_->set_font(value);
-        SetNeedsLayout();
     }
     
     float TextBox::font_size() const {
@@ -64,7 +59,6 @@ namespace oliview {
     
     void TextBox::set_font_size(float value) {
         text_view_->set_font_size(value);
-        SetNeedsLayout();
     }
     
     Color TextBox::font_color() const {
@@ -81,7 +75,6 @@ namespace oliview {
     
     void TextBox::set_text_alignment(TextAlignment value) {
         text_view_->set_text_alignment(value);
-        SetNeedsLayout();
     }
     
     Option<size_t> TextBox::max_line_num() const {
@@ -90,9 +83,14 @@ namespace oliview {
     
     void TextBox::set_max_line_num(const Option<size_t> & value) {
         text_view_->set_max_line_num(value);
-        if (text_view_->needs_layout()) {
-            SetNeedsLayout();
-        }
+    }
+    
+    bool TextBox::word_wrap_enabled() const {
+        return text_view_->word_wrap_enabled();
+    }
+    
+    void TextBox::set_word_wrap_enabled(bool value) {
+        text_view_->set_word_wrap_enabled(value);
     }
 
     Text::Index TextBox::cursor_index() const {
@@ -140,6 +138,10 @@ namespace oliview {
 
     bool TextBox::OnKeyDownEvent(const KeyEvent & event) {
         return text_view_->OnKeyDownEvent(event);
+    }
+    
+    bool TextBox::OnKeyRepeatEvent(const KeyEvent & event) {
+        return text_view_->OnKeyRepeatEvent(event);
     }
     
     void TextBox::OnCharEvent(const CharEvent & event) {
