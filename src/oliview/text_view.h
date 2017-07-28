@@ -9,6 +9,7 @@ namespace oliview {
     class TextView : public TextViewBase {
     public:
         virtual void Init(const Ptr<Application> & application) override;
+        virtual void InitAsLabel(const Ptr<Application> & application);
         
         RHETORIC_SUBCLASS_SHARED_FROM_THIS(TextView, TextViewBase)
         

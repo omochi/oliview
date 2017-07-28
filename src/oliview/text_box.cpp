@@ -10,7 +10,7 @@ namespace oliview {
         content_view()->AddChild(text_view_);
         text_view_->set_focusable(false);
         
-        set_background_color(Color(1.0f, 1.0f, 1.0f, 1.0f));
+//        set_background_color(Color(1.0f, 1.0f, 1.0f, 1.0f));
         set_focusable(true);
     }
     

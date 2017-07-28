@@ -6,7 +6,7 @@ namespace oliview {
         
         auto_content_size_enabled_ = true;
         
-        set_background_color(Color(1.0f, 1.0f, 1.0f, 1.0f));
+//        set_background_color(Color(1.0f, 1.0f, 1.0f, 1.0f));
 
         content_view_ = OLIVIEW_INIT(ScrollContentView, app, shared_from_this());
         AddChild(content_view_);
