@@ -36,6 +36,7 @@ namespace oliview {
         text_ = New<Text>(*value);
         text_draw_info_ = nullptr;
         set_cursor_index(text_->begin_index());
+        ClampLines();
         SetNeedsLayout();
     }
     
@@ -105,6 +106,15 @@ namespace oliview {
     
     void TextViewBase::set_word_wrap_enabled(bool value) {
         text_layouter_->set_word_wrap_enabled(value);
+        SetNeedsLayout();
+    }
+    
+    Option<size_t> TextViewBase::desired_height_in_line_num() const {
+        return desired_height_in_line_num_;
+    }
+    
+    void TextViewBase::set_desired_height_in_line_num(const Option<size_t> & value) {
+        desired_height_in_line_num_ = value;
         SetNeedsLayout();
     }
     
@@ -206,12 +216,24 @@ namespace oliview {
                                              query_width_o);
 
         if (query_width_o) {
-            float measured_width = layout->frame().size().width();
-            if (*query_width_o < measured_width) {
+            float w = layout->frame().size().width();
+            if (*query_width_o < w) {
                 layout = text_layouter_->Layout(ctx,
                                                 text_,
-                                                Some(measured_width));
+                                                Some(w));
             }
+        }
+        
+        if (desired_height_in_line_num_) {
+            float h = *desired_height_in_line_num_ * layout->font_metrics().line_height;
+
+            auto frame = layout->frame();
+            {
+                auto sz = frame.size();
+                sz.set_height(h);
+                frame.set_size(sz);
+            }
+            layout->set_frame(frame);
         }
         
         return layout->frame().size();
@@ -351,6 +373,9 @@ namespace oliview {
         cursor_visible_ = value;
     }
     
+    TextDrawInfo::FontMetrics TextViewBase::_GetFontMetrics(NVGcontext * ctx) const {
+        return text_layouter_->GetFontMetrics(ctx);
+    }
     
     void TextViewBase::_InsertTextAt(const Text::Index & index,
                                      const Ptr<const Text> & text,

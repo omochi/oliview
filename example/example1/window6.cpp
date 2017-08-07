@@ -4,12 +4,12 @@ void Window6::Init(const Ptr<Application> & app) {
     Window::Init(app);
     
     {
-        auto view = OLIVIEW_INIT(TextView, app);
+        auto view = OLIVIEW_INIT_NAME(TextView, InitLabel, app);
         text_view_ = view;
         content_view()->AddChild(view);
         content_view()->set_background_color(Color(1.0f, 0.9f, 0.8f, 1.0f));
-        view->set_text_alignment(TextAlignment::Left);
-//        view->set_word_wrap_enabled(false);
+        view->set_text_alignment(TextAlignment::Right);
+        view->set_background_color(Color(1.0f, 0, 0, 1.0f));
         view->set_text(New<Text>("C++14\n"
                                  "\n"
                                  "C++14 は、プログラミング言語 C++ のISO標準 ISO/IEC 14882:2014 の略称である。"
@@ -39,5 +39,13 @@ void Window6::Init(const Ptr<Application> & app) {
 }
 
 void Window6::LayoutContentView(NVGcontext * ctx, const Ptr<WindowContentView> & view) {
-    text_view_->set_frame(view->bounds().InsetBy(EdgeInset(50, 50, 50, 50)));
+    MeasureQuery query;
+    Size measured_size = text_view_->Measure(ctx, query);
+    Rect frame = view->bounds().InsetBy(EdgeInset(50, 50, 50, 50));
+    {
+        Size sz = measured_size;
+        sz.set_width(std::max(sz.width(), frame.size().width()));
+        frame.set_size(sz);
+    }
+    text_view_->set_frame(frame);
 }

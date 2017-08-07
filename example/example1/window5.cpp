@@ -10,7 +10,9 @@ void Window5::Init(const Ptr<Application> & app) {
         content_view()->set_background_color(Color(0.8f, 1.0f, 0.8f, 1.0f));
 
         view->set_text_alignment(TextAlignment::Left);
-//        view->set_word_wrap_enabled(false);
+        view->set_desired_height_in_line_num(Some(1));
+        view->set_max_line_num(Some(1));
+        view->set_word_wrap_enabled(false);
         view->set_text(New<Text>("C++14\n"
                                  "\n"
                                  "C++14 は、プログラミング言語 C++ のISO標準 ISO/IEC 14882:2014 の略称である。"
@@ -41,15 +43,24 @@ void Window5::Init(const Ptr<Application> & app) {
 }
 
 void Window5::LayoutContentView(NVGcontext * ctx, const Ptr<WindowContentView> & view) {
-    text_box_->set_frame(view->bounds().InsetBy(EdgeInset(50, 50, 50, 50)));
+    
+    auto rect = view->bounds().InsetBy(EdgeInset(50, 50, 50, 50));
+    
+    MeasureQuery query;
+    query.set_max_width(Some(rect.size().width()));
+    query.set_max_height(Some(rect.size().height()));
+    
+    Size measured_size = text_box_->Measure(ctx, query);
+    
+    text_box_->set_frame(Rect(rect.origin(), measured_size));
 }
 
 void Window5::OnKeyDownEvent(const KeyEvent & event) {
-    if (event.key() == GLFW_KEY_C) {
-        if ((event.modifier() & GLFW_MOD_SHIFT) != 0) {
-            text_box_->set_max_line_num(None());
-        } else {
-            text_box_->set_max_line_num(Some(3));
-        }
-    }
+//    if (event.key() == GLFW_KEY_C) {
+//        if ((event.modifier() & GLFW_MOD_SHIFT) != 0) {
+//            text_box_->set_max_line_num(None());
+//        } else {
+//            text_box_->set_max_line_num(Some(3));
+//        }
+//    }
 }

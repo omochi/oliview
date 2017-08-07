@@ -495,14 +495,16 @@ namespace oliview {
     
     void View::DrawShadow(NVGcontext * ctx) {
         if (focused()) {
+            auto bounds = this->bounds();
             EdgeInset shadow_inset(-2, -2, -2, -2);
-            Rect shadow_rect = bounds().InsetBy(shadow_inset);
+            Rect shadow_rect = bounds.InsetBy(shadow_inset);
             
             nvgBeginPath(ctx);
-            nvgPathWinding(ctx, NVG_SOLID);
+            
+            nvgBeginPath(ctx);
             NVGAddRoundRectPath(ctx, shadow_rect, 2.0f);
-//            nvgPathWinding(ctx, NVG_HOLE);
-//            NVGAddRectPath(ctx, Rect(Vector2(20, 20), Size(100, 100)));
+            NVGAddRectPath(ctx, bounds);
+            nvgPathWinding(ctx, NVG_HOLE);
             NVGSetFillColor(ctx, Color(0.0f, 0.4f, 0.8f, 0.3f));
             nvgFill(ctx);
         }

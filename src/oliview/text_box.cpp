@@ -92,6 +92,15 @@ namespace oliview {
     void TextBox::set_word_wrap_enabled(bool value) {
         text_view_->set_word_wrap_enabled(value);
     }
+    
+    Option<size_t> TextBox::desired_height_in_line_num() const {
+        return desired_height_in_line_num_;
+    }
+    
+    void TextBox::set_desired_height_in_line_num(const Option<size_t> & value) {
+        desired_height_in_line_num_ = value;
+        SetNeedsLayout();
+    }
 
     Text::Index TextBox::cursor_index() const {
         return text_view_->cursor_index();
@@ -115,6 +124,20 @@ namespace oliview {
     
     bool TextBox::MoveCursorDown() {
         return text_view_->MoveCursorDown();
+    }
+    
+    Size TextBox::MeasureOwnContent(NVGcontext * ctx, const MeasureQuery & query) const {
+        Size size = View::MeasureOwnContent(ctx, query);
+        
+        if (desired_height_in_line_num_) {
+            auto metrics = text_view_->_GetFontMetrics(ctx);
+            
+            float h = *desired_height_in_line_num_ * metrics.line_height;
+            
+            size.set_height(h);
+        }
+        
+        return size;
     }
     
     Size TextBox::MeasureScrollContentView(NVGcontext * ctx,

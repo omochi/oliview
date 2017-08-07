@@ -245,18 +245,17 @@ namespace oliview {
     }
     
     Range<float> ScrollBar::GetKnobRange() const {
-        float top_rate = 0;
-        float bottom_rate = 0;
-        if (content_size_ > 0.0f) {
-            top_rate = scroll_position_ / content_size_;
-            bottom_rate = (scroll_position_ + visible_size_) / content_size_;
+        Range<float> space_range = GetBarSpaceRange();
+        if (visible_size_ >= content_size_) {
+            return space_range;
         }
         
-        auto space_range = GetBarSpaceRange();
-        float top = space_range.Blend(top_rate);
-        float bottom = space_range.Blend(bottom_rate);
-        bottom = std::max(bottom, top + knob_min_height_);
-        return MakeRange(top, bottom);
+        float space_size = space_range.count();
+        float knob_height = space_size * visible_size_ / content_size_;
+        knob_height = std::min(std::max(knob_height, knob_min_height_), space_size);
+        float rem_size = space_size - knob_height;
+        float top = space_range.lower_bound() + rem_size * scroll_position_ / (content_size_ - visible_size_);
+        return MakeRange(top, top + knob_height);
     }
     
     Rect ScrollBar::GetKnobHitRect() const {

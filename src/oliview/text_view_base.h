@@ -49,6 +49,9 @@ namespace oliview {
         bool word_wrap_enabled() const;
         void set_word_wrap_enabled(bool value);
         
+        Option<size_t> desired_height_in_line_num() const;
+        void set_desired_height_in_line_num(const Option<size_t> & value);
+        
         // cursor
         
         Text::Index cursor_index() const;
@@ -81,6 +84,8 @@ namespace oliview {
         
         bool _cursor_visible() const;
         void _set_cursor_visible(bool value);
+        
+        TextDrawInfo::FontMetrics _GetFontMetrics(NVGcontext * ctx) const;
     private:
         void _InsertTextAt(const Text::Index & index,
                            const Ptr<const Text> & text,
@@ -105,5 +110,6 @@ namespace oliview {
         float cursor_blink_time_;
         
         Option<size_t> max_line_num_;
+        Option<size_t> desired_height_in_line_num_;
     };
 }

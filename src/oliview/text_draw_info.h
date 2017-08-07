@@ -72,6 +72,16 @@ namespace oliview {
             bool operator==(const CharPositionIndex & other) const;
             RHETORIC_EQUATABLE_DEFAULT(CharPositionIndex)
         };
+        
+        struct FontMetrics {
+            float ascent;
+            float descent;
+            float height;
+            float line_height;
+            float line_gap;
+            
+            FontMetrics();
+        };
 
         RHETORIC_ACCESSOR(std::vector<Ptr<LineEntry>>, lines)
         size_t line_num() const;
@@ -100,10 +110,7 @@ namespace oliview {
         Vector2 GetDrawPointFor(const CharPositionIndex & position_index) const;
         
         RHETORIC_ACCESSOR(Rect, frame)
-        RHETORIC_ACCESSOR_TRIVIAL(float, font_ascent)
-        RHETORIC_ACCESSOR_TRIVIAL(float, font_descent)
-        RHETORIC_ACCESSOR_TRIVIAL(float, line_height)
-        RHETORIC_ACCESSOR_TRIVIAL(float, line_gap)
+        RHETORIC_ACCESSOR(FontMetrics, font_metrics)
         
         float GetLineTop(float y) const;
         float GetLineBottom(float y) const;
@@ -114,10 +121,7 @@ namespace oliview {
         std::vector<Ptr<LineEntry>> lines_;
         Rect frame_;
         
-        float font_ascent_;
-        float font_descent_;
-        float line_height_;
-        float line_gap_;
+        FontMetrics font_metrics_;
         
         float origin_x_;
         

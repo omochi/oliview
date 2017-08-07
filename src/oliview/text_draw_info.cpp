@@ -73,6 +73,14 @@ namespace oliview {
         }
     }
     
+    TextDrawInfo::FontMetrics::FontMetrics():
+    ascent(0),
+    descent(0),
+    height(0),
+    line_height(0),
+    line_gap(0)
+    {}
+    
     TextDrawInfo::CharPositionIndex::CharPositionIndex():CharPositionIndex(0, 0)
     {}
     
@@ -254,9 +262,9 @@ namespace oliview {
     }
     
     float TextDrawInfo::GetLineTop(float y) const {
-        return y - font_ascent();
+        return y - font_metrics_.ascent;
     }
     float TextDrawInfo::GetLineBottom(float y) const {
-        return y - font_descent() + line_gap();
+        return y - font_metrics_.descent + font_metrics_.line_gap;
     }
 }

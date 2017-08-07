@@ -54,6 +54,9 @@ namespace oliview {
         
         bool word_wrap_enabled() const;
         void set_word_wrap_enabled(bool value);
+        
+        Option<size_t> desired_height_in_line_num() const;
+        void set_desired_height_in_line_num(const Option<size_t> & value);
 
         // cursor
         
@@ -66,6 +69,8 @@ namespace oliview {
         bool MoveCursorDown();
         
         // view control
+        
+        virtual Size MeasureOwnContent(NVGcontext * ctx, const MeasureQuery & query) const override;
         
         virtual Size MeasureScrollContentView(NVGcontext * ctx,
                                               const Ptr<ScrollContentView> & view,
@@ -81,6 +86,8 @@ namespace oliview {
         virtual void OnUnfocus() override;
     private:
         Ptr<TextBoxTextView> text_view_;
+        
+        Option<size_t> desired_height_in_line_num_;
     };
     
     class TextBoxTextView : public TextViewBase {

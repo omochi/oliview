@@ -7,20 +7,28 @@ namespace oliview {
     word_wrap_enabled_(true)
     {}
     
+    TextDrawInfo::FontMetrics TextDrawLayouter::GetFontMetrics(NVGcontext * ctx)
+    {
+        NVGSetFont(ctx, font());
+        nvgFontSize(ctx, font_size());
+        
+        TextDrawInfo::FontMetrics ret;
+        
+        nvgTextMetrics(ctx, &ret.ascent, &ret.descent, &ret.line_height);
+        ret.height = ret.ascent - ret.descent;
+        ret.line_gap = (ret.line_height - ret.height) * 0.5f;
+        ret.line_height = ret.height + ret.line_gap;
+        
+        return ret;
+    }
+    
     Ptr<TextDrawInfo>
     TextDrawLayouter::Layout(NVGcontext * ctx,
                              const Ptr<Text> & text,
                              const Option<float> & max_width)
     {
-        NVGSetFont(ctx, font());
-        nvgFontSize(ctx, font_size());
-        
-        float ascent, descent, line_height;
-        nvgTextMetrics(ctx, &ascent, &descent, &line_height);
-        float font_height = ascent - descent;
-        float line_gap = line_height - font_height;
-        line_gap *= 0.5f;
-        line_height = font_height + line_gap;
+        // set context parameter
+        auto font_metrics = GetFontMetrics(ctx);
         
         std::vector<Ptr<TextDrawInfo::LineEntry>> result_lines;
         
@@ -36,10 +44,7 @@ namespace oliview {
         }
 
         Ptr<TextDrawInfo> result = New<TextDrawInfo>();
-        result->set_font_ascent(ascent);
-        result->set_font_descent(descent);
-        result->set_line_height(line_height);
-        result->set_line_gap(line_gap);
+        result->set_font_metrics(font_metrics);
         
         float top = 0;
         float bottom = 0;
@@ -57,7 +62,7 @@ namespace oliview {
             top = std::min(top, result->GetLineTop(draw_y));
             bottom = std::max(bottom, result->GetLineBottom(draw_y));
             
-            draw_y += result->line_height();
+            draw_y += result->font_metrics().line_height;
         }
 
         float layout_width;
